@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript" src="js.class.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+        <script type="text/javascript">
+            var preventJSClassConstructorCall = 'prevent';
+            console.log('definieng classews');
+            var a = JS.Class({
+                callMe : function (a, b) {
+                    console.log(a+b);
+                    this.callB();
+                },
+                callB : function() {
+                    this.AA = 111;
+                },
+                construct : function(a) {
+                    console.log('classs a:' + a);
+                }
+                
+            });
+            
+            var b = a.extend({
+                callB : function() {
+                    this.AA = 222;
+                },
+                callMe : function() {
+                    console.log('callMe b');
+                    this.parent.callMe(1,1);
+                }
+            });
+            
+            var c = a.extend({
+                construct : function (a) {
+                    console.log("class c:" + a)
+                }
+            });
+            console.log('xxxxx');
+            var bin = new b('ohoho');
+            
+            
+            var cin = new c('a');
+            
+            
+            console.log('-------------------');
+            d = c.extend({
+                construct : function(a) {
+                    console.log('class d:' + a);
+                }
+            });
+            
+            
+            
+            e = d.extend({});
+            
+            
+            
+            f = e.extend({
+                construct : function(a) {
+                    console.log('f class:' + a);
+                }
+            });
+            
+            
+            
+            g = f.extend({
+                construct : function(a) {
+                    console.log('g class:' + a);
+                }
+            });
+            
+            h = g.extend({});
+            
+            console.log('-------------');
+            vdo = new d('aa');
+            vfo = new f('fff');
+            veo = new e('bb');
+            vgo = new g('aaaaaaa');
+            vho = new h('hhhh');
+            //console.log(veo);
+            
+            console.log(vho instanceof d);
+            console.log(preventJSClassConstructorCall);
+        </script>
+  </body>
+</html>

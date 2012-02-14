@@ -1,0 +1,78 @@
+/* Radio Buttons */
+.radio { font:10pt Arial; cursor:pointer; color:inherit; text-decoration:none; margin:0; padding:0; outline:none; }
+.radio-left.selected, .radio-right.selected { font-weight:bold; }
+.radio-left.disabled, .radio-right.disabled { color:#a6a6a6; }
+
+.radio-center.green { background-image:url(images/green/radio.png); background-repeat:no-repeat; background-position: center -9px; }
+.radio-center.green.hover { background-position: center -153px; }
+.radio-center.green.selected { background-position: center -297px; }
+.radio-center.green.selected.hover { background-position: center -441px; }
+.radio-center.green.disabled { background-position: center -580px; }
+.radio-center.green.disabled.selected { background-position: center -729px; }
+
+.radio-center.toggle { background-image:url(images/toggle/checkbox.png); background-repeat:no-repeat; background-position: center -12px; }
+.radio-center.toggle.selected { background-position: center -300px; }
+.radio-center.toggle.disabled { background-position: center -583px; }
+.radio-center.toggle.disabled.selected { background-position: center -732px; }
+
+.radio-center.default { background-image:url(images/default/radio.png); background-repeat:no-repeat; background-position: center -12px; }
+.radio-center.default.hover { background-position: center -156px; }
+.radio-center.default.selected { background-position: center -300px; }
+.radio-center.default.selected.hover { background-position: center -444px; }
+.radio-center.default.disabled { background-position: center -583px; }
+.radio-center.default.disabled.selected { background-position: center -732px; }
+
+.radio-center.switch { background-image:url(images/switch/checkbox.png); background-repeat:no-repeat; background-position: center -12px; }
+.radio-center.switch.hover { background-position: center -156px; }
+.radio-center.switch.selected { background-position: center -300px; }
+.radio-center.switch.selected.hover { background-position: center -444px; }
+.radio-center.switch.disabled { background-position: center -583px; }
+.radio-center.switch.disabled.selected { background-position: center -732px; }
+
+/* Checkboxes */
+.checkbox { font:10pt Arial; cursor:pointer; color:inherit; text-decoration:none; margin:0; padding:0; outline:none; }
+.checkbox-left.selected, .checkbox-right.selected { font-weight:bold; }
+.checkbox-left.disabled, .checkbox-right.disabled { color:#a6a6a6; }
+
+.checkbox-center.green { background-image:url(images/green/checkbox.png); background-repeat:no-repeat; background-position: center -9px; }
+.checkbox-center.green.hover { background-position: center -153px; }
+.checkbox-center.green.selected { background-position: center -297px; }
+.checkbox-center.green.selected.hover { background-position: center -441px; }
+.checkbox-center.green.disabled { background-position: center -581px; }
+.checkbox-center.green.disabled.selected { background-position: center -730px; }
+
+.checkbox-center.toggle { background-image:url(images/toggle/checkbox.png); background-repeat:no-repeat; background-position: center -12px; }
+.checkbox-center.toggle.selected { background-position: center -300px; }
+.checkbox-center.toggle.disabled { background-position: center -583px; }
+.checkbox-center.toggle.disabled.selected { background-position: center -732px; }
+
+.checkbox-center.default { background-image:url(images/default/checkbox.png); background-repeat:no-repeat; background-position: center -12px; }
+.checkbox-center.default.hover { background-position: center -156px; }
+.checkbox-center.default.selected { background-position: center -300px; }
+.checkbox-center.default.selected.hover { background-position: center -444px; }
+.checkbox-center.default.disabled { background-position: center -583px; }
+.checkbox-center.default.disabled.selected { background-position: center -732px; }
+
+.checkbox-center.switch { background-image:url(images/switch/checkbox.png); background-repeat:no-repeat; background-position: center -12px; }
+.checkbox-center.switch.hover { background-position: center -156px; }
+.checkbox-center.switch.selected { background-position: center -300px; }
+.checkbox-center.switch.selected.hover { background-position: center -444px; }
+.checkbox-center.switch.disabled { background-position: center -583px; }
+.checkbox-center.switch.disabled.selected { background-position: center -732px; }
+
+/* Numeric Sliders */
+.numeric { color:inherit; text-decoration:none; margin:0; padding:0; outline:none; }
+
+.numeric-slide.green { background-image:url(images/green/numeric.png); background-repeat:no-repeat; background-position: 0px -34px; }
+.numeric-slide.green.hover { background-position: 0px -82px; }
+.numeric-slider.green { background-image:url(images/green/numeric.png); background-repeat:no-repeat; background-position: 0px 2px; }
+.numeric-slider.green.hover { background-position: -24px 2px; }
+
+.numeric-slide.toggle { background-image:url(images/toggle/numeric.png); background-repeat:no-repeat; background-position: 0px -38px; }
+.numeric-slide.toggle.hover { background-position: 0px -86px; }
+.numeric-slider.toggle { background-image:url(images/toggle/numeric.png); background-repeat:no-repeat; background-position: -2px -2px; }
+.numeric-slider.toggle.hover { background-position: -26px -2px; }
+
+.numeric-slide.default { background-image:url(images/default/numeric.png); background-repeat:repeat-x; background-position: 0px -38px; }
+.numeric-slider.default { background-image:url(images/default/numeric.png); background-repeat:no-repeat; background-position: -6px -2px; }
+.numeric-slider.default.hover { background-position: -30px -2px; }

@@ -1,0 +1,2757 @@
+
+[
+    {
+        "itemID":26,
+        "itemName":"Tasty Tubs (Pack of 4)",
+        "label":"Tasty Tubs (Pack of 4)",
+        "price":"18.0000",
+        "categoryID":18,
+        "itemNr":"TT4",
+        "sizeHeight":"10",
+        "sizeLength":"10",
+        "sizeWidth":"10",
+        "weight":"4.0000",
+        "variantGroups":
+        {
+            "4":
+            {
+                "groupID":4,
+                "items":
+                [
+                    {
+                        "itemID":26,
+                        "variantID":10,
+                        "groupID":4,
+                        "shortDesc":"",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":11,
+                        "groupID":4,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":12,
+                        "groupID":4,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":13,
+                        "groupID":4,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":14,
+                        "groupID":4,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":15,
+                        "groupID":4,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"4.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":16,
+                        "groupID":4,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":17,
+                        "groupID":4,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"4.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":18,
+                        "groupID":4,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"4.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":19,
+                        "groupID":4,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":20,
+                        "groupID":4,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":21,
+                        "groupID":4,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":22,
+                        "groupID":4,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":23,
+                        "groupID":4,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":24,
+                        "groupID":4,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"4.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":25,
+                        "groupID":4,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":26,
+                        "groupID":4,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":27,
+                        "groupID":4,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":28,
+                        "groupID":4,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":29,
+                        "groupID":4,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":30,
+                        "groupID":4,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":31,
+                        "groupID":4,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":32,
+                        "groupID":4,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":33,
+                        "groupID":4,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"6.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":34,
+                        "groupID":4,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":35,
+                        "groupID":4,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":26,
+                        "variantID":36,
+                        "groupID":4,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":28,
+        "itemName":"Mini Tasty Tubs (Pack of 4) ",
+        "label":"Mini Tasty Tubs (Pack of 4) ",
+        "price":"12.0000",
+        "categoryID":18,
+        "itemNr":"MTT4",
+        "sizeHeight":"7",
+        "sizeLength":"7",
+        "sizeWidth":"7",
+        "weight":"4.0000",
+        "variantGroups":
+        {
+            "4":
+            {
+                "groupID":4,
+                "items":
+                [
+                    {
+                        "itemID":28,
+                        "variantID":37,
+                        "groupID":4,
+                        "shortDesc":"",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":38,
+                        "groupID":4,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":39,
+                        "groupID":4,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":40,
+                        "groupID":4,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":41,
+                        "groupID":4,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":42,
+                        "groupID":4,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"2.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":43,
+                        "groupID":4,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":44,
+                        "groupID":4,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"2.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":45,
+                        "groupID":4,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"2.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":46,
+                        "groupID":4,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":47,
+                        "groupID":4,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":48,
+                        "groupID":4,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":49,
+                        "groupID":4,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":50,
+                        "groupID":4,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":51,
+                        "groupID":4,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"2.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":52,
+                        "groupID":4,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":53,
+                        "groupID":4,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":54,
+                        "groupID":4,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":55,
+                        "groupID":4,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":56,
+                        "groupID":4,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":57,
+                        "groupID":4,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":58,
+                        "groupID":4,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":59,
+                        "groupID":4,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":60,
+                        "groupID":4,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":61,
+                        "groupID":4,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":62,
+                        "groupID":4,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":28,
+                        "variantID":63,
+                        "groupID":4,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":29,
+        "itemName":"Tasty Tubs (Pack of 10)",
+        "label":"Tasty Tubs (Pack of 10)",
+        "price":"44.0000",
+        "categoryID":18,
+        "itemNr":"TT10",
+        "sizeHeight":"20",
+        "sizeLength":"20",
+        "sizeWidth":"20",
+        "weight":"9.0000",
+        "variantGroups":
+        {
+            "6":
+            {
+                "groupID":6,
+                "items":
+                [
+                    {
+                        "itemID":29,
+                        "variantID":65,
+                        "groupID":6,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":66,
+                        "groupID":6,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":67,
+                        "groupID":6,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":68,
+                        "groupID":6,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":69,
+                        "groupID":6,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":70,
+                        "groupID":6,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":71,
+                        "groupID":6,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":72,
+                        "groupID":6,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":73,
+                        "groupID":6,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":74,
+                        "groupID":6,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":75,
+                        "groupID":6,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":76,
+                        "groupID":6,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":77,
+                        "groupID":6,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":78,
+                        "groupID":6,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":79,
+                        "groupID":6,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":80,
+                        "groupID":6,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":81,
+                        "groupID":6,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":82,
+                        "groupID":6,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":83,
+                        "groupID":6,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":84,
+                        "groupID":6,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":85,
+                        "groupID":6,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":86,
+                        "groupID":6,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":87,
+                        "groupID":6,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":88,
+                        "groupID":6,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":89,
+                        "groupID":6,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":90,
+                        "groupID":6,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 1",
+                "displayType":"DropDown"
+            },
+            "7":
+            {
+                "groupID":7,
+                "items":
+                [
+                    {
+                        "itemID":29,
+                        "variantID":91,
+                        "groupID":7,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":92,
+                        "groupID":7,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":93,
+                        "groupID":7,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":94,
+                        "groupID":7,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":95,
+                        "groupID":7,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":96,
+                        "groupID":7,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":97,
+                        "groupID":7,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":98,
+                        "groupID":7,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":99,
+                        "groupID":7,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":100,
+                        "groupID":7,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":101,
+                        "groupID":7,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":102,
+                        "groupID":7,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":103,
+                        "groupID":7,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":104,
+                        "groupID":7,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"5.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":105,
+                        "groupID":7,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":106,
+                        "groupID":7,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":107,
+                        "groupID":7,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":108,
+                        "groupID":7,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":109,
+                        "groupID":7,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":110,
+                        "groupID":7,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":111,
+                        "groupID":7,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":112,
+                        "groupID":7,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":113,
+                        "groupID":7,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"7.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":114,
+                        "groupID":7,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":115,
+                        "groupID":7,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":29,
+                        "variantID":116,
+                        "groupID":7,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 2",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":30,
+        "itemName":"Mini Tasty Tubs (Pack of 10) ",
+        "label":"Mini Tasty Tubs (Pack of 10) ",
+        "price":"29.0000",
+        "categoryID":18,
+        "itemNr":"MTT10",
+        "sizeHeight":"14",
+        "sizeLength":"14",
+        "sizeWidth":"14",
+        "weight":"6.0000",
+        "variantGroups":
+        {
+            "6":
+            {
+                "groupID":6,
+                "items":
+                [
+                    {
+                        "itemID":30,
+                        "variantID":117,
+                        "groupID":6,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"0",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":118,
+                        "groupID":6,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":119,
+                        "groupID":6,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":120,
+                        "groupID":6,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":121,
+                        "groupID":6,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":122,
+                        "groupID":6,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":123,
+                        "groupID":6,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":124,
+                        "groupID":6,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":125,
+                        "groupID":6,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":126,
+                        "groupID":6,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":127,
+                        "groupID":6,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":128,
+                        "groupID":6,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":129,
+                        "groupID":6,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":130,
+                        "groupID":6,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":131,
+                        "groupID":6,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":132,
+                        "groupID":6,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":133,
+                        "groupID":6,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":134,
+                        "groupID":6,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":135,
+                        "groupID":6,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":136,
+                        "groupID":6,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":137,
+                        "groupID":6,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":138,
+                        "groupID":6,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":139,
+                        "groupID":6,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":140,
+                        "groupID":6,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":141,
+                        "groupID":6,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":142,
+                        "groupID":6,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 1",
+                "displayType":"DropDown"
+            },
+            "7":
+            {
+                "groupID":7,
+                "items":
+                [
+                    {
+                        "itemID":30,
+                        "variantID":143,
+                        "groupID":7,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":144,
+                        "groupID":7,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":145,
+                        "groupID":7,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":146,
+                        "groupID":7,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":147,
+                        "groupID":7,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":148,
+                        "groupID":7,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":149,
+                        "groupID":7,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":150,
+                        "groupID":7,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":151,
+                        "groupID":7,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":152,
+                        "groupID":7,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":153,
+                        "groupID":7,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":154,
+                        "groupID":7,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":155,
+                        "groupID":7,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":156,
+                        "groupID":7,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"2.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":157,
+                        "groupID":7,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":158,
+                        "groupID":7,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":159,
+                        "groupID":7,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":160,
+                        "groupID":7,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":161,
+                        "groupID":7,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":162,
+                        "groupID":7,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":163,
+                        "groupID":7,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":164,
+                        "groupID":7,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":165,
+                        "groupID":7,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"3.7500",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":166,
+                        "groupID":7,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":167,
+                        "groupID":7,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":30,
+                        "variantID":168,
+                        "groupID":7,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 2",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":31,
+        "itemName":"Cotton Candy Balls (12)",
+        "label":"Cotton Candy Balls (12)",
+        "price":"35.0000",
+        "categoryID":18,
+        "itemNr":"CCB12",
+        "sizeHeight":"20",
+        "sizeLength":"20",
+        "sizeWidth":"20",
+        "weight":"9.0000",
+        "variantGroups":
+        {
+            "6":
+            {
+                "groupID":6,
+                "items":
+                [
+                    {
+                        "itemID":31,
+                        "variantID":169,
+                        "groupID":6,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":170,
+                        "groupID":6,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":171,
+                        "groupID":6,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":172,
+                        "groupID":6,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":174,
+                        "groupID":6,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":175,
+                        "groupID":6,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":176,
+                        "groupID":6,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":177,
+                        "groupID":6,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":178,
+                        "groupID":6,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":179,
+                        "groupID":6,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":180,
+                        "groupID":6,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":181,
+                        "groupID":6,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":182,
+                        "groupID":6,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":183,
+                        "groupID":6,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":184,
+                        "groupID":6,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":185,
+                        "groupID":6,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":186,
+                        "groupID":6,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":187,
+                        "groupID":6,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":188,
+                        "groupID":6,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":189,
+                        "groupID":6,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":190,
+                        "groupID":6,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":191,
+                        "groupID":6,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":192,
+                        "groupID":6,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":193,
+                        "groupID":6,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":194,
+                        "groupID":6,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":195,
+                        "groupID":6,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 1",
+                "displayType":"DropDown"
+            },
+            "7":
+            {
+                "groupID":7,
+                "items":
+                [
+                    {
+                        "itemID":31,
+                        "variantID":173,
+                        "groupID":7,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":196,
+                        "groupID":7,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":197,
+                        "groupID":7,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":198,
+                        "groupID":7,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":199,
+                        "groupID":7,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":200,
+                        "groupID":7,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":201,
+                        "groupID":7,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":202,
+                        "groupID":7,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":203,
+                        "groupID":7,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":204,
+                        "groupID":7,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":205,
+                        "groupID":7,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":206,
+                        "groupID":7,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":207,
+                        "groupID":7,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":208,
+                        "groupID":7,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":209,
+                        "groupID":7,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":210,
+                        "groupID":7,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":211,
+                        "groupID":7,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":212,
+                        "groupID":7,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":213,
+                        "groupID":7,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":214,
+                        "groupID":7,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":215,
+                        "groupID":7,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":216,
+                        "groupID":7,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":217,
+                        "groupID":7,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":218,
+                        "groupID":7,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":219,
+                        "groupID":7,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":31,
+                        "variantID":220,
+                        "groupID":7,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 2",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":32,
+        "itemName":"Cotton Candy Pops (12) ",
+        "label":"Cotton Candy Pops (12) ",
+        "price":"38.0000",
+        "categoryID":18,
+        "itemNr":"CCL12",
+        "sizeHeight":"20",
+        "sizeLength":"20",
+        "sizeWidth":"20",
+        "weight":"9.0000",
+        "variantGroups":
+        {
+            "6":
+            {
+                "groupID":6,
+                "items":
+                [
+                    {
+                        "itemID":32,
+                        "variantID":221,
+                        "groupID":6,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":222,
+                        "groupID":6,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":223,
+                        "groupID":6,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":224,
+                        "groupID":6,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":226,
+                        "groupID":6,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":227,
+                        "groupID":6,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":228,
+                        "groupID":6,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":229,
+                        "groupID":6,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":230,
+                        "groupID":6,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":231,
+                        "groupID":6,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":232,
+                        "groupID":6,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":233,
+                        "groupID":6,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":234,
+                        "groupID":6,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":235,
+                        "groupID":6,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":236,
+                        "groupID":6,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":237,
+                        "groupID":6,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":238,
+                        "groupID":6,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":239,
+                        "groupID":6,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":240,
+                        "groupID":6,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":241,
+                        "groupID":6,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":242,
+                        "groupID":6,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":243,
+                        "groupID":6,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":244,
+                        "groupID":6,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":245,
+                        "groupID":6,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":246,
+                        "groupID":6,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":247,
+                        "groupID":6,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 1",
+                "displayType":"DropDown"
+            },
+            "7":
+            {
+                "groupID":7,
+                "items":
+                [
+                    {
+                        "itemID":32,
+                        "variantID":225,
+                        "groupID":7,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":248,
+                        "groupID":7,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":249,
+                        "groupID":7,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":250,
+                        "groupID":7,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":251,
+                        "groupID":7,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":252,
+                        "groupID":7,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":253,
+                        "groupID":7,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":254,
+                        "groupID":7,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":255,
+                        "groupID":7,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":256,
+                        "groupID":7,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":257,
+                        "groupID":7,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":258,
+                        "groupID":7,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":259,
+                        "groupID":7,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":260,
+                        "groupID":7,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":261,
+                        "groupID":7,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":262,
+                        "groupID":7,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":263,
+                        "groupID":7,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":264,
+                        "groupID":7,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":265,
+                        "groupID":7,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":266,
+                        "groupID":7,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":267,
+                        "groupID":7,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":268,
+                        "groupID":7,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":269,
+                        "groupID":7,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":270,
+                        "groupID":7,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":271,
+                        "groupID":7,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":32,
+                        "variantID":272,
+                        "groupID":7,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 2",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":33,
+        "itemName":"Martini Puffs (12) ",
+        "label":"Martini Puffs (12) ",
+        "price":"38.0000",
+        "categoryID":18,
+        "itemNr":"MP12",
+        "sizeHeight":"20",
+        "sizeLength":"20",
+        "sizeWidth":"20",
+        "weight":"9.0000",
+        "variantGroups":
+        {
+            "6":
+            {
+                "groupID":6,
+                "items":
+                [
+                    {
+                        "itemID":33,
+                        "variantID":273,
+                        "groupID":6,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":274,
+                        "groupID":6,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":275,
+                        "groupID":6,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":276,
+                        "groupID":6,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":278,
+                        "groupID":6,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":279,
+                        "groupID":6,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":280,
+                        "groupID":6,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":281,
+                        "groupID":6,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":282,
+                        "groupID":6,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":283,
+                        "groupID":6,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":284,
+                        "groupID":6,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":285,
+                        "groupID":6,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":286,
+                        "groupID":6,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":287,
+                        "groupID":6,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":288,
+                        "groupID":6,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":289,
+                        "groupID":6,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":290,
+                        "groupID":6,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":291,
+                        "groupID":6,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":292,
+                        "groupID":6,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":293,
+                        "groupID":6,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":294,
+                        "groupID":6,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":295,
+                        "groupID":6,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":296,
+                        "groupID":6,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":297,
+                        "groupID":6,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":298,
+                        "groupID":6,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":299,
+                        "groupID":6,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 1",
+                "displayType":"DropDown"
+            },
+            "7":
+            {
+                "groupID":7,
+                "items":
+                [
+                    {
+                        "itemID":33,
+                        "variantID":277,
+                        "groupID":7,
+                        "shortDesc":"Berry Nana",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":300,
+                        "groupID":7,
+                        "shortDesc":"Apple Verde",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":301,
+                        "groupID":7,
+                        "shortDesc":"Banana Cadabra",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":302,
+                        "groupID":7,
+                        "shortDesc":"Banana Mango Sorbet",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":303,
+                        "groupID":7,
+                        "shortDesc":"Berry Caliente",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":304,
+                        "groupID":7,
+                        "shortDesc":"Cherry Blast",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":305,
+                        "groupID":7,
+                        "shortDesc":"Cherry Lemonade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":306,
+                        "groupID":7,
+                        "shortDesc":"Cherry Limeade",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":307,
+                        "groupID":7,
+                        "shortDesc":"Citrus Swirl",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":308,
+                        "groupID":7,
+                        "shortDesc":"Lemon Blush",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":309,
+                        "groupID":7,
+                        "shortDesc":"Lima Lime",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":310,
+                        "groupID":7,
+                        "shortDesc":"Luscious Lemon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":311,
+                        "groupID":7,
+                        "shortDesc":"Orange Mango Tango",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":312,
+                        "groupID":7,
+                        "shortDesc":"Philippine Mango",
+                        "priceOffset":"3.0000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":313,
+                        "groupID":7,
+                        "shortDesc":"Pina Colada",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":314,
+                        "groupID":7,
+                        "shortDesc":"Pink Bubble",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":315,
+                        "groupID":7,
+                        "shortDesc":"Pretty in Pink",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":316,
+                        "groupID":7,
+                        "shortDesc":"Purple Grape",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":317,
+                        "groupID":7,
+                        "shortDesc":"Spicy J",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":318,
+                        "groupID":7,
+                        "shortDesc":"Spicy Watermelon",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":319,
+                        "groupID":7,
+                        "shortDesc":"Summer Breeze",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":320,
+                        "groupID":7,
+                        "shortDesc":"Superstar Strawberry",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":321,
+                        "groupID":7,
+                        "shortDesc":"Tropical Delight",
+                        "priceOffset":"4.5000",
+                        "offsetType":"+ dollars"
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":322,
+                        "groupID":7,
+                        "shortDesc":"Tropical Orange",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":323,
+                        "groupID":7,
+                        "shortDesc":"True Blue",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    },
+                    {
+                        "itemID":33,
+                        "variantID":324,
+                        "groupID":7,
+                        "shortDesc":"Wild Watermelon",
+                        "priceOffset":"0",
+                        "offsetType":""
+                    }
+                ],
+                "groupName":"FLAVOR 2",
+                "displayType":"DropDown"
+            }
+        }
+    },
+    {
+        "itemID":34,
+        "itemName":"Delivery",
+        "label":"Delivery",
+        "price":"0",
+        "categoryID":18,
+        "itemNr":"DEL",
+        "sizeHeight":"",
+        "sizeLength":"",
+        "sizeWidth":"",
+        "weight":"-922337203685477.5808",
+        "variantGroups":
+        [
+        ]
+    },
+    {
+        "itemID":101,
+        "itemName":"Catered Service - Cotton Candy",
+        "label":"Catered Service - Cotton Candy",
+        "price":"0",
+        "itemNr":"CATERCC"
+    },
+    {
+        "itemID":102,
+        "itemName":"Catered Service - Snow Cones",
+        "label":"Catered Service - Snow Cones",
+        "price":"0",
+        "itemNr":"CATERSC"
+    }
+]

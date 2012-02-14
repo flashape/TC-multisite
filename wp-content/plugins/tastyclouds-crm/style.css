@@ -1,0 +1,15 @@
+#loadingShipping { 
+	display:none; 
+}
+
+input.order_date { width: 20px; margin-right: 15px;}
+
+
+
+/*
+$('.tc_crm_datepicker').each(function (){
+	$('#' + jQuery(this).attr('id')).datepicker();
+	// $('#' + jQuery(this).attr('id')).datepicker({ dateFormat: 'yy-mm-dd' });
+	// For more options see http://jqueryui.com/demos/datepicker/#option-dateFormat
+});
+*/

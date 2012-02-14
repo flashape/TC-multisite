@@ -1,0 +1,311 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Sidebars\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-02 14:09-0500\n"
+"PO-Revision-Date: 2011-02-02 14:09-0500\n"
+"Last-Translator: Alberto Lau <alau@albertolau.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ../.\n"
+
+#: .././custom-widget-area.php:32
+#, fuzzy
+msgid "404 sidebars"
+msgstr "Tag sidebars"
+
+#: .././custom-widget-area.php:38
+msgid "Search sidebars"
+msgstr "Search sidebars"
+
+#: .././custom-widget-area.php:44
+msgid "Frontpage sidebars"
+msgstr "Frontpage sidebars"
+
+#: .././custom-widget-area.php:50
+msgid "Home sidebars"
+msgstr "Home sidebars"
+
+#: .././custom-widget-area.php:56
+#, fuzzy
+msgid "Attachments sidebars"
+msgstr "Search sidebars"
+
+#: .././custom-widget-area.php:62
+#, fuzzy
+msgid "Single sidebars"
+msgstr "Page sidebars"
+
+#: .././custom-widget-area.php:68
+#: .././includes/class.CUSTWIDGETSidebars.php:158
+#: .././includes/class.CUSTWIDGETSidebars.php:159
+msgid "Page sidebars"
+msgstr "Page sidebars"
+
+#: .././custom-widget-area.php:74
+msgid "Category sidebars"
+msgstr "Category sidebars"
+
+#: .././custom-widget-area.php:80
+msgid "Tag sidebars"
+msgstr "Tag sidebars"
+
+#: .././custom-widget-area.php:86
+#, fuzzy
+msgid "Author sidebars"
+msgstr "Custom sidebars"
+
+#: .././custom-widget-area.php:92
+#, fuzzy
+msgid "Archive sidebars"
+msgstr "Search sidebars"
+
+#: .././custom-widget-area.php:110
+#, fuzzy
+msgid "Custom Widget Area"
+msgstr "Custom Sidebar"
+
+#: .././custom-widget-area.php:127
+#, fuzzy
+msgid "Custom widgets area"
+msgstr "Custom Sidebar"
+
+#: .././custom-widget-area.php:128
+#, fuzzy
+msgid "Add/Remove custom custom widget area"
+msgstr "Add/Remove custom sidebars"
+
+#: .././custom-widget-area.php:129
+msgid "Sidebar settings"
+msgstr "Sidebar settings"
+
+#: .././custom-widget-area.php:133
+#, fuzzy
+msgid "Create&nbsp;sidebar"
+msgstr "Create sidebar"
+
+#: .././custom-widget-area.php:142
+msgid "Created sidebars"
+msgstr "Created sidebars"
+
+#: .././custom-widget-area.php:148
+msgid "Go to"
+msgstr "Go to"
+
+#: .././custom-widget-area.php:148
+msgid "Widgets"
+msgstr "Widgets"
+
+#: .././custom-widget-area.php:148
+msgid "in order to add Widgets to your new sidebars."
+msgstr "in order to add Widgets to your new sidebars."
+
+#: .././custom-widget-area.php:180
+msgid "*If the theme template does not shows a default sidebar, it will not show a custom either"
+msgstr "*If the theme template does not shows a default sidebar, it will not show a custom either"
+
+#: .././custom-widget-area.php:200
+msgid "Save changes"
+msgstr "Save changes"
+
+#: .././custom-widget-area.php:205
+msgid "Widget in content CSS"
+msgstr ""
+
+#: .././custom-widget-area.php:206
+msgid "Modify the CSS for widgets in content"
+msgstr ""
+
+#: .././custom-widget-area.php:207
+msgid "CSS for Widgets in content"
+msgstr ""
+
+#: .././custom-widget-area.php:211
+msgid "CSS"
+msgstr ""
+
+#: .././custom-widget-area.php:213
+msgid "Most be valid css, will be printed on the theme head section."
+msgstr ""
+
+#: .././custom-widget-area.php:223
+#: .././custom-widget-area.php:224
+#: .././custom-widget-area.php:225
+#: .././includes/class.CUSTWIDGETShortcode.php:60
+#, fuzzy
+msgid "Advanced settings"
+msgstr "Sidebar settings"
+
+#: .././custom-widget-area.php:229
+msgid "Disable jquery-ui theme"
+msgstr ""
+
+#: .././custom-widget-area.php:231
+msgid "If another plugin is adding a jquery-ui theme, you can disable the one that this plugin is adding by choosing yes."
+msgstr ""
+
+#: .././api/AddSidebar.php:12
+#: .././api/LoadSidebar.php:12
+#: .././api/RemoveSidebar.php:12
+msgid "No access"
+msgstr "No access"
+
+#: .././api/AddSidebar.php:27
+msgid "Sidebar with the same name is already created."
+msgstr "Sidebar with the same name is already created."
+
+#: .././api/LoadSidebar.php:34
+msgid "Remove"
+msgstr "Remove"
+
+#: .././api/LoadSidebar.php:39
+msgid "No custom sidebars."
+msgstr "No custom sidebars."
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:114
+msgid "-default-"
+msgstr "-default-"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:115
+msgid "Do not display"
+msgstr "Do not display"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:170
+msgid "Options updated."
+msgstr "Options updated."
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:223
+msgid "Open all"
+msgstr "Open all"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:224
+msgid "Save all"
+msgstr "Save all"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:335
+msgid "Yes"
+msgstr "Yes"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:336
+msgid "No"
+msgstr "No"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:411
+msgid "Add"
+msgstr "Add"
+
+#: .././includes/class.CUSTWIDGETOptionsTogglePanel.php:416
+msgid "Loading..."
+msgstr "Loading..."
+
+#: .././includes/class.CUSTWIDGETShortcode.php:27
+msgid "Insert Widget Area"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:31
+msgid "Choose the sidebar you want to insert in the content and customize optional html"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:34
+#, fuzzy
+msgid "Custom Widget Area:"
+msgstr "Custom Sidebar"
+
+#: .././includes/class.CUSTWIDGETShortcode.php:43
+msgid "Default styles:"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:45
+msgid "--choose--"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:46
+msgid "1 Column Left"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:47
+msgid "1 Column Right"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:48
+msgid "1 Column (100% width)"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:49
+msgid "Horizontal 2 Columns Left"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:50
+msgid "Horizontal 3 Columns Left"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:51
+msgid "Horizontal 2 Columns Right"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:52
+msgid "Horizontal 3 Columns Right"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:60
+msgid "Click to open"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:63
+msgid "Before Title"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:67
+msgid "After Title"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:71
+msgid "Before widget"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:75
+msgid "After widget"
+msgstr ""
+
+#: .././includes/class.CUSTWIDGETShortcode.php:79
+#, fuzzy
+msgid "Before sidebar"
+msgstr "Home sidebars"
+
+#: .././includes/class.CUSTWIDGETShortcode.php:83
+#, fuzzy
+msgid "After sidebar"
+msgstr "Create sidebar"
+
+#: .././includes/class.CUSTWIDGETSidebars.php:184
+msgid "No widget (theme default)"
+msgstr "No widget (theme default)"
+
+#~ msgid "Sidebar: %s"
+#~ msgstr "Sidebar: %s"
+
+#~ msgid "Category"
+#~ msgstr "Category"
+
+#~ msgid "Tag"
+#~ msgstr "Tag"
+
+#~ msgid "Search"
+#~ msgstr "Search"
+
+#~ msgid "Sidebar"
+#~ msgstr "Sidebar"
+
+#~ msgid ""
+#~ "Specify a name for the sidebar.<br /> Go to Appearance > Widgets and then "
+#~ "configure your new sidebar"
+#~ msgstr ""
+#~ "Specify a name for the sidebar.<br /> Go to Appearance > Widgets and then "
+#~ "configure your new sidebar"
