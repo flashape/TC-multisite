@@ -2,9 +2,9 @@
 Contributors: GaryJ
 Donate link: http://code.garyjones.co.uk/donate/
 Tags: admin bar, genesis
-Requires at least: 3.1
-Tested up to: 3.2.1
-Stable tag: 1.2.5
+Requires at least: 3.3
+Tested up to: 3.3.1
+Stable tag: 1.3.0
 
 Adds resource links related to the Genesis Framework to the admin bar.
 
@@ -20,6 +20,8 @@ The plugin is built with theme and plugin developers in mind, as they can add su
 * Easy addition of Support board links via single lines in theme `functions.php`.
 
 This plugin is conceptual fork of the Genesis Admin Bar Addition plugin, re-written from scratch, adding new features.
+
+Please report issues at https://github.com/GaryJones/Genesis-Admin-Bar-Plus/issues and not the WP Forums.
 
 == Installation ==
 
@@ -40,7 +42,7 @@ See the *Add Support Boards* section for an example of how to add these to the S
 
 You can also add a reference to another board via the `gabp_support_boards` filter.
 
-= What Settings links are supported? =
+= What settings links are supported? =
 The following theme and plugins, when active, have a link to their settings page added to the Settings submenu:
 
 * Design Settings (for [Prose Theme](http://gmj.to/prose))
@@ -66,9 +68,18 @@ Genesis Simple Menus and Genesis Tabs can't be supported as they have no individ
 
 == Changelog ==
 
+= 1.3.0 =
+* Added Italian language files to the plugin (props [http://gidibao.net/](Gianni Diurno))
+* Added support for AgentPress 2, Backcountry, Balance, eleven40, Generate and Luscious themes.
+* Added support for Clip Cart, Cre8tive Burst, Curtail, Driskill, Politica and Pure Elegance Marketplace themes.
+* Improved icon markup and styles to match how WP 3.3 does it, which fixes overlapping icon issue.
+* Improved properties and methods by declaring public or private visibility.
+* Fixed to use new /tutorials links as StudioPress re-arrange their site.
+* Fixed to use stricter code standards above and beyond WP CS.
+
 = 1.2.5 =
 * Added support for Fashionista, Modern Blogger (both Marketplace) and Scribble themes.
-* Added updated German language files back in with the plugin.
+* Added updated German language files back in with the plugin (props [http://deckerweb.de/material/sprachdateien/genesis-plugins/](David Decker))
 * Improved a few strings to use the plugin text domain to avoid conflicts.
 * Improved readme descriptions.
 
@@ -120,7 +131,7 @@ Genesis Simple Menus and Genesis Tabs can't be supported as they have no individ
 * Improved inconsistent external link icon by replacing CSS Unicode characters with base64 encoded image.
 * Included .pot file for translations.
 * Added German translation files (props [deckerweb.de](http://deckerweb.de/material/sprachdateien/genesis-plugins/)).
-
+/)).
 = 1.0 =
 * First public version.
 
@@ -227,3 +238,4 @@ For child themes, the bit after the `gabp-support-` string must be the theme nam
 == Translations ==
 
 * Deutsch: http://deckerweb.de/material/sprachdateien/genesis-plugins/#genesis-admin-bar-plus
+* Italiano: http://gidibao.net/
