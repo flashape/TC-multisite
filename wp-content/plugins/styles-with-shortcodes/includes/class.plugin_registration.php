@@ -220,7 +220,9 @@ function load_registered_licenses(){
 		}
 	}	
 }
+endif;
 
+if(!class_exists('righthere_license')):
 class righthere_license {
 	var $license_key;
 	var $item_id;

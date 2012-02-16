@@ -31,14 +31,19 @@ class rh_downloadable_content {
 		foreach($defaults as $property => $default){
 			$this->$property = isset($args[$property])?$args[$property]:$default;
 		}	
-		
-		wp_register_style('rh-dc', 		$this->plugin_url.'css/dc.css', array(), '1.0.0');
+	
 		wp_register_script('rh-dc', 	$this->plugin_url.'js/dc.js', array(), '1.0.0');		
 		
 		add_action('admin_menu',array(&$this,'admin_menu'));
 		
 		add_action('wp_ajax_rh_get_bundles_'.$this->id,array(&$this,'get_bundles'));
 		add_action('wp_ajax_rh_download_bundle_'.$this->id,array(&$this,'download_bundle'));
+	
+		add_action('init',array(&$this,'init'));
+	}
+	
+	function init(){
+		wp_register_style('rh-dc', 		$this->plugin_url.'css/dc.css', array(), '1.0.0');
 	}
 	
 	function get_license_keys(){

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>wp-content/plugins/genesis-admin-bar-plus/genesis-admin-bar-plus (Rich Rodecker's conflicted copy 2012-02-12).php</string>
+	<string>wp-content/debug.log</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,7 +21,21 @@
 	<integer>355</integer>
 	<key>metaData</key>
 	<dict>
-		<key>wp-content/plugins/genesis-admin-bar-plus/genesis-admin-bar-plus (Rich Rodecker's conflicted copy 2012-02-12).php</key>
+		<key>wp-config.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>84</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>55</integer>
+		</dict>
+		<key>wp-content/debug.log</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -49,11 +63,73 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>wp-content/themes/legacy/README.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>38</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+		</dict>
+		<key>wp-content/themes/legacy/functions.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>52</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>45</integer>
+		</dict>
+		<key>wp-content/themes/legacy/home.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>41</integer>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>wp-content/plugins/genesis-admin-bar-plus/genesis-admin-bar-plus.php</string>
-		<string>wp-content/plugins/genesis-admin-bar-plus/genesis-admin-bar-plus (Rich Rodecker's conflicted copy 2012-02-12).php</string>
+		<string>wp-content/themes/legacy/home.php</string>
+		<string>wp-content/themes/legacy/README.txt</string>
+		<string>wp-content/themes/legacy/functions.php</string>
+		<string>wp-config.php</string>
+		<string>wp-content/debug.log</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -66,10 +142,34 @@
 			<key>isExpanded</key>
 			<true/>
 			<key>subItems</key>
-			<dict/>
+			<dict>
+				<key>wp-content</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict>
+						<key>themes</key>
+						<dict>
+							<key>isExpanded</key>
+							<true/>
+							<key>subItems</key>
+							<dict>
+								<key>legacy</key>
+								<dict>
+									<key>isExpanded</key>
+									<true/>
+									<key>subItems</key>
+									<dict/>
+								</dict>
+							</dict>
+						</dict>
+					</dict>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{802, 96}, {1552, 962}}</string>
+	<string>{{164, 96}, {1552, 962}}</string>
 </dict>
 </plist>

@@ -43,12 +43,13 @@ class sws_lightbox {
 				$le[$name]=$this->options[$option];
 			}
 		}		
+		$le['modal']=$le['modal']?true:false;
 		$json = json_encode((object)$le);
 ?>
 <?php	if(isset($this->options['le_background_color_custom'])&&''!=$this->options['le_background_color_custom']):?>
 <style>.jquery-lightbox-overlay {background: <?php echo "#".$this->options['le_background_color_custom']?>;}</style>
 <?php endif;?>
-<script type='text/javascript' rel='sws'>
+<script type='text/javascript'>
 var sws_lightbox = <?PHP echo ($json)?$json:'{}';?>;
 </script>
 

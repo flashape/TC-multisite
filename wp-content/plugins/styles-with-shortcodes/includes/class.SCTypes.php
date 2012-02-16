@@ -21,7 +21,8 @@ class SCTypes {
 		'data',
 		'label',
 		'hidden',
-		'ui_theme'
+		'ui_theme',
+		'checkbox'
 	);
 	
 	function SCTypes(){
@@ -96,6 +97,28 @@ class SCTypes {
 			return str_replace('"','\"',str_replace('{val}',"_val", sprintf("_val = %s ;",$field->jsfunc)));
 		}
 		return '';
+	}
+	
+	function checkbox($field){
+?>
+		<div class="fieldset">
+			<?php if(!empty($field->description)) :?>
+			<div class="description"><?php echo $field->description?></div>
+			<?php endif;?>		
+			<label class="css-mce-label"><?php echo $field->label?></label>
+			<div class="css-mce-input">
+				<?php echo sprintf("<input type=\"checkbox\" id=\"mce-checkbox-%s\" name=\"sws_%s\" class=\"mce-item %s\" rel=\"%s\" value=\"%s\" %s>",
+					$this->uid++,
+					$field->name,
+					$this->get_classes($field),
+					$this->get_jsfunc($field),
+					$field->checkbox_value,
+					$field->default==$field->checkbox_value?'checked="checked"':''
+					); ?>
+			</div>
+			<div class="clearer"></div>
+		</div>
+<?php
 	}
 	
 	function text($field){

@@ -15,16 +15,22 @@ class CSSEditor {
 	var $metabox_title = '';
 	function CSSEditor($args=array()){
 		$defaults = array(
-			'show_in_metabox' 	=> false,
-			'metabox_title' 	=> __('Styles with shortcodes','css'),
-			'meta_box_post_types'=> array()
+			'show_in_metabox' 		=> false,
+			'metabox_title' 		=> __('Styles with shortcodes','css'),
+			'meta_box_post_types'	=> array(),
+			'editor_head_always'	=> 0
 		);
 		foreach($defaults as $property => $default){
 			$this->$property = isset($args[$property])?$args[$property]:$default;
 		}
 		
-		add_action("admin_head-post.php",array(&$this,'insert_tool_head'));
-		add_action("admin_head-post-new.php",array(&$this,'insert_tool_head'));		
+		if(1==$this->editor_head_always){
+			add_action("admin_head",array(&$this,'insert_tool_head'));
+		}else{
+			add_action("admin_head-post.php",array(&$this,'insert_tool_head'));
+			add_action("admin_head-post-new.php",array(&$this,'insert_tool_head'));				
+		}
+		
 		if($this->show_in_metabox){
 			add_action('admin_menu', array(&$this, 'post_meta_box') );
 		}else{
@@ -48,7 +54,7 @@ class CSSEditor {
 		wp_print_styles('sws-insert-tool');
 		wp_print_scripts('sws-insert-tool');
 		if(!$this->show_in_metabox){	
-			add_action('admin_footer',array(&$this,'shortcode_dialog'));
+			add_action('admin_footer',array(&$this,'shortcode_dialog'),1);
 		}
 	}
 	
@@ -92,7 +98,16 @@ class CSSEditor {
 		/* moved to insert_tool.css and insert_tool.js*/
 	}
 	
+	function install_bundle_if_not_installed(){
+		global $wpdb;
+		$installed_shortcodes_count = intval($wpdb->get_var("SELECT count(ID) FROM `{$wpdb->posts}` WHERE post_type='csshortcode' AND post_status='publish'",0,0));
+		if(0==$installed_shortcodes_count){
+			sws_install();
+		}
+	}
+	
 	function add_mce_popup_body(){
+		$this->install_bundle_if_not_installed();
 ?>
         <div id="insert_csshortcode" style="<?php echo $this->show_in_metabox?'':''/*'display:none;'*/?>">
             <div id="css-mce-form" class="wrap">

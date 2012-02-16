@@ -8,100 +8,25 @@ Author: Rich Rodecker
 Author URI: http://tastyclouds.com/
 */
 
-
-
-
-
-//add_action( 'init', 'register_taxonomy_tc_press_type' );
-
-add_action('init', 'register_tc_testamonials_posttype');
-add_action('init', 'register_tc_press_posttype');
-add_action('init', 'register_tc_products_posttype');
-
-
-
-
-
-
-
-// function register_taxonomy_tc_press_type() {
-// 
-//     $labels = array( 
-//         'name' => _x( 'X Press Types', 'press type' ),
-//         'singular_name' => _x( 'XX Press Type', 'press type' ),
-//         'search_items' => _x( 'Search Press Types', 'press type' ),
-//         'popular_items' => _x( 'Popular Press Types', 'press type' ),
-//         'all_items' => _x( 'All Press Types', 'press type' ),
-//         'parent_item' => _x( 'Parent Press Type', 'press type' ),
-//         'parent_item_colon' => _x( 'Parent Press Type:', 'press type' ),
-//         'edit_item' => _x( 'Edit Press Type', 'press type' ),
-//         'update_item' => _x( 'Update Press Type', 'press type' ),
-//         'add_new_item' => _x( 'XXX Add New Press Type', 'press type' ),
-//         'new_item_name' => _x( 'New Press Type Name', 'press type' ),
-//         'separate_items_with_commas' => _x( 'Separate press types with commas', 'press type' ),
-//         'add_or_remove_items' => _x( 'Add or remove press types', 'press type' ),
-//         'choose_from_most_used' => _x( 'Choose from the most used press types', 'press type' ),
-//         'menu_name' => _x( 'Press Types', 'press type' ),
-//     );
-// 
-//     $args = array( 
-//         'labels' => $labels,
-//         'public' => true,
-//         'show_in_nav_menus' => true,
-//         'show_ui' => true,
-//         'show_tagcloud' => true,
-//         'hierarchical' => false,
-// 		'rewrite' 			=> array('slug' => 'tc_press_type', 'with_front' => false),
-//         // 'rewrite' => true,
-//         'query_var' => 'tc_press_type'
-//     );
-// 
-//     register_taxonomy( 'tc_press_type', 'tc_press', $args );
-// }
-
-// ----------------  
-// Register Press post types
-// ---------------- 
-
-function register_tc_press_posttype() {
-	$labels = array(
-	  'name' => _x('Press', 'post type general name'),
-	  'singular_name' => _x('Press', 'post type singular name'),
-	  'add_new' => _x('Add New', 'Press'),
-	  'add_new_item' => __('Add New Press'),
-	  'edit_item' => __('Edit Press'),
-	  'new_item' => __('New Press'),
-	  'view_item' => __('View Press'),
-	  'search_items' => __('Search Press'),
-	  'not_found' =>  __('No Press found'),
-	  'not_found_in_trash' => __('No Press found in Trash'),
-	  'parent_item_colon' => ''
-	);
-	
-	$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
-	
-
-  	//$supports = array('title', 'editor', 'custom-fields', 'revisions', 'excerpt');
-
-	$post_type_args = array(
-		'labels' 			=> $labels,
-		'public' 			=> true,
-		'show_ui' 			=> true,
-		'publicly_queryable'=> true,
-		'query_var'			=> 'tc_press',
-		'capability_type' 	=> 'post',
-		'has_archive' 		=> false,
-		'hierarchical' 		=> true,
-			'rewrite' 			=> array( 'slug' => 'press', 'with_front' => false),
-		 // 'rewrite' => false,
-		'supports' 			=> $supports,
-		'menu_position' 	=> 0,
-	 );
-	
-  	register_post_type( 'tc_press', $post_type_args);
-	add_action('add_meta_boxes', 'tc_cms_add_meta_boxes');
-	add_action('save_post', 'tc_cms_save_press_meta');
+if (!defined('TASTY_CMS_PLUGIN_DIR')) {
+    define('TASTY_CMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 }
+
+
+if (!defined('TASTY_CMS_PLUGIN_INC_DIR')) {
+    define('TASTY_CMS_PLUGIN_INC_DIR', TASTY_CMS_PLUGIN_DIR . 'includes/');
+    define('TASTY_CMS_PLUGIN_METABOX_DIR', TASTY_CMS_PLUGIN_DIR . 'includes/metabox/');
+}
+
+if(!defined('TC_CMS_JS_DIR')){
+    define('TC_CMS_JS_DIR', plugins_url('tastyclouds-cms/js/'));
+}
+
+
+
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
+
+
 
 function tc_cms_add_meta_boxes(){
 	add_meta_box('tc_press_meta_box', 'External URL', 'tc_cms_press_metabox', 'tc_press', 'normal', 'high');
@@ -124,86 +49,15 @@ function tc_cms_save_press_meta($post_id){
 }
 
 
-// ----------------  
-// Register Testamonials post types
-// ----------------
-
-function register_tc_testamonials_posttype() {
-  $labels = array(
-    'name' => _x('Testamonials', 'post type general name'),
-    'singular_name' => _x('Testamonial', 'post type singular name'),
-    'add_new' => _x('Add New', 'Testamonial'),
-    'add_new_item' => __('Add New Testamonial'),
-    'edit_item' => __('Edit Testamonial'),
-    'new_item' => __('New Testamonial'),
-    'view_item' => __('View Testamonial'),
-    'search_items' => __('Search Testamonials'),
-    'not_found' =>  __('No Testamonials found'),
-    'not_found_in_trash' => __('No Testamonials found in Trash'),
-    'parent_item_colon' => ''
-  );
-
-  $supports = array('title', 'editor', 'custom-fields', 'revisions', 'excerpt');
-
-  register_post_type( 'tc_testamonials',
-    array(
-      'labels' => $labels,
-      'public' => true,
-      'supports' => $supports,
-      'menu_position' => 0
-    )
-  );
-}
-
-
-
-
-
-
-// ----------------  
-// Register Product post types
-// ----------------
-
-function register_tc_products_posttype() {
-	$labels = array(
-		'name' 				=> _x( 'Products', 'post type general name' ),
-		'singular_name'		=> _x( 'Product', 'post type singular name' ),
-		'add_new' 			=> _x( 'Add New', 'Product'),
-		'add_new_item' 		=> __( 'Add New Product '),
-		'edit_item' 		=> __( 'Edit Product '),
-		'new_item' 			=> __( 'New Product '),
-		'view_item' 		=> __( 'View Product '),
-		'search_items' 		=> __( 'Search Products '),
-		'not_found' 		=>  __( 'No Product found' ),
-		'not_found_in_trash'=> __( 'No Products found in Trash' ),
-		'parent_item_colon' => ''
-	);
-	
-	$supports = array('title','editor','thumbnail','excerpt','post-formats','page-attributes');
-	
-	$post_type_args = array(
-		'labels' 			=> $labels,
-		'singular_label' 	=> __('Product'),
-		'public' 			=> true,
-		'show_ui' 			=> true,
-		'publicly_queryable'=> true,
-		'query_var'			=> true,
-		'capability_type' 	=> 'post',
-		'has_archive' 		=> false,
-		'hierarchical' 		=> true,
-		'rewrite' 			=> array('slug' => 'products', 'with_front' => false),
-		'supports' 			=> $supports,
-		'menu_position' 	=> 0,
-	 );
-	 register_post_type('tc_products',$post_type_args);
-}
-
 	
 // Styling for the custom post type icon
  
 add_action( 'admin_head', 'tc_testamonials_icons' );
  
 function tc_testamonials_icons() {
+	
+	
+	
     ?>
     <style type="text/css" media="screen">
         #menu-posts-tc_testamonials .wp-menu-image {
@@ -223,15 +77,6 @@ function tc_testamonials_icons() {
     </style>
 <?php }
 
-
-add_action('init', 'my_custom_init');
-
-function my_custom_init() {
-	add_post_type_support( 'tc_products', 'genesis-seo' );
-	add_post_type_support( 'tc_press', 'genesis-seo' );
-	add_post_type_support( 'tc_testamonials', 'genesis-seo' );
-	
-}
 
 
 ?>

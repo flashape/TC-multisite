@@ -63,7 +63,8 @@ if(!defined('TC_JS_DIR')){
 
 
 // include the class in your theme or plugin
-include_once 'wpalchemy/MetaBox.php';
+//include_once 'wpalchemy/MetaBox.php';
+include_once WP_CONTENT_DIR.'/wpalchemy/MetaBox.php';
 
 
 

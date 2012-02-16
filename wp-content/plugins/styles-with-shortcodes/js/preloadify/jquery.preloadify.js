@@ -9,41 +9,55 @@
 		  	if( r == null )
 		    	return "";
 		  	else
-		    	return r[1];
+		    	return unescape(r[1]);
 		}		
-		
+
+		function add_parameter_to_url(_url,param){
+		    _url += (_url.split('?')[1] ? '&':'?') + param;
+		    return _url;
+		}
+
 		return this.each(function() {
 			
 			$(this).preloadify(options);
 			
 			if( $(this).hasClass('use-lightbox-1') && $(this).find('.frame-zoom-wrap').length==0 ){
-				var src = $(this).find('img').attr('rel');
+				var src = unescape($(this).find('img').attr('rel'));
 				var _class = "frame-zoom";
 				if('undefined'==typeof(src)||src==''){
 					var thumb_src = $(this).find('img').attr('src');
-					src = get_url_parameter(thumb_src,'src');			
+					src = get_url_parameter(thumb_src,'src');	
+					src = src==''?thumb_src:src;		
 				}else{
 					_class = _class+' le-video';
-				}			
-				$(this).prepend(
-					$("<a />")
+				}	
+			
+				if($(this).hasClass('sws_image_frame')||$(this).hasClass('sws_image_frame_custom')){
+
+					$(this).find('a')
 						.attr('href', src )
-						.attr('rel', $(this).attr('rel') )
-						.addClass('frame-zoom-wrap')
-						.css('position','absolute')
-						.append(
-							$("<div />")
-							.addClass(_class)
-							.css('opacity',0)
-							.unbind('hover')
-							.hover(function(){
-								$(this).animate({'opacity':0.8},350);
-							},function(){
-								$(this).animate({'opacity':0},350);
-							})				
-						)
-					).find('.frame-zoom-wrap')
-					.sws_lightbox();	
+						.sws_lightbox();
+				}else{
+					$(this).prepend(
+						$("<a />")
+							.attr('href', src )
+							.attr('rel', $(this).attr('rel') )
+							.addClass('frame-zoom-wrap')
+							.css('position','absolute')
+							.append(
+								$("<div />")
+								.addClass(_class)
+								.css('opacity',0)
+								.unbind('hover')
+								.hover(function(){
+									$(this).animate({'opacity':0.8},350);
+								},function(){
+									$(this).animate({'opacity':0},350);
+								})				
+							)
+						).find('.frame-zoom-wrap')
+						.sws_lightbox();					
+				}
 			}
 
 		});

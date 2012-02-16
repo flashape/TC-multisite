@@ -4,13 +4,45 @@ Author URL: http://plugins.righthere.com/styles-with-shortcodes/
 Tags: WordPress, Shortcodes, Shortcode API, jQuery UI, jQuery TOOLS, Toggle, Tabs, Accordion, Syntax Highlighter, Custom underlined links, Overlay, Buttons, Columns, Google Maps, Blockquotes, Pullquotes, Tables, Dividers, Colored Boxes, Picture frames, Tooltips, Facebook, Twitter, LinkedIN, Flattr, Twitter follow me, Google +1
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 1.7.4 rev7914
+Stable tag: 1.7.7 rev13259
 
 
 ======== Changelog =======
+Version 1.7.7 rev13259 - December 6, 2011
+* Bug Fixed: When adding panel items, sliders where not rendering with the correct min, max and step values
+* Bug Fixed: Jerky Chrome Nivo Slider animation
+* Bug Fixed: Missing Header breaks Chrome caching
+* Update: Thumbnail.php updated to TimThumb 2.8.3 and removed word thumb and old timthumb files.
+
+Version 1.7.6 rev11833 - November 11, 2011
+* New Feature: Added a checkbox field type for Shortcode creation
+* New Feature: Added option to selective disable bundle on fronted, backend or both
+
+Version 1.7.6 rev11488 - October 26, 2011
+* Bug Fixed: Insert tool top margin increased to accommodate the admin bar
+* New Feature: Additional drop downs for the Shortcode creator; registered post types and registered taxonomies.
+
+Version 1.7.6 rev11143 - October 20, 2011
+* New Feature: Added lightbox support for CSS Frames
+* Update: Increasing bottom padding on buttons
+* New Feature: Added resources for new Minimalistic Divider Bar Shortcodes
+
+Version 1.7.5 rev10566 - October 5, 2011
+* Bug Fixed: Videos not loading in Lightbox. Force update of preloadify.js
+* Updated: Updated Lightbox to 1.5.3
+* New Feature: Added support for Lightbox on CSS Frames
+
+Version 1.7.5 rev10020 - September 23, 2011
+* Bug Fixed: S icon dialog was hidden by some other plugin that is hiding HTML in the admin footer.
+* Bug Fixed: Hardcode fix, url encode the src field of TimThumb urls.
+* Improvement: Position the insert tool in the top of the viewport and not top of the page
+* Improvement: Option to always include admin sws scripts for plugins and themes that custom add Custom Post Content on screens
+* New Feature: Added 18 new Golden Ratio Picture frames.
+* New Feature: Added "align" and "width" parameter to the Twitter Follow Button Shortcode.
+
 Version 1.7.4 rev7914 - August 11, 2011
 * Bug Fixed: update_post_meta does not behave the same when adding a new meta or updating and existing one in regard to slashes.
-* New Feature: added 15 new images for picture frame Shortcodes.
+* New Feature: added 15 new images for picture frame Shortcodes (DC).
 
 Version 1.7.3 rev7550 - August 5, 2011
 * Security Update: Disallow php from being executed on the TimThumb cache
@@ -169,7 +201,7 @@ And then just click "Confirm Import shortcode settings". No need to know anythin
 
 
 
-==Sources and Credits ==
+==Sources, Credits & Licenses ==
 
 I've used the following opensource projects, graphics, fonts, API's or other files as listed. Thanks to the author for the creative work they made.
 
@@ -179,7 +211,7 @@ I've used the following opensource projects, graphics, fonts, API's or other fil
 
 3) jQuery UI library (http://jqueryui.com/)
 
-4) TimThumb by Ben Gillbanks (http://www.binarymoon.co.uk/projects/timthumb/)
+4) TimThumb by Ben Gillbanks (http://www.binarymoon.co. uk/projects/timthumb/)
 
 5) Google Maps API version 3.0 (http://code.google.com/apis/maps/documentation/javascript/)
 
@@ -210,4 +242,11 @@ License Type: Extended License
 URL: http://codecanyon.net/item/jquery-lightbox-evolution/115655
 Item Purchase Code: 3e36c852-3030-4ed3-a569-da1dc1e806c0
 Licensor's Author Name: aeroalquimia
+Licensee: RightHere LLC
+
+13) Minimalist Dividers
+License Type: Extended License
+URL: http://graphicriver.net/item/minimalist-dividers-resizable-/146824
+Item Purchase Code: cb35782e-cc52-4aab-9ab0-bd50e981ddce
+Licensor's Author Username: 360Degrees
 Licensee: RightHere LLC

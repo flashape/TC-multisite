@@ -197,6 +197,14 @@ class sws_options {
 				'load_option'=>true				
 			),
 			(object)array(
+				'id'	=> 'editor_head_always',
+				'type'	=> 'checkbox',
+				'label'	=> __('Always output the sws insert tool head scripts','css'),
+				'description'=> __("Check this option if you have a plugin or theme that is adding the sws S icon, but it is not working.","sws"),
+				'save_option'=>true,
+				'load_option'=>true				
+			),
+			(object)array(
 				'type'	=> 'clear',
 			),
 			(object)array(
@@ -249,7 +257,7 @@ class sws_options {
 	
 	function pop_admin_head(){
 ?>
-<script>
+<script type='text/javascript'>
  jQuery(document).ready(function($){ 
 	$("#btn_restore_bundle").click(function(){restore_bundle( $('#bundle_dropdown').val() );});
  });	

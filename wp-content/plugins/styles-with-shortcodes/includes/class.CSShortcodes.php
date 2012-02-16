@@ -505,6 +505,7 @@ jQuery(document).ready(function($){
 						<option value='textarea'>Textarea</option>
 						<option value='rtf'>rtf editor</option>
 						<option value='dropdown'>drop-down</option>
+						<option value='checkbox'>checkbox</option>
 						<option value='slider'>Slider/Range input</option>
 						<option value='data'>Data set/Stackable fields</option>
 						<option value='label'>Label</option>
@@ -515,6 +516,16 @@ jQuery(document).ready(function($){
 				<td class="col3">&nbsp;</td>
 			</tr>
 
+			<tr class="css-type-checkbox css-type-fields">
+				<td class="col1"><label class="css-field-type">Checked value:</label></td>
+				<td class="col2">
+					<input id="css_checkbox_value" name="css_checkbox_value" class="css_checkbox_value" type="text" value="" />
+				</td>
+				<td class="col3" rowspan=2>
+				<div class="description">Specify the checkbox value.  That is the value sent to the shortcode when the checkbox is checked.  Else a blank string is sent.</div>
+				</td>		
+			</tr>
+			
 			<tr class="css-type-dropdown css-type-fields">
 				<td class="col1"><label class="css-field-type">Predifined options:</label></td>
 				<td class="col2">
@@ -691,6 +702,7 @@ function edit_css_field(_name){
 				$('#css_field_shortcode_template').val(data.DATA.shortcode_template);
 				$('#css_field_field_number').val(data.DATA.field_number);
 				$('#css_field_button_label').val(data.DATA.button_label);
+				$('#css_checkbox_value').val(data.DATA.checkbox_value);
 			}else if(data.R=='ERR'){
 				load_css_fields();
 				_alert(data.MSG);	
@@ -749,7 +761,8 @@ function add_css_field(){
 			field_number:	$('#css_field_field_number').val(),
 			shortcode_template:$('#css_field_shortcode_template').val(),
 			button_label:	$('#css_field_button_label').val(),
-			nonce:			$('#csshortcode-css-nonce').val()
+			nonce:			$('#csshortcode-css-nonce').val(),
+			checkbox_value:	$('#css_checkbox_value').val()
 		};
 		$.post(ajaxurl,args,function(data){
 			if(data.R=='OK'){
@@ -1016,16 +1029,46 @@ function css_moreinfo(){
 //----- adding more Predifined options source: ----------
 add_filter('sws_dropdown_callback_options','sws_dropdown_callback_options',10,1);
 function sws_dropdown_callback_options($options){
-	$options['sws_category_options_slug']	= __('Category dropdown (value=slug)','cbw');
-	//$options['sws_category_options_id']		= __('Category dropdown (value=cat_id)','cbw');
+	$options['sws_category_options_slug']	= __('Category dropdown (value=slug)','sws');
+	$options['sws_registered_post_types_with_ui']	= __('Registered post types with UI(value=name)','sws');
+	$options['sws_registered_taxonomies']	= __('Registered taxonomies(value=name)','sws');	
 	return $options;
 }
 
 function sws_category_options_slug(){
 	$categories = get_categories( $args );
-	$options = array(''=> __('--choose category--','cbw') );
+	$options = array(''=> __('--choose category--','sws') );
 	foreach($categories as $c){
 		$options[$c->slug]=$c->cat_name;
+	}
+	return $options;
+}
+
+function sws_registered_post_types_with_ui($options){
+	$args=array(
+	  'show_ui'   => true
+	); 
+	$options = array(''=> __('--choose post type--','sws') );
+	$post_types=get_post_types($args,"objects","and");
+	if(is_array($post_types)&&count($post_types)>0){
+		foreach($post_types as $p){
+			$options[$p->name]=$p->label;
+			
+		}
+	}
+	return $options;
+}
+
+function sws_registered_taxonomies(){
+	$args=array(
+	  'public'   => true
+	); 
+	$options = array(''=> __('--choose post type--','sws') );
+	$taxonomies = get_taxonomies($args,'objects','and');
+	if(is_array($taxonomies)&&count($taxonomies)>0){
+		foreach($taxonomies as $t){
+			$options[$t->name]=$t->label;
+		}
 	}
 	return $options;
 }

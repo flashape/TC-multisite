@@ -1,7 +1,8 @@
 jQuery(document).ready(function($){
 	if( $('#sws-insert-tool-trigger').length > 0 && $('#sws-insert-tool').length > 0){
 		$('#sws-insert-tool-trigger').click(function(e){
-			$('#sws-insert-tool').fadeIn();			
+			$('#sws-insert-tool').css('top', $(document).scrollTop() );
+			$('#sws-insert-tool').fadeIn();		
 		});
 		
 		$('#sws-insert-tool').find('.sws-close-icon-a').click(function(e){
@@ -58,7 +59,11 @@ function insert_csshortcode(){
     	var str = '';
 		if($('.mce-item').length>0){
 			$('.mce-item').each(function(){
-				var _val = $(this).val();
+				if( $(this).is(':checkbox') ){
+					var _val = $(this).is(':checked')?$(this).val():'';
+				}else{
+					var _val = $(this).val();
+				}
 				if( $(this).hasClass('mce-escape') ){
 					_val = escape(_val);
 				}
@@ -177,7 +182,12 @@ function set_slider(){
 		$( ".sws-rangeinput" ).each(function(i,inp){
 			if(!$(inp).data("rangeinput")){
 				$(this).parent().find('.slider').remove();//because of clone, remove the already added html element.
-				$(this).rangeinput();		
+				if( undefined==$(this).attr('max') ){
+					var arr = $(this).parent().attr('rel').split('|');
+					$(this).attr('min',arr[0]).attr('max',arr[1]).attr('step',arr[2]);
+				}
+				$(this).parent().attr('rel', $(this).attr('min')+'|'+$(this).attr('max')+'|'+$(this).attr('step') );	
+				$(this).rangeinput();
 			}			
 		});
 	});

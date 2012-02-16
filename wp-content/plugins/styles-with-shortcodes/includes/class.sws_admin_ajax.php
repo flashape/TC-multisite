@@ -151,7 +151,7 @@ class sws_admin_ajax {
 		}
 		
 		$new_field = array();
-		foreach(array('name','label','default','classes','jsfunc','description','content','type','dropdown_callback','options','min','max','step','shortcode','shortcode_template','field_number','button_label') as $field){
+		foreach(array('name','label','default','classes','jsfunc','description','content','type','dropdown_callback','options','min','max','step','shortcode','shortcode_template','field_number','button_label','checkbox_value') as $field){
 			$new_field[$field] = $_POST[$field];
 		}
 		

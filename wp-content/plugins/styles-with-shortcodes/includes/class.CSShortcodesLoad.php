@@ -24,6 +24,7 @@ class CSShortcodesLoad {
 		global $wp_filter;
 		$out = "<textarea cols=40 rows=5>".$content."</textarea>";
 		$out .= "<pre>".print_r($wp_filter['the_content'],true)."</pre>";
+		$out .= "<pre>".print_r($wp_filter['wp_footer'],true)."</pre>";
 		return $out;
 	}
 	
@@ -160,7 +161,7 @@ class CSShortcodesLoad {
 				if(@$f->content==1){
 					$replace["{".$f->name."}"]=$content;
 				}else{
-					$replace["{".$f->name."}"]=@$$varname;
+					$replace["{".$f->name."}"]=$this->get_field_value($f,@$$varname,$code);//@$$varname;
 				}
 			}
 		}	
@@ -171,7 +172,7 @@ class CSShortcodesLoad {
 	
 		$out = do_shortcode($sc_template);
 		$out = $this->_replace($out,$replace);		
-		
+		$out = str_replace('timthumb.php','thumbnail.php',$out);		
 		return $out;
 	}
 
@@ -204,7 +205,7 @@ class CSShortcodesLoad {
 		if(is_array($fields)&&count($fields)>0){
 			foreach($fields as $f){
 				$varname = strtolower($f->name);//wp shortcode api lowercases attributes. :s
-				$replace["{".$f->name."}"]=$$varname;
+				$replace["{".$f->name."}"]=$this->get_field_value($f,@$$varname,$code);
 			}
 		}		
 	
@@ -269,7 +270,7 @@ class CSShortcodesLoad {
 			$js = get_post_meta($sc_id,'sc_js',true);
 			$this->footer['js'.$code]= $this->_replace($js,$replace);
 		}
-		
+		$out = str_replace('timthumb.php','thumbnail.php',$out);
 		return $out;						
 	}
 	
@@ -286,6 +287,7 @@ class CSShortcodesLoad {
 		}catch(Exception $e){
 			
 		}
+		$output = str_replace('timthumb.php','thumbnail.php',$output);
 		return $output;
 	}
 	
@@ -295,6 +297,13 @@ class CSShortcodesLoad {
 		$footer = str_replace("<script>\r\n</script>","",$footer);
 		echo $footer;
 	}	
+	
+	function get_field_value($field,$value,$shortcode){
+		if(!property_exists($field,'urlencode')&& false!==strpos($shortcode,'sws_picture_frame')){
+			$value = urlencode($value);
+		}
+		return $value;
+	}
 }
 
 new CSShortcodesLoad();

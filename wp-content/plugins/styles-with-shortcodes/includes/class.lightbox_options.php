@@ -43,7 +43,9 @@ class lightbox_options {
 					'evolution-dark'=>'Evolution Dark',
 					'minimalist'=>'Minimalist',
 					'white-green'=>'White Green',
-					'disable'=>'--Disable Bundled Theme--'
+					'disable'=>'--Disable Bundled Theme--',
+					'disable_front'=>'--Disable Bundled Theme on frontend only--',
+					'disable_admin'=>'--Disable Bundled Theme on wp-admin only--'
 				),
 				'save_option'=>true,
 				'load_option'=>true

@@ -1,5 +1,5 @@
 .sws_btn_small {
-font-size:12px;
+font-size:12px !important;
 margin:4px 5px 5px
 }
 .sws_btn_small:active {
@@ -9,7 +9,7 @@ margin:5px 5px 5px;
 padding:10px 14px 8px;
 }
 .sws_btn_medium {
-font-size:14px;
+font-size:14px !important;
 margin: 3px 5px 5px;
 }
 .sws_btn_medium:active {
@@ -19,7 +19,7 @@ margin:4px 5px 5px;
 padding: 12px 15px;
 }
 .sws_btn_large {
-font-size:18px;
+font-size:18px !important;
 margin:0px 5px 5px;
 }
 .sws_btn_large:active {
@@ -29,7 +29,7 @@ margin:1px 5px 5px;
 padding:13px 18px;
 }
 .sws_btn_xlarge {
-font-size:22px;
+font-size:22px !important;
 margin:0px 5px 5px;
 }
 .sws_btn_xlarge:active {
@@ -131,7 +131,7 @@ button.sws-button  {
 	color:#fff;
 	text-shadow:0 1px 1px rgba(0, 0, 0, 0.25);
 	border-top: rgba(255, 255, 255, .3) 1px solid;
-	padding:0.6em 1.3em;
+	padding:0.6em 1.3em 0.7em;
 	line-height:1em;
 	text-decoration:none;
 	text-align:center;

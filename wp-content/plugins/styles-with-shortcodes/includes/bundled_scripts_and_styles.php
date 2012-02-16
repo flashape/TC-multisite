@@ -44,10 +44,10 @@ class bundled_scripts_and_styles {
 		wp_register_style('start',WPCSS_URL.'css/start/jquery-ui-1.8.7.custom.css',array(),'1.8.7');	
 		$sws_plugin->add_style('start','UI Start','',true);		
 		
-		wp_register_script('lightbox-evolution',WPCSS_URL.'js/lightbox/jquery.lightbox.js',array('jquery'),'1.4.3');		
+		wp_register_script('lightbox-evolution',WPCSS_URL.'js/lightbox/jquery.lightbox.js',array('jquery'),'1.5.3');		
 		$sws_plugin->add_script('lightbox-evolution','Lightbox Evolution','');			
 		
-		wp_register_script('preloadify',WPCSS_URL.'js/preloadify/jquery.preloadify.js',array('jquery','lightbox-evolution'),'1.0.2');		
+		wp_register_script('preloadify',WPCSS_URL.'js/preloadify/jquery.preloadify.js',array('jquery','lightbox-evolution'),'1.0.3');		
 		$sws_plugin->add_script('preloadify','Preloadify','');		
 		
 		wp_register_style('preloadify',WPCSS_URL.'js/preloadify/plugin/css/style.css',array(),'1.0.2');	

@@ -83,7 +83,7 @@ class custom_shortcode_styling {
 	}
 	function get_editor_parameters(){
 		$r = array();
-		foreach(array('show_in_metabox','metabox_title','meta_box_post_types') as $field){
+		foreach(array('show_in_metabox','metabox_title','meta_box_post_types','editor_head_always') as $field){
 			if(isset($this->options[$field])){
 				$r[$field]=$this->options[$field];
 			}
@@ -95,6 +95,8 @@ class custom_shortcode_styling {
 		if(is_admin()):
 			wp_enqueue_style('wpcss-toggle',WPCSS_URL.'css/toggle.css',array(),'1.0.3');
 			wp_enqueue_style('jquery-colorpicker',WPCSS_URL.'colorpicker/css/colorpicker.css',array(),'1.0.0');
+			wp_register_style( 'sws-insert-tool', WPCSS_URL.'css/insert_tool.css', array(),'1.0.0');
+			wp_register_style( 'sws-options', WPCSS_URL.'css/pop.css', array(),'1.0.0');
 		endif;
 	}
 	
@@ -116,12 +118,9 @@ class custom_shortcode_styling {
 		new sws_lightbox($this->options);
 		
 		if(is_admin()):
-			//wp_enqueue_style('wpcss-toggle',WPCSS_URL.'css/toggle.css',array(),'1.0.3');
 			wp_enqueue_script('wpsws',WPCSS_URL.'js/sws.js',array(),'1.0.2');
 			
-			//wp_enqueue_style('colorpicker',WPCSS_URL.'colorpicker/css/colorpicker.css',array(),'1.0.0');
-			wp_enqueue_script('jquery-colorpicker',WPCSS_URL.'colorpicker/js/colorpicker.js',array('jquery'),'1.0.0');			
-			wp_register_style( 'sws-insert-tool', WPCSS_URL.'css/insert_tool.css', array(),'1.0.0');			
+			wp_enqueue_script('jquery-colorpicker',WPCSS_URL.'colorpicker/js/colorpicker.js',array('jquery'),'1.0.0');				
 			wp_register_script( 'sws-insert-tool', WPCSS_URL.'js/insert_tool.js', array(),'1.0.0');
 			
 			if(!isset($this->options['editor_capability']) || ''==$this->options['editor_capability'] || current_user_can($this->options['editor_capability']) ){				
@@ -132,7 +131,6 @@ class custom_shortcode_styling {
 			require_once WPCSS_PATH.'includes/class.plugin_registration.php';
 			new plugin_registration(array('plugin_id'=>$this->id,'tdom'=>'sws','plugin_code'=>'SWS','options_varname'=>'sws_options'));			
 			
-			wp_register_style( 'sws-options', WPCSS_URL.'css/pop.css', array(),'1.0.0');
 			require_once WPCSS_PATH.'includes/class.PluginOptionsPanel.php';		
 			new PluginOptionsPanel($this->options_parameters);		
 			require_once WPCSS_PATH.'includes/class.sws_options.php';
@@ -142,6 +140,7 @@ class custom_shortcode_styling {
 			
 			$this->options['license_keys'] =  is_array($this->options['license_keys'])&&count($this->options['license_keys'])>0?$this->options['license_keys']:array();			
 			if(!defined('rh_downloadable_content'))require_once WPCSS_PATH.'includes/class.rh_downloadable_content.php';
+
 			new rh_downloadable_content(array(
 				'id'			=> 'sws_downloads',
 				'parent_id'		=> $this->options_parameters['option_menu_parent'],
