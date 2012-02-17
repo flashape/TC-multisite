@@ -1,0 +1,215 @@
+[17-Feb-2012 00:45:58] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:45:58] Array
+(
+    [post] => Array
+        (
+            [0] => 
+            [1] => Post updated. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">View post</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Post updated.
+            [5] => 
+            [6] => Post published. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">View post</a>
+            [7] => Post saved.
+            [8] => Post submitted. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116&#038;preview=true">Preview post</a>
+            [9] => Post scheduled for: <strong>Feb 17, 2012 @ 0:45</strong>. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">Preview post</a>
+            [10] => Post draft updated. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116&#038;preview=true">Preview post</a>
+        )
+
+    [page] => Array
+        (
+            [0] => 
+            [1] => Page updated. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">View page</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Page updated.
+            [5] => 
+            [6] => Page published. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">View page</a>
+            [7] => Page saved.
+            [8] => Page submitted. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116&#038;preview=true">Preview page</a>
+            [9] => Page scheduled for: <strong>Feb 17, 2012 @ 0:45</strong>. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116">Preview page</a>
+            [10] => Page draft updated. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1116&#038;preview=true">Preview page</a>
+        )
+
+    [foobar] => Array
+        (
+            [0] => 
+            [1] => FooBar updated.
+            [2] => 
+            [3] => 
+            [4] => FooBar updated.
+            [5] => 
+            [6] => FooBar created
+            [7] => FooBar saved.
+            [8] => 
+            [9] => FooBar scheduled for: <strong>Feb 17, 2012 @ 0:45</strong>
+            [10] => FooBar draft updated
+        )
+
+    [6] => Variant Group saved successfully.
+)
+
+[17-Feb-2012 00:46:02] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:46:03] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:46:03] Array
+(
+    [post] => Array
+        (
+            [0] => 
+            [1] => Post updated. <a href="http://tastyclouds.com/product_variation/qweqwe/">View post</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Post updated.
+            [5] => 
+            [6] => Post published. <a href="http://tastyclouds.com/product_variation/qweqwe/">View post</a>
+            [7] => Post saved.
+            [8] => Post submitted. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/?preview=true">Preview post</a>
+            [9] => Post scheduled for: <strong>Feb 17, 2012 @ 0:46</strong>. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/">Preview post</a>
+            [10] => Post draft updated. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/?preview=true">Preview post</a>
+        )
+
+    [page] => Array
+        (
+            [0] => 
+            [1] => Page updated. <a href="http://tastyclouds.com/product_variation/qweqwe/">View page</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Page updated.
+            [5] => 
+            [6] => Page published. <a href="http://tastyclouds.com/product_variation/qweqwe/">View page</a>
+            [7] => Page saved.
+            [8] => Page submitted. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/?preview=true">Preview page</a>
+            [9] => Page scheduled for: <strong>Feb 17, 2012 @ 0:46</strong>. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/">Preview page</a>
+            [10] => Page draft updated. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe/?preview=true">Preview page</a>
+        )
+
+    [foobar] => Array
+        (
+            [0] => 
+            [1] => FooBar updated.
+            [2] => 
+            [3] => 
+            [4] => FooBar updated.
+            [5] => 
+            [6] => FooBar created
+            [7] => FooBar saved.
+            [8] => 
+            [9] => FooBar scheduled for: <strong>Feb 17, 2012 @ 0:46</strong>
+            [10] => FooBar draft updated
+        )
+
+    [6] => Variant Group saved successfully.
+)
+
+[17-Feb-2012 00:47:16] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:47:16] Array
+(
+    [post] => Array
+        (
+            [0] => 
+            [1] => Post updated. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">View post</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Post updated.
+            [5] => 
+            [6] => Post published. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">View post</a>
+            [7] => Post saved.
+            [8] => Post submitted. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118&#038;preview=true">Preview post</a>
+            [9] => Post scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">Preview post</a>
+            [10] => Post draft updated. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118&#038;preview=true">Preview post</a>
+        )
+
+    [page] => Array
+        (
+            [0] => 
+            [1] => Page updated. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">View page</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Page updated.
+            [5] => 
+            [6] => Page published. <a href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">View page</a>
+            [7] => Page saved.
+            [8] => Page submitted. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118&#038;preview=true">Preview page</a>
+            [9] => Page scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118">Preview page</a>
+            [10] => Page draft updated. <a target="_blank" href="http://tastyclouds.com/?post_type=tc_product_variation&#038;p=1118&#038;preview=true">Preview page</a>
+        )
+
+    [foobar] => Array
+        (
+            [0] => 
+            [1] => FooBar updated.
+            [2] => 
+            [3] => 
+            [4] => FooBar updated.
+            [5] => 
+            [6] => FooBar created
+            [7] => FooBar saved.
+            [8] => 
+            [9] => FooBar scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>
+            [10] => FooBar draft updated
+        )
+
+    [tc_product_variation] => Array
+        (
+            [6] => Variant Group saved successfully.
+        )
+
+)
+
+[17-Feb-2012 00:47:22] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:47:23] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854
+[17-Feb-2012 00:47:23] Array
+(
+    [post] => Array
+        (
+            [0] => 
+            [1] => Post updated. <a href="http://tastyclouds.com/product_variation/qweqwe-2/">View post</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Post updated.
+            [5] => 
+            [6] => Post published. <a href="http://tastyclouds.com/product_variation/qweqwe-2/">View post</a>
+            [7] => Post saved.
+            [8] => Post submitted. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/?preview=true">Preview post</a>
+            [9] => Post scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/">Preview post</a>
+            [10] => Post draft updated. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/?preview=true">Preview post</a>
+        )
+
+    [page] => Array
+        (
+            [0] => 
+            [1] => Page updated. <a href="http://tastyclouds.com/product_variation/qweqwe-2/">View page</a>
+            [2] => Custom field updated.
+            [3] => Custom field deleted.
+            [4] => Page updated.
+            [5] => 
+            [6] => Page published. <a href="http://tastyclouds.com/product_variation/qweqwe-2/">View page</a>
+            [7] => Page saved.
+            [8] => Page submitted. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/?preview=true">Preview page</a>
+            [9] => Page scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/">Preview page</a>
+            [10] => Page draft updated. <a target="_blank" href="http://tastyclouds.com/product_variation/qweqwe-2/?preview=true">Preview page</a>
+        )
+
+    [foobar] => Array
+        (
+            [0] => 
+            [1] => FooBar updated.
+            [2] => 
+            [3] => 
+            [4] => FooBar updated.
+            [5] => 
+            [6] => FooBar created
+            [7] => FooBar saved.
+            [8] => 
+            [9] => FooBar scheduled for: <strong>Feb 17, 2012 @ 0:47</strong>
+            [10] => FooBar draft updated
+        )
+
+    [tc_product_variation] => Array
+        (
+            [6] => Variant Group saved successfully.
+        )
+
+)
+
+[17-Feb-2012 00:49:01] PHP Notice:  Trying to get property of non-object in /Users/rich/Desktop/tastyclouds/multisite/wp-admin/includes/template.php on line 854

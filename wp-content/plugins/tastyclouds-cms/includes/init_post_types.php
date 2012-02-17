@@ -7,6 +7,7 @@ add_action('init', 'register_tc_variation_group_posttype');
 add_action('init', 'register_tc_variation_item_posttype');
 add_action('init', 'my_custom_init');
 
+
 function my_custom_init() {
 
 	add_post_type_support( 'tc_products', 'genesis-seo' );
@@ -162,9 +163,9 @@ function register_tc_product_variation_posttype() {
 	$post_type_args = array(
 		'labels' 			=> $labels,
 		'singular_label' 	=> __('Product Variation'),
-		'public' 			=> true,
+		'public' 			=> false,
 		'show_ui' 			=> true,
-		'publicly_queryable'=> true,
+		'publicly_queryable'=> false,
 		'query_var'			=> 'tc_product_variation',
 		'capability_type' 	=> 'post',
 		'has_archive' 		=> false,

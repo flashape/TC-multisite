@@ -18,6 +18,16 @@ if (!defined('TASTY_PLUGIN_INC_DIR')) {
     define('TASTY_PLUGIN_METABOX_DIR', TASTY_PLUGIN_DIR . 'includes/metabox/');
 }
 
+if(!defined('TC_SHARED_DIR')){
+    define('TC_SHARED_DIR', WP_CONTENT_DIR.'/tc_shared/');
+}
+
+if(!defined('TC_SHARED_JS_URL')){
+    define('TC_SHARED_JS_URL', WP_CONTENT_URL . '/tc_shared/js/');
+}
+
+
+
 define('TC_MENU_POSITION_CONTACT', 1);
 define('TC_MENU_POSITION_ORDERS', 3);
 define('TC_MENU_POSITION_PAYMENTS', 4);
@@ -64,7 +74,7 @@ if(!defined('TC_JS_DIR')){
 
 // include the class in your theme or plugin
 //include_once 'wpalchemy/MetaBox.php';
-include_once WP_CONTENT_DIR.'/wpalchemy/MetaBox.php';
+include_once TC_SHARED_DIR.'/wpalchemy/MetaBox.php';
 
 
 
@@ -933,7 +943,7 @@ function tc_crm_admin_enqueue_scripts(){
 	wp_register_script('validate-additional-methods','http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js' , array('jquery'));
 	wp_enqueue_script( 'validate' ); 
 	wp_enqueue_script( 'validate-additional-methods' );
-	wp_enqueue_script( 'ba-debug', TC_JS_DIR .'/ba-debug.js', __FILE__ );
+	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_DIR .'/ba-debug.js', __FILE__ );
 	
 
 	wp_enqueue_script('jquery-ui-datepicker', TC_JS_DIR . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
