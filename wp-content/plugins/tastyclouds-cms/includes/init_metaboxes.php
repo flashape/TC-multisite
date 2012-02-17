@@ -8,26 +8,38 @@ include_once TC_SHARED_DIR.'wpalchemy/MetaBox.php';
 
 
 
-$product_options_metabox = new WPAlchemy_MetaBox(array
+$variation_options_metabox = new WPAlchemy_MetaBox(array
 (
-	'id' => 'product_options',
+	'id' => 'variation_options',
 	'title' => 'Variation Options',
 	'types' => array('tc_product_variation'),
 	'mode' => WPALCHEMY_MODE_ARRAY,
-	'prefix' => '_tc_product_options_',
+	'prefix' => '_tc_variation_options_',
 	'hide_title' => true,
-	'init_action' => 'onProductOptionsMetaboxInitAction',
-	'foot_action' => 'onProductOptionsMetaboxFooterAction',
-	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ProductOptionsMetabox.php',
+	'foot_action' => 'onVariantOptionsMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'VariantOptionsMetabox.php',
 
 ));
 
-function onProductOptionsMetaboxInitAction() {
-	add_filter( 'post_updated_messages', 'product_options_messages_filter' );
-	
-}
+$variation_items_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'variation_items',
+	'title' => 'Variation Items',
+	'types' => array('tc_product_variation'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_variation_items_',
+	'hide_title' => false,
+	'foot_action' => 'onVariationItemsMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'VariationItemsMetabox.php',
 
-function product_options_messages_filter($messages){
+));
+
+// function onVariantOptionsMetaboxInitAction() {
+// 	add_filter( 'post_updated_messages', 'variant_options_messages_filter' );
+// 	
+// }
+
+function variant_options_messages_filter($messages){
 	$messages['tc_product_variation'][6] =  __('Variation saved successfully.');
 	return $messages;
 }

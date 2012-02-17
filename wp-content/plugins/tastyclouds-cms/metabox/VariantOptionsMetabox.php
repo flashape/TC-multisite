@@ -22,6 +22,22 @@
 </div>
 
 
+
+	
+	
+
+<?php
+function onProductOptionsMetaboxInitAction() {
+	add_filter( 'post_updated_messages', 'product_options_messages_filter' );
+	
+}
+
+function product_options_messages_filter($messages){
+	$messages[6] =  __('Variant Group saved successfully.');
+	
+	return $messages;
+}
+?>
 <?php
 function onProductOptionsMetaboxFooterAction() {
 	?>

@@ -13,31 +13,18 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
 }
 
 
-if (!defined('TASTY_CMS_PLUGIN_INC_DIR')) {
-    define('TASTY_CMS_PLUGIN_INC_DIR', TASTY_CMS_PLUGIN_DIR . 'includes/');
-    define('TASTY_CMS_PLUGIN_METABOX_DIR', TASTY_CMS_PLUGIN_DIR . 'metabox/');
-}
-
-if(!defined('TC_CMS_JS_DIR')){
-    define('TC_CMS_JS_DIR', plugins_url('tastyclouds-cms/js/'));
-}
-
-if(!defined('TC_SHARED_DIR')){
-    define('TC_SHARED_DIR', WP_CONTENT_DIR.'/tc_shared/');
-}
-
-if(!defined('TC_SHARED_JS_URL')){
-    define('TC_SHARED_JS_URL', WP_CONTENT_URL . '/tc_shared/js/');
-}
-
 // turn off wp 'doing it wrong' errors like "[somefunction]_called_incorrectly"
 add_filter('doing_it_wrong_trigger_error', 'on_doing_it_wrong_trigger_error_filter');
 function on_doing_it_wrong_trigger_error_filter(){
 	return false;
 }
 
+require_once(TASTY_CMS_PLUGIN_DIR .'includes/init_constants.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
 
