@@ -6,7 +6,10 @@
 ?>
 
 <style>
-
+.variationItemRowBottomBorder {
+	width:350px;
+	border-bottom: 1px solid #ccc;
+}
 </style>
 
 
@@ -58,7 +61,7 @@
 <div id="variationItemRowTemplate" class="variationItemRow" style="display:none;">
 	
 	<div class="defaultState" style="display:none;">
-		Item: <span class="variantTitle"></span> SKU Ext: <span class="skuExtension"></span>
+		<div style="display:inline-block;width:250px;"><b>Item:</b> <span class="variantTitle"></span></div> <b>SKU Ext:</b><span class="skuExtension"></span>
 	</div>
 
 	
@@ -66,7 +69,7 @@
 		Label: <input type="text" class="variantTitleInput" />
 		Sku# Extension: <input type="text" class="skuExtensionInput" />
 	</div>
-	
+	<div class="variationItemRowBottomBorder" />
 <div>
 
 <?php
