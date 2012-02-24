@@ -19,4 +19,8 @@ if(!defined('TC_SHARED_JS_URL')){
     define('TC_SHARED_JS_URL', WP_CONTENT_URL . '/tc_shared/js/');
 }
 
+if(!defined('TC_SHARED_CSS_URL')){
+    define('TC_SHARED_CSS_URL', WP_CONTENT_URL . '/tc_shared/css/');
+}
+
 ?>

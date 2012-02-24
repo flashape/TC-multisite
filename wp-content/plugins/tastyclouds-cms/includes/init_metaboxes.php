@@ -34,6 +34,19 @@ $variation_items_metabox = new WPAlchemy_MetaBox(array
 
 ));
 
+$product_variation_rules_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'variation_rules',
+	'title' => 'Variation Rules',
+	'types' => array('tc_products'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_variation_rules_',
+	'hide_title' => false,
+	'foot_action' => 'onProductVariationRulesMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ProductVariationRulesMetabox.php',
+
+));
+
 // function onVariantOptionsMetaboxInitAction() {
 // 	add_filter( 'post_updated_messages', 'variant_options_messages_filter' );
 // 	

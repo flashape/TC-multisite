@@ -16,4 +16,26 @@ function register_p2p_connections() {
 		
 		) 
 	);
+	
+	
+	p2p_register_connection_type( array(
+		'name' => 'variation_to_product',
+		'from' => 'tc_product_variation',
+		'to' => 'tc_products',
+		'reciprocal' => true,
+		'cardinatlity'=>'many-to-one',
+		'admin_box' => false
+		) 
+	);
+	
+	
+	p2p_register_connection_type( array(
+		'name' => 'variation_rule_to_product',
+		'from' => 'tc_variation_rule',
+		'to' => 'tc_products',
+		'reciprocal' => true,
+		'cardinatlity'=>'many-to-one',
+		'admin_box' => false
+		) 
+	);
 }

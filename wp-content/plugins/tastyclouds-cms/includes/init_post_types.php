@@ -5,6 +5,7 @@ add_action('init', 'register_tc_products_posttype');
 add_action('init', 'register_tc_product_variation_posttype');
 add_action('init', 'register_tc_variation_group_posttype');
 add_action('init', 'register_tc_variation_item_posttype');
+add_action('init', 'register_tc_variation_rule_posttype');
 add_action('init', 'my_custom_init');
 
 
@@ -180,7 +181,6 @@ function register_tc_product_variation_posttype() {
 // ----------------  
 // Register Product Variation Item post types
 // Used for defining variation items in a group, i.e. "Apple", "Banana" posts for a "Flavor" Variant
-// Metadata can contain info such as Label, Surchage, Surcharge Type (i.e. + or - dollars, percent), weight, item sku # extension, etc.
 // ----------------
 
 function register_tc_variation_item_posttype() {
@@ -254,6 +254,47 @@ function register_tc_variation_group_posttype() {
 		'menu_position' 	=> 0,
 	 );
 	 register_post_type('tc_variant_group',$post_type_args);
+}
+
+// ----------------  
+// Register Product Variation Rule post types
+// After assigning a Variation Group to a product, 
+// each Variation Item in the Group can be assigned a Variaiton Rule,
+// Such as "if {flavor} is {equal to} Strawberry Jalepeno {add} XX to {total}"
+// ----------------
+
+function register_tc_variation_rule_posttype() {
+	$labels = array(
+		'name' 				=> _x( 'Variant Rules', 'post type general name' ),
+		'singular_name'		=> _x( 'Variant Rule', 'post type singular name' ),
+		'add_new' 			=> _x( 'Add New', 'Variant Rule'),
+		'add_new_item' 		=> __( 'Add New Variant Rule'),
+		'edit_item' 		=> __( 'Edit Variant Rule'),
+		'new_item' 			=> __( 'New Variant Rule'),
+		'view_item' 		=> __( 'View Variant Rules'),
+		'search_items' 		=> __( 'Search Variant Rules'),
+		'not_found' 		=>  __( 'No Variant Rules found' ),
+		'not_found_in_trash'=> __( 'No Variant Rules found in Trash' ),
+		'parent_item_colon' => ''
+	);
+	
+	$supports = array('title');
+	
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'singular_label' 	=> __('Variant Rule'),
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> 'tc_variation_rule',
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> true,
+		'rewrite' 			=> array('slug' => 'variation_rule', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0,
+	 );
+	 register_post_type('tc_variation_rule',$post_type_args);
 }
 
 

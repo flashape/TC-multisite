@@ -25,6 +25,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');
 
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
 
@@ -60,6 +61,8 @@ function tc_cms_admin_enqueue_scripts(){
 	wp_enqueue_script( 'validate' ); 
 	wp_enqueue_script( 'validate-additional-methods' );
 	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_URL .'/ba-debug.js', __FILE__ );
+	
+	wp_enqueue_style('jquery.ui.theme', TC_SHARED_CSS_URL .'jqueryui/smoothness/jquery-ui-1.8.16.custom.css', __FILE__);
 	
 	
 }
