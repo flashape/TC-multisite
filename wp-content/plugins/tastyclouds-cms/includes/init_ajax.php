@@ -12,6 +12,8 @@ add_action( 'wp_ajax_tc_get_rules_for_variation', array('ProductVariationRulesAj
 
 add_action( 'wp_ajax_tc_insert_variation_rule', array('ProductVariationRulesAjax', 'insertVariationRule') );
 add_action( 'wp_ajax_tc_update_variation_rule', array('ProductVariationRulesAjax', 'updateVariationRule') );
+add_action( 'wp_ajax_tc_delete_variation_rule', array('ProductVariationRulesAjax', 'deleteVariationRule') );
+
 // add_action( 'wp_ajax_tc_update_variation_item', array('VariationItemAjax', 'updateVariationItem') );
 // add_action( 'wp_ajax_tc_delete_variation_item', array('VariationItemAjax', 'deleteVariationItem') );
 // add_action( 'wp_ajax_tc_get_variation_items', array('VariationItemAjax', 'getItemsForVariation') );

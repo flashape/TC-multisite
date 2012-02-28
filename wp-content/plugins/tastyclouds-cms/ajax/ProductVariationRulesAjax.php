@@ -125,14 +125,14 @@ class ProductVariationRulesAjax
 	}
 			
 	function deleteVariationRule($data){
-		// $model = self::jsonDecodePostKey('model');
-		// 
-		// 
-		// $variationItemID = $model->id;
-		// wp_delete_post($variationItemID);
-		// 
-		// $result = self::createResult('VariationRule deleted successfully.', true, array('model'=>$model) );
-		// self::returnJson($result);
+		$model = self::jsonDecodePostKey('model');
+		
+		
+		$variationItemID = $model->id;
+		wp_delete_post($variationItemID);
+		
+		$result = self::createResult('VariationRule deleted successfully.', true, array('model'=>$model) );
+		self::returnJson($result);
 	}
 	
 

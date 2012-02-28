@@ -17,6 +17,12 @@
 	border: 1px solid #ccc;
 	overflow:auto;
 }
+.variationRuleContainer {
+	padding-bottom:20px;
+	margin-bottom:30px;
+	border: 1px solid #ccc;
+	
+}
 .changes-for-rule {
 	max-height:200px;
 	border: 1px solid #ccc;
@@ -51,7 +57,13 @@
 }
 
 
+.editVariationLabelDiv{
+	background-color:yellow;
+}
 
+
+/*.ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+*/
 
 </style>
 
@@ -100,6 +112,7 @@
 
 
 function onProductVariationRulesMetaboxFooterAction() {
+	
 	?>
 	<script type="text/javascript">
 
@@ -107,6 +120,12 @@ function onProductVariationRulesMetaboxFooterAction() {
 		$( "#tc-variation-rules-dialog" ).dialog({
 			modal: true,
 			autoOpen: false,
+			resizable: false,
+		    width:400,
+			zIndex: 3999,
+			closeOnEscape:false,
+			close: onDialogClose,
+			
 			buttons: {
 				"Cancel": function() {
 					//$( this ).dialog( "close" );
@@ -116,6 +135,7 @@ function onProductVariationRulesMetaboxFooterAction() {
 				"Save and Close": function() {
 					onVariationRuleEditEnd($( "#tc-variation-rules-dialog" ).data('selectedRuleRow'));
 				},
+
 
 			}
 		});
@@ -476,9 +496,9 @@ function onProductVariationRulesMetaboxFooterAction() {
 		function onVariationRuleEditEnd(row){
 			debug.log("onVariationItemEditEnd", row);
 			changed = variationRuleChanged(row);
+			debug.log('changed : '+changed);
 		
-		
-		
+			
 		
 			if( changed ){
 				saveVariationRule(row);
@@ -491,8 +511,27 @@ function onProductVariationRulesMetaboxFooterAction() {
 			}
 			
 			$( "#tc-variation-rules-dialog" ).dialog('close');
+			//resetRuleDialog();
+		}
+		
+		function onDialogClose(event, ui){
+			debug.log('dialog closed! :');
+			debug.log('event : ', event);
+			debug.log('ui : ', ui);
+			var row = $( "#tc-variation-rules-dialog" ).data('selectedRuleRow');
+			
+			
+			if( $(event.currentTarget).hasClass('ui-dialog-titlebar-close') ){
+				// the 'X' button was used to close the dialog window
+				if (row.data('model').id == 0){
+					row.remove();
+				}
+			}
+			
+			
 			resetRuleDialog();
 		}
+		
 				
 		function onVariationRuleEditCancel(row){
 			debug.log("onVariationRuleEditCancel", row);
@@ -502,7 +541,7 @@ function onProductVariationRulesMetaboxFooterAction() {
 			}
 			
 			$( "#tc-variation-rules-dialog" ).dialog('close');
-			resetRuleDialog();
+			//resetRuleDialog();
 			
 			
 		}
@@ -521,7 +560,9 @@ function onProductVariationRulesMetaboxFooterAction() {
 			var newData = getUpdatedVariationRuleData(row);
 			
 			// will only work if both arrays contain numbers
-			if(newData.selectedItems.sort().join(',') === model.selectedItems.sort().join(',')){
+			debug.log("newData.selectedItems : ", newData.selectedItems.sort().join(','));
+			debug.log("model.selectedItems : ", model.selectedItems.sort().join(','));
+			if(newData.selectedItems.sort().join(',') !== model.selectedItems.sort().join(',')){
 				return true;
 			}
 			
@@ -557,6 +598,26 @@ function onProductVariationRulesMetaboxFooterAction() {
 			return model;
 			//saveVariationRule(model )
 		}
+		
+		
+		function deleteVariationRule(row) {
+			var data = {};
+			data.action = 'tc_delete_variation_rule';
+
+			data.model = JSON.stringify(row.data("model"));
+			data.postID = jQuery('#post_ID').val();
+			row.remove();
+
+			jQuery.post(ajaxurl, data, 
+				function (result){
+					debug.log('deleteVariationRule result:'+result.message);
+					debug.log(result);				
+				},
+				'json'
+			);
+		}
+		
+		
 		
 		
 		function saveVariationRule(row){
@@ -664,6 +725,11 @@ function onProductVariationRulesMetaboxFooterAction() {
 			newRow.data("row", newRow);
 			newRow.data("container", container);
 			
+			newRow.find('.deleteRuleButton').button();
+			newRow.find('.deleteRuleButton').on('click', function(){
+				deleteVariationRule(newRow.data('row'));
+				return false;
+			});
 			// newRow.find('.defaultState').hide();
 			// 
 			// newRow.find('.editState')
@@ -738,11 +804,12 @@ function onProductVariationRulesMetaboxFooterAction() {
 			<button class="cancelEditVariationLabelButton">Cancel</button>
 		</div>
 		<button class="editVariationLabelButton">Edit label</button>
-		<button class="removeVariationFromProductButton alignright">Remove This Variation From Product</button>
+		<button class="removeVariationFromProductButton alignright">Remove Variation</button>
 		<button class="addVariationRuleButton alignright">Create Variation Rule</button>
 	</span>
-	<span class="description">Double-click rule name below to edit.</span>
-	<div class="variation-rules-for-product">
+	
+	<span class="description" style="padding:0px 10px;">Double-click rule name below to edit.</span>
+	<div class="variation-rules-for-product" style="padding:0px 10px;">
 		<ul class="variation-rules-list">
 			
 		</ul>
@@ -753,6 +820,7 @@ function onProductVariationRulesMetaboxFooterAction() {
 
 
 <div id="variationRuleRowTemplate" class="variationRuleRow" style="display:none;">
+	<button class="deleteRuleButton">x</button>
 	<div style="display:inline-block;width:300px;"><span class="variationRuleTitle"></span></div>
 	<div class="variationItemRowBottomBorder"></div>
 </div>
