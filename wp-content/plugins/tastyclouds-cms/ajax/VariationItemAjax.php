@@ -88,7 +88,7 @@ class VariationItemAjax
 			$variationItems[(int)$variationItemID] = json_decode(get_post_meta($variationItemID, '_variation_item_model', true));
 		}
 		ksort($variationItems, SORT_NUMERIC);
-		$result = self::createResult("Variation Items found for $postType", true, array('variationItems'=>array_values($variationItems)) );
+		$result = self::createResult("Variation Items found for postID: $thePostID", true, array('variationItems'=>array_values($variationItems)) );
 		self::returnJson($result);
 	}
 	

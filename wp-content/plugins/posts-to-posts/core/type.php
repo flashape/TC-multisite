@@ -49,8 +49,12 @@ class Generic_Connection_Type {
 	private function set_labels( &$args ) {
 		foreach ( array( 'from', 'to' ) as $key ) {
 			$labels = _p2p_pluck( $args, $key . '_labels' );
+
 			if ( empty( $labels ) )
 				$labels = $this->side[ $key ]->get_labels();
+			else
+				$labels = (object) $labels;
+
 			$this->labels[ $key ] = $labels;
 		}
 	}
@@ -115,7 +119,7 @@ class Generic_Connection_Type {
 	 */
 	public function find_direction( $arg, $instantiate = true ) {
 		foreach ( array( 'from', 'to' ) as $direction ) {
-			if ( !$this->side[ $direction ]->recognize_item( $arg ) )
+			if ( !$this->side[ $direction ]->item_recognize( $arg ) )
 				continue;
 
 			if ( $this->indeterminate )
@@ -125,24 +129,6 @@ class Generic_Connection_Type {
 		}
 
 		return false;
-	}
-}
-
-
-class P2P_Connection_Type extends Generic_Connection_Type {
-
-	public function __construct( $args ) {
-		parent::__construct( $args );
-
-		$common = array_intersect( $this->from, $this->to );
-
-		if ( !empty( $common ) )
-			$this->indeterminate = true;
-	}
-
-	public function __get( $key ) {
-		if ( 'from' == $key || 'to' == $key )
-			return $this->side[ $key ]->post_type;
 	}
 
 	/**
@@ -181,25 +167,38 @@ class P2P_Connection_Type extends Generic_Connection_Type {
 		}
 		$extra_qv['nopaging'] = true;
 
-		$q = $directed->get_connected( array_keys( $posts ), $extra_qv );
+		$q = $directed->get_connected( array_keys( $posts ), $extra_qv, 'abstract' );
 
-		foreach ( $q->posts as $inner_post ) {
-			if ( $inner_post->ID == $inner_post->p2p_from )
-				$outer_post_id = $inner_post->p2p_to;
-			elseif ( $inner_post->ID == $inner_post->p2p_to )
-				$outer_post_id = $inner_post->p2p_from;
-			else {
-				trigger_error( "Corrupted data for post $inner_post->ID", E_USER_WARNING );
+		foreach ( $q->items as $inner_item ) {
+			if ( $inner_item->ID == $inner_item->p2p_from ) {
+				$outer_item_id = $inner_item->p2p_to;
+			} elseif ( $inner_item->ID == $inner_item->p2p_to ) {
+				$outer_item_id = $inner_item->p2p_from;
+			} else {
+				trigger_error( "Corrupted data for item $inner_item->ID", E_USER_WARNING );
 				continue;
 			}
 
-			if ( $outer_post_id == $inner_post->ID ) {
-				trigger_error( 'Post connected to itself.', E_USER_WARNING );
-				continue;
-			}
-
-			array_push( $posts[ $outer_post_id ]->$prop_name, $inner_post );
+			array_push( $posts[ $outer_item_id ]->$prop_name, $inner_item );
 		}
+	}
+}
+
+
+class P2P_Connection_Type extends Generic_Connection_Type {
+
+	public function __construct( $args ) {
+		parent::__construct( $args );
+
+		$common = array_intersect( $this->from, $this->to );
+
+		if ( !empty( $common ) )
+			$this->indeterminate = true;
+	}
+
+	public function __get( $key ) {
+		if ( 'from' == $key || 'to' == $key )
+			return $this->side[ $key ]->post_type;
 	}
 
 	/**

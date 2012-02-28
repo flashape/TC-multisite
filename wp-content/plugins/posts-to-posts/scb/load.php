@@ -1,15 +1,20 @@
 <?php
 
-$GLOBALS['_scb_data'] = array( 47, __FILE__, array(
+$GLOBALS['_scb_data'] = array( 50, __FILE__, array(
 	'scbUtil', 'scbOptions', 'scbForms', 'scbTable',
 	'scbWidget', 'scbAdminPage', 'scbBoxesPage',
 	'scbCron', 'scbHooks',
 ) );
 
 if ( !class_exists( 'scbLoad4' ) ) :
+/**
+ * The main idea behind this class is to load the most recent version of the scb classes available.
+ *
+ * It waits until all plugins are loaded and then does some crazy hacks to make activation hooks work.
+ */
 class scbLoad4 {
 
-	private static $candidates;
+	private static $candidates = array();
 	private static $classes;
 	private static $callbacks = array();
 

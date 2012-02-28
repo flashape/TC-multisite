@@ -8,8 +8,29 @@ class scbForms {
 
 	protected static $cur_name;
 
+	function input_with_value( $args, $value ) {
+		if ( !is_null( $value ) ) {
+			switch ( $args['type'] ) {
+			case 'select':
+			case 'radio':
+				$args['selected'] = $value;
+				break;
+			case 'checkbox':
+				if ( is_array( $value ) )
+					$args['checked'] = $value;
+				else
+					$args['checked'] = ( $value || ( isset( $args['value'] ) && $value == $args['value'] ) );
+				break;
+			default:
+				$args['value'] = $value;
+			}
+		}
+
+		return self::input( $args );
+	}
+
 	static function input( $args, $formdata = false ) {
-		if ( !empty( $formdata ) ) {
+		if ( false !== $formdata ) {
 			$form = new scbForm( $formdata );
 			return $form->input( $args );
 		}
@@ -185,7 +206,7 @@ class scbForms {
 			if ( is_array( $args['desc'] ) ) {
 				$values = array_combine( $values, $args['desc'] );	// back-compat
 				$args['desc'] = false;
-			} elseif ( !$args['numeric'] ) {
+			} elseif ( !isset( $args['numeric'] ) || !$args['numeric'] ) {
 				$values = array_combine( $values, $values );
 			}
 		}
@@ -378,10 +399,11 @@ class scbForms {
 	 * Given a list of fields, extract the appropriate POST data and return it.
 	 *
 	 * @param array $fields List of args that would be sent to scbForms::input()
+	 * @param array $to_update Existing data to update
 	 *
 	 * @return array
 	 */
-	static function validate_post_data( $fields ) {
+	static function validate_post_data( $fields, $to_update = array() ) {
 		foreach ( $fields as $field ) {
 			$value = scbForms::get_value( $field['name'], $_POST );
 
@@ -397,6 +419,8 @@ class scbForms {
 				break;
 			case 'radio':
 			case 'select':
+				self::_expand_values( $field );
+
 				if ( !isset( $field['values'][ $value ] ) )
 					continue 2;
 			}
@@ -405,6 +429,37 @@ class scbForms {
 		}
 
 		return $to_update;
+	}
+
+	static function input_from_meta( $args, $object_id, $meta_type = 'post' ) {
+		$single = ( 'checkbox' != $args['type'] );
+
+		$key = (array) $args['name'];
+		$key = end( $key );
+
+		$value = get_metadata( $meta_type, $object_id, $key, $single );
+
+		return self::input_with_value( $args, $value );
+	}
+
+	static function update_meta( $fields, $data, $object_id, $meta_type = 'post' ) {
+		foreach ( $fields as $field_args ) {
+			$key = $field_args['name'];
+
+			if ( 'checkbox' == $field_args['type'] ) {
+				$new_values = isset( $data[$key] ) ? $data[$key] : array();
+
+				$old_values = get_metadata( $meta_type, $object_id, $key );
+
+				foreach ( array_diff( $new_values, $old_values ) as $value )
+					add_metadata( $meta_type, $object_id, $key, $value );
+
+				foreach ( array_diff( $old_values, $new_values ) as $value )
+					delete_metadata( $meta_type, $object_id, $key, $value );
+			} else {
+				update_metadata( $meta_type, $object_id, $key, $data[$key] );
+			}
+		}
 	}
 
 	private static function set_value( &$arr, $name, $value ) {
@@ -430,6 +485,7 @@ class scbForms {
 	}
 }
 
+
 /**
  * A wrapper for scbForms, containing the formdata
  */
@@ -454,30 +510,15 @@ class scbForm {
 	}
 
 	function input( $args ) {
-		$value = scbForms::get_value( $args['name'], $this->data );
+		$default = isset( $args['default'] ) ? $args['default'] : null;
 
-		if ( !is_null( $value ) ) {
-			switch ( $args['type'] ) {
-			case 'select':
-			case 'radio':
-				$args['selected'] = $value;
-				break;
-			case 'checkbox':
-				if ( is_array( $value ) )
-					$args['checked'] = $value;
-				else
-					$args['checked'] = ( $value || ( isset( $args['value'] ) && $value == $args['value'] ) );
-				break;
-			default:
-				$args['value'] = $value;
-			}
-		}
+		$value = scbForms::get_value( $args['name'], $this->data, $default );
 
 		if ( !empty( $this->prefix ) ) {
 			$args['name'] = array_merge( $this->prefix, (array) $args['name'] );
 		}
 
-		return scbForms::input( $args );
+		return scbForms::input_with_value( $args, $value );
 	}
 }
 

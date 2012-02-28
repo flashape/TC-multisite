@@ -1,8 +1,6 @@
 <?php
 
-/**
- * @internal
- */
+/** @internal */
 function _p2p_expand_direction( $direction ) {
 	if ( 'any' == $direction )
 		return array( 'from', 'to' );
@@ -10,9 +8,7 @@ function _p2p_expand_direction( $direction ) {
 		return array( $direction );
 }
 
-/**
- * @internal
- */
+/** @internal */
 function _p2p_meta_sql_helper( $data ) {
 	global $wpdb;
 
@@ -30,22 +26,19 @@ function _p2p_meta_sql_helper( $data ) {
 	return get_meta_sql( $meta_query, 'p2p', $wpdb->p2p, 'p2p_id' );
 }
 
-/**
- * @internal
- */
+/** @internal */
 function _p2p_pluck( &$arr, $key ) {
 	$value = $arr[ $key ];
 	unset( $arr[ $key ] );
 	return $value;
 }
 
+/** @internal */
 function _p2p_append( &$arr, $values ) {
 	$arr = array_merge( $arr, $values );
 }
 
-/**
- * @internal
- */
+/** @internal */
 function _p2p_get_field_type( $args ) {
 	if ( isset( $args['type'] ) )
 		return $args['type'];
@@ -54,5 +47,13 @@ function _p2p_get_field_type( $args ) {
 		return 'select';
 
 	return 'text';
+}
+
+/** @internal */
+function _p2p_first( $args ) {
+	if ( empty( $args ) )
+		return false;
+
+	return reset( $args );
 }
 

@@ -79,8 +79,10 @@ function panalo_contact_admin_footer(){
 
 
 function tc_crm_move_order_metabox_scripts(){
-	wp_enqueue_script( 'caret', TC_JS_DIR. 'jquery.caret.1.02.js');
-	wp_enqueue_script('jquery-forcepriceonly', TC_JS_DIR.'tc/jquery.forcepriceonly.js', array('caret'));
+	wp_enqueue_script( 'caret', TC_SHARED_JS_DIR. 'jquery.caret.1.02.js');
+	//wp_enqueue_script( 'caret', TC_JS_DIR. 'jquery.caret.1.02.js');
+	//wp_enqueue_script('jquery-forcepriceonly', TC_JS_DIR.'tc/jquery.forcepriceonly.js', array('caret'));
+	wp_enqueue_script('jquery-forcepriceonly', TC_SHARED_JS_DIR.'jquery.forcepriceonly.js', array('caret'));
 	
 	wp_enqueue_script('tc-utils', TC_JS_DIR.'tc/utils.js');
 	

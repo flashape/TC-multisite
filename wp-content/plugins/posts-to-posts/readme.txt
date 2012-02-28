@@ -3,7 +3,7 @@ Contributors: scribu, ciobi
 Tags: connections, custom post types, relationships, many-to-many, users
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 
 Efficient many-to-many connections between posts, pages, custom post types, users.
 
@@ -49,6 +49,14 @@ Make sure your host is running PHP 5. The only foolproof way to do this is to ad
 4. Widget
 
 == Changelog ==
+
+= 1.1.5 =
+* added P2P_Connection_Type->replace() method
+* added 'self_connections' flag to p2p_register_connection_type()
+* made P2P_Connection_Type->each_connected() work for posts-to-users connections
+* made admin list table columns work for posts-to-users connections
+* fixed 'from_labels' and 'to_labels' parameters
+* fixed search being limited only to post titles
 
 = 1.1.4 =
 * show attachment thumbnail instead of title

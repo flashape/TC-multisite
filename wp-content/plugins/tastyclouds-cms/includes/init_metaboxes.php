@@ -42,10 +42,22 @@ $product_variation_rules_metabox = new WPAlchemy_MetaBox(array
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_variation_rules_',
 	'hide_title' => false,
+	'head_action' => 'onProductVariationRulesMetaboxHeadAction',
 	'foot_action' => 'onProductVariationRulesMetaboxFooterAction',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ProductVariationRulesMetabox.php',
 
 ));
+
+
+
+function onProductVariationRulesMetaboxHeadAction(){
+	wp_enqueue_script( 'caret', TC_SHARED_JS_URL. 'jquery.caret.1.02.js');
+	//wp_enqueue_script( 'caret', TC_JS_DIR. 'jquery.caret.1.02.js');
+	//wp_enqueue_script('jquery-forcepriceonly', TC_JS_DIR.'tc/jquery.forcepriceonly.js', array('caret'));
+	wp_enqueue_script('jquery-forcepriceonly', TC_SHARED_JS_URL.'jquery.forcepriceonly.js', array('caret'));	
+}
+
+
 
 // function onVariantOptionsMetaboxInitAction() {
 // 	add_filter( 'post_updated_messages', 'variant_options_messages_filter' );

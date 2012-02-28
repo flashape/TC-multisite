@@ -80,22 +80,14 @@ class P2P_Field_Generic implements P2P_Field {
 
 	function render( $p2p_id, $post_id ) {
 		$args = array(
-			'name' => $this->key,
+			'name' => array( 'p2p_meta', $p2p_id, $this->key ),
 			'type' => $this->data['type']
 		);
 
 		if ( isset( $this->data['values'] ) )
 			$args['value'] = $this->data['values'];
 
-		$single_value = ( 'checkbox' != $args['type'] );
-
-		$data = array(
-			$this->key => p2p_get_meta( $p2p_id, $this->key, $single_value )
-		);
-
-		$form = new scbForm( $data, array( 'p2p_meta', $p2p_id ) );
-
-		return $form->input( $args );
+		return scbForms::input_from_meta( $args, $p2p_id, 'p2p' );
 	}
 }
 
@@ -155,11 +147,9 @@ class P2P_Field_Title_Attachment extends P2P_Field_Title_Post {
 class P2P_Field_Title_User extends P2P_Field_Title_Post {
 
 	function render( $p2p_id, $user_id ) {
-		$user = get_user_by( 'id', $user_id );
-
 		$data = array(
 			'title-attr' => '',
-			'title' => $user->display_name,
+			'title' => get_user_by( 'id', $user_id )->display_name,
 			'url' => $this->get_edit_url( $user_id ),
 		);
 

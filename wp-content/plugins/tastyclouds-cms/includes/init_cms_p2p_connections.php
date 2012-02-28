@@ -23,6 +23,7 @@ function register_p2p_connections() {
 		'from' => 'tc_product_variation',
 		'to' => 'tc_products',
 		'reciprocal' => true,
+		'prevent_duplicates' => false,
 		'cardinatlity'=>'many-to-one',
 		'admin_box' => false
 		) 

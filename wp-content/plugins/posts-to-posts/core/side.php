@@ -50,39 +50,7 @@ class P2P_Side_Post extends P2P_Side {
 		return new WP_Query( $args );
 	}
 
-	private static $admin_box_qv = array(
-		'update_post_term_cache' => false,
-		'update_post_meta_cache' => false,
-		'post_status' => 'any',
-	);
-
-	function get_connections( $directed, $item_id ) {
-		$qv = array_merge( self::$admin_box_qv, array(
-			'nopaging' => true
-		) );
-
-		$query = $directed->get_connected( $item_id, $qv );
-
-		return scb_list_fold( $query->posts, 'p2p_id', 'ID' );
-	}
-
-	function get_connectable( $item_id, $page, $search, $to_exclude, $directed ) {
-		$qv = array_merge( $this->get_base_qv(), self::$admin_box_qv, array(
-			'posts_per_page' => ADMIN_BOX_PER_PAGE,
-			'paged' => $page,
-		) );
-
-		if ( $search ) {
-			$qv['_p2p_box'] = true;
-			$qv['s'] = $search;
-		}
-
-		$qv['post__not_in'] = $to_exclude;
-
-		$qv = apply_filters( 'p2p_connectable_args', $qv, $directed, $item_id );
-
-		$query = new WP_Query( $qv );
-
+	function abstract_query( $query ) {
 		return (object) array(
 			'items' => $query->posts,
 			'current_page' => max( 1, $query->get('paged') ),
@@ -90,14 +58,37 @@ class P2P_Side_Post extends P2P_Side {
 		);
 	}
 
-	function item_exists( $item_id ) {
-		return (bool) get_post( $item_id );
+	private static $admin_box_qv = array(
+		'update_post_term_cache' => false,
+		'update_post_meta_cache' => false,
+		'post_status' => 'any',
+	);
+
+	function get_connections_qv() {
+		return array_merge( self::$admin_box_qv, array(
+			'nopaging' => true
+		) );
+	}
+
+	function get_connectable_qv( $item_id, $page, $search, $to_exclude ) {
+		$qv = array_merge( $this->get_base_qv(), self::$admin_box_qv, array(
+			'posts_per_page' => ADMIN_BOX_PER_PAGE,
+			'paged' => $page,
+		) );
+
+		if ( $search ) {
+			$qv['s'] = $search;
+		}
+
+		$qv['post__not_in'] = $to_exclude;
+
+		return $qv;
 	}
 
 	/**
 	 * @param mixed A post type, a post id, a post object, an array of post ids or of objects.
 	 */
-	function recognize_item( $arg ) {
+	function item_recognize( $arg ) {
 		if ( is_array( $arg ) ) {
 			$arg = reset( $arg );
 		}
@@ -121,6 +112,14 @@ class P2P_Side_Post extends P2P_Side {
 
 	protected function get_ptype() {
 		return get_post_type_object( $this->post_type[0] );
+	}
+
+	function item_exists( $item_id ) {
+		return (bool) get_post( $item_id );
+	}
+
+	function item_title( $item ) {
+		return $item->post_title;
 	}
 }
 
@@ -157,16 +156,23 @@ class P2P_Side_User extends P2P_Side {
 		return new WP_User_Query( $args );
 	}
 
-	function get_connections( $directed, $item_id ) {
-		$query = $directed->get_connected( $item_id );
-
-		return scb_list_fold( $query->results, 'p2p_id', 'ID' );
+	function abstract_query( $query ) {
+		return (object) array(
+			'items' => $query->get_results(),
+			'current_page' => isset( $query->query_vars['_p2p_page'] ) ? $query->query_vars['_p2p_page'] : 1,
+			'total_pages' => ceil( $query->get_total() / ADMIN_BOX_PER_PAGE )
+		);
 	}
 
-	function get_connectable( $item_id, $page, $search, $to_exclude, $directed ) {
+	function get_connections_qv() {
+		return array();
+	}
+
+	function get_connectable_qv( $item_id, $page, $search, $to_exclude ) {
 		$qv = array_merge( $this->get_base_qv(), array(
 			'number' => ADMIN_BOX_PER_PAGE,
-			'offset' => ADMIN_BOX_PER_PAGE * ( $page - 1 )
+			'offset' => ADMIN_BOX_PER_PAGE * ( $page - 1 ),
+			'_p2p_page' => $page
 		) );
 
 		if ( $search ) {
@@ -175,23 +181,19 @@ class P2P_Side_User extends P2P_Side {
 
 		$qv['exclude'] = $to_exclude;
 
-		$qv = apply_filters( 'p2p_connectable_args', $qv, $directed, $item_id );
+		return $qv;
+	}
 
-		$query = new WP_User_Query( $qv );
-
-		return (object) array(
-			'items' => $query->get_results(),
-			'current_page' => $page,
-			'total_pages' => ceil( $query->get_total() / ADMIN_BOX_PER_PAGE )
-		);
+	function item_recognize( $arg ) {
+		return false;
 	}
 
 	function item_exists( $item_id ) {
 		return (bool) get_user_by( 'id', $item_id );
 	}
 
-	function recognize_item( $arg ) {
-		return false;
+	function item_title( $item ) {
+		return $item->display_name;
 	}
 }
 

@@ -13,23 +13,66 @@ class ProductVariationRulesAjax
 		$productID = $_POST['productID'];
 		$variationID = $_POST['variationID'];
 		$variationLabel = $_POST['variationLabel'];
+		//$title = $_POST['title'];
 		
-		p2p_type( "variation_to_product" )->connect( $variationID, $productID, array(
+		
+		
+		$p2p_id = p2p_type( "variation_to_product" )->connect( $variationID, $productID, array(
 			'variationLabel' => $variationLabel
 		));
+		
+		$model = array('title'=>$variationLabel, 'label'=>$variationLabel, 'id'=>$variationID, 'p2p_id'=>$p2p_id);
+		
+		
+		p2p_update_meta($p2p_id, 'variationToProduct_p2p_id', $p2p_id);
+		
+		//self::checkNotifications($model);
+		
+		$result = self::createResult('Variation assigned successfully', true, array('variationLabel'=>$variationLabel, 'model'=>$model) );
+		self::returnJson($result);
+	}	
+	
+	
+	function updateVariationLabel(){
+		$model = self::jsonDecodePostKey('model');
+		// $productID = $_POST['productID'];
+		// $variationID = $_POST['variationID'];
+		$variationLabel = $_POST['variationLabel'];
+		
+		$p2p_id = $model->p2p_id;
+				
+		p2p_update_meta($p2p_id, 'variationLabel', $variationLabel);
+		//$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
+		
+		$model->label = $variationLabel;
+		
+		//self::checkNotifications($model);
+		
+		$result = self::createResult('Variation label updated successfully', true, array('variationLabel'=>$variationLabel, 'model'=>$model) );
+		self::returnJson($result);
+	}
+		
+	function removeVariationFromProduct(){
+		$model = self::jsonDecodePostKey('model');
+		
+		// $connections = p2p_get_connections( 'variation_to_product', array('to'=>$productID, 'from'=>$variationID, 'fields'=>'p2p_id') );
+		// $p2p_id = $connections[0];
+		
+		p2p_delete_connection($model->p2p_id);
 		
 		
 		//self::checkNotifications($model);
 		
-		$result = self::createResult('Variation assigned successfully', true, array('variationLabel'=>$variationLabel) );
+		$result = self::createResult('Variation removed successfully', true );
 		self::returnJson($result);
 	}
 		
 	function insertVariationRule($data){
 		$model = self::jsonDecodePostKey('model');
-		$selectedItems = self::jsonDecodePostKey('selectedItems');
+		//$selectedItems = self::jsonDecodePostKey('selectedItems');
 		$productID = $_POST['productID'];
 		$variationID = $_POST['variationID'];
+		$variationToProduct_p2p_id = $_POST['variationToProduct_p2p_id'];
 		
 		$variationRuleID = self::createVariationRulePost($model);
 		
@@ -38,8 +81,9 @@ class ProductVariationRulesAjax
 			
 			update_post_meta($variationRuleID, '_variation_rule_model', json_encode($model));			
 			
-			$p2p_id = p2p_type( "variation_rule_to_product" )->connect( $variationRuleID, $productID, array(
-				'variationID' => $variationID
+			$rule_p2p_id = p2p_type( "variation_rule_to_product" )->connect( $variationRuleID, $productID, array(
+				'variationID' => $variationID,
+				'variationToProduct_p2p_id' => $variationToProduct_p2p_id,
 			));
 			
 		}
@@ -47,7 +91,7 @@ class ProductVariationRulesAjax
 		
 		//self::checkNotifications($model);
 		
-		$result = self::createResult('VariationRule saved successfully', true, array('model'=>$model, 'p2p_id'=>$p2p_id) );
+		$result = self::createResult('VariationRule saved successfully', true, array('model'=>$model, 'rule_p2p_id'=>$rule_p2p_id) );
 		self::returnJson($result);
 	}
 	
@@ -69,15 +113,15 @@ class ProductVariationRulesAjax
 	}
 		
 	function updateVariationRule($data){
-		// $model = self::jsonDecodePostKey('model');
-		// 
-		// $variationItemID = $model->id;
-		// update_post_meta($variationItemID, '_variation_rule_model', json_encode($model));
-		// 
-		// self::checkNotifications($model);
-		// 
-		// $result = self::createResult('VariationRule updated successfully.', true, array('model'=>$model) );
-		// self::returnJson($result);
+		$model = self::jsonDecodePostKey('model');
+		
+		$variationItemID = $model->id;
+		update_post_meta($variationItemID, '_variation_rule_model', json_encode($model));
+		
+		//self::checkNotifications($model);
+		
+		$result = self::createResult('VariationRule updated successfully.', true, array('model'=>$model) );
+		self::returnJson($result);
 	}
 			
 	function deleteVariationRule($data){
@@ -115,11 +159,9 @@ class ProductVariationRulesAjax
 				$variationPost = get_post($p2pConn->p2p_from);
 				$title = $variationPost->post_title;
 				$variationPostID = $variationPost->ID;
-				
+				$p2p_id = $p2pConn->p2p_id;
 				$variationLabel = p2p_get_meta($p2pConn->p2p_id, 'variationLabel', true);
-				
-				
-				$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID);
+				$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
 					
 			}
 			
@@ -132,28 +174,31 @@ class ProductVariationRulesAjax
 	}
 	
 	
-	public function getVariationRulesForProduct(){
+	public function getRulesForVariation(){
 		$productID = $_POST['productID'];
 		$variationID = $_POST['variationID'];
+		$variationToProduct_p2p_id = $_POST['variationToProduct_p2p_id'];
 		
 		
 		$connected = new WP_Query( array(
 			'connected_type' => 'variation_rule_to_product',
 			'connected_items' => $productID ,
-			'connected_meta' => array( 'variationID' => $variationID )
+			'connected_meta' => array( 'variationID' => $variationID, 'variationToProduct_p2p_id'=>$variationToProduct_p2p_id )
 		) );
 		
-		error_log(var_export($connected, 1));
+		//error_log(var_export($connected->posts, 1));
 		
-		//$connectedIDs = p2p_get_connections( 'variation_to_product', array('to'=>$productID, 'fields'=>'p2p_from') );
+		$variationRules = array();
 		
-		$variationItems = array();
-		
-		foreach($connectedIDs as $variationRuleID){
-			$variationItems[(int)$variationRuleID] = json_decode(get_post_meta($variationRuleID, '_variation_rule_model', true));
+		foreach ($connected->posts as $rulePost){
+			$variationRuleID = $rulePost->ID;
+			$variationRules[(int)$variationRuleID] = json_decode(get_post_meta($variationRuleID, '_variation_rule_model', true));
+			
 		}
-		ksort($variationItems, SORT_NUMERIC);
-		$result = self::createResult("Variation Items found for $postType", true, array('variationItems'=>array_values($variationItems)) );
+		
+		
+		ksort($variationRules, SORT_NUMERIC);
+		$result = self::createResult("Variation Rules found for productID: $productID", true, array('rules'=>array_values($variationRules)) );
 		
 		
 		
