@@ -66,6 +66,36 @@ $product_sku_metabox = new WPAlchemy_MetaBox(array
 ));
 
 
+$coupon_details_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'coupon_details',
+	'title' => 'Coupon Details',
+	'types' => array('tc_coupon'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_coupon_',	
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'CouponDetailsMetabox.php',
+
+));
+
+$coupon_save_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'coupon_save',
+	'title' => 'Save',
+	'types' => array('tc_coupon'),
+	'mode' => WPALCHEMY_MODE_EXTRACT,
+	'prefix' => '_tc_coupon_',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'CouponSaveMetabox.php',
+	'foot_action'=>'onCouponSaveMetaboxFooterAction',
+	'head_action'=>'onCouponSaveMetaboxHeadAction',
+	'init_action'=>'onCouponSaveMetaboxInitAction'
+));
+
+
+
+
+
+
+
 
 function onProductVariationRulesMetaboxHeadAction(){
 	wp_enqueue_script( 'caret', TC_SHARED_JS_URL. 'jquery.caret.1.02.js');
@@ -75,9 +105,30 @@ function onProductVariationRulesMetaboxHeadAction(){
 }
 
 
+function onCouponSaveMetaboxHeadAction(){
+	wp_enqueue_script('jquery-ui-datepicker', TC_SHARED_JS_URL . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+}
+
 function onVariationItemsMetaboxHeadAction(){
 	wp_enqueue_script( 'jquery-ui-button' );
 }
+
+function onCouponSaveMetaboxInitAction(){
+	add_action( 'admin_enqueue_scripts', 'tc_disable_autosave_for_coupons' );
+}     
+
+
+
+
+function tc_disable_autosave_for_coupons(){
+	global $post_type, $current_screen; 
+	if($post_type == 'tc_coupon' ) {
+		wp_deregister_script( 'autosave' );
+	}
+}
+
+
+
 
 
 

@@ -100,7 +100,7 @@
 		
 	</label>
 	
-
+	<p class="description">The SKU # extensions for variations will be added to this products sku # in the order the variations are listed below.</p>
 	<div style="clear:both;margin-bottom:10px;" ></div>
 	
 	

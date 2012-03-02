@@ -6,6 +6,7 @@ add_action('init', 'register_tc_product_variation_posttype');
 add_action('init', 'register_tc_variation_group_posttype');
 add_action('init', 'register_tc_variation_item_posttype');
 add_action('init', 'register_tc_variation_rule_posttype');
+add_action('init', 'register_tc_coupon_posttype');
 //add_action('init', 'register_tc_test_products_posttype');
 add_action('init', 'my_custom_init');
 
@@ -291,7 +292,7 @@ function register_tc_variation_item_posttype() {
 		'labels' 			=> $labels,
 		'singular_label' 	=> __('Variation Item'),
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_variation_item',
 		'capability_type' 	=> 'post',
@@ -330,7 +331,7 @@ function register_tc_variation_group_posttype() {
 		'labels' 			=> $labels,
 		'singular_label' 	=> __('Variant Group'),
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_variant_group',
 		'capability_type' 	=> 'post',
@@ -371,7 +372,7 @@ function register_tc_variation_rule_posttype() {
 		'labels' 			=> $labels,
 		'singular_label' 	=> __('Variant Rule'),
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_variation_rule',
 		'capability_type' 	=> 'post',
@@ -383,6 +384,94 @@ function register_tc_variation_rule_posttype() {
 	 );
 	 register_post_type('tc_variation_rule',$post_type_args);
 }
+
+
+// ----------------  
+// Register Coupon post types
+// ---------------- 
+
+function register_tc_coupon_posttype() {
+	$labels = array(
+	  'name' => _x('Coupons', 'post type general name'),
+	  'singular_name' => _x('Coupon', 'post type singular name'),
+	  'add_new' => _x('Add New', 'Coupon'),
+	  'add_new_item' => __('Add New Coupon'),
+	  'edit_item' => __('Edit Coupon'),
+	  'new_item' => __('New Coupon'),
+	  'view_item' => __('View Coupons'),
+	  'search_items' => __('Search Coupons'),
+	  'not_found' =>  __('No Coupon found'),
+	  'not_found_in_trash' => __('No Coupons found in Trash'),
+	  'parent_item_colon' => ''
+	);
+	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
+	//$supports = array('custom-fields', 'excerpt', 'comments', 'post-formats', 'page-attributes');
+	
+	$supports = array('title');
+	
+
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> 'tc_coupon',
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> false,
+		'rewrite' 			=> array( 'slug' => 'coupon', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0
+	 );
+  	register_post_type( 'tc_coupon', $post_type_args);
+
+	
+}
+
+
+
+
+// ----------------  
+// Register Order post types
+// ---------------- 
+
+// function register_tc_order_posttype() {
+// 	$labels = array(
+// 	  'name' => _x('Orders', 'post type general name'),
+// 	  'singular_name' => _x('Order', 'post type singular name'),
+// 	  'add_new' => _x('Add New', 'Order'),
+// 	  'add_new_item' => __('Add New Order'),
+// 	  'edit_item' => __('Edit Order'),
+// 	  'new_item' => __('New Order'),
+// 	  'view_item' => __('View Orders'),
+// 	  'search_items' => __('Search Orders'),
+// 	  'not_found' =>  __('No Order found'),
+// 	  'not_found_in_trash' => __('No Orders found in Trash'),
+// 	  'parent_item_colon' => ''
+// 	);
+// 	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
+// 	//$supports = array('custom-fields', 'excerpt', 'comments', 'post-formats', 'page-attributes');
+// 	
+// 	$supports = array('title','editor');
+// 	
+// 
+// 	$post_type_args = array(
+// 		'labels' 			=> $labels,
+// 		'public' 			=> true,
+// 		'show_ui' 			=> true,
+// 		'publicly_queryable'=> true,
+// 		'query_var'			=> 'tc_crm_order',
+// 		'capability_type' 	=> 'post',
+// 		'has_archive' 		=> false,
+// 		'hierarchical' 		=> false,
+// 		'rewrite' 			=> array( 'slug' => 'orders', 'with_front' => false),
+// 		'supports' 			=> $supports,
+// 		'menu_position' 	=> 0
+// 	 );
+//   	register_post_type( 'tc_order', $post_type_args);
+// }
+// 
+
 
 
 ?>
