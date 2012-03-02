@@ -29,6 +29,7 @@ $variation_items_metabox = new WPAlchemy_MetaBox(array
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_variation_items_',
 	'hide_title' => false,
+	'head_action' => 'onVariationItemsMetaboxHeadAction',
 	'foot_action' => 'onVariationItemsMetaboxFooterAction',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'VariationItemsMetabox.php',
 
@@ -49,12 +50,33 @@ $product_variation_rules_metabox = new WPAlchemy_MetaBox(array
 ));
 
 
+$product_sku_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'product_details',
+	'title' => 'Product SKU And Details',
+	'types' => array('tc_products'),
+	'mode' => WPALCHEMY_MODE_EXTRACT,
+	'prefix' => '_tc_product_details_',
+	'hide_title' => false,
+	'context' => 'side',
+	// 'head_action' => 'onProductDetailsMetaboxHeadAction',
+	// 'foot_action' => 'onProductDetailsMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ProductDetailsMetabox.php',
+
+));
+
+
 
 function onProductVariationRulesMetaboxHeadAction(){
 	wp_enqueue_script( 'caret', TC_SHARED_JS_URL. 'jquery.caret.1.02.js');
 	//wp_enqueue_script( 'caret', TC_JS_DIR. 'jquery.caret.1.02.js');
 	//wp_enqueue_script('jquery-forcepriceonly', TC_JS_DIR.'tc/jquery.forcepriceonly.js', array('caret'));
 	wp_enqueue_script('jquery-forcepriceonly', TC_SHARED_JS_URL.'jquery.forcepriceonly.js', array('caret'));	
+}
+
+
+function onVariationItemsMetaboxHeadAction(){
+	wp_enqueue_script( 'jquery-ui-button' );
 }
 
 

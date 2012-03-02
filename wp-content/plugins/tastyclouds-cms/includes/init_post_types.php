@@ -6,6 +6,7 @@ add_action('init', 'register_tc_product_variation_posttype');
 add_action('init', 'register_tc_variation_group_posttype');
 add_action('init', 'register_tc_variation_item_posttype');
 add_action('init', 'register_tc_variation_rule_posttype');
+//add_action('init', 'register_tc_test_products_posttype');
 add_action('init', 'my_custom_init');
 
 
@@ -137,6 +138,92 @@ function register_tc_products_posttype() {
 	 );
 	 register_post_type('tc_products',$post_type_args);
 }
+
+
+// ----------------  
+// Register Test Product post types
+// ----------------
+
+function register_tc_test_products_posttype() {
+	$labels = array(
+		'name' 				=> _x( 'Test Products', 'post type general name' ),
+		'singular_name'		=> _x( 'Test Product', 'post type singular name' ),
+		'add_new' 			=> _x( 'Add New', 'Test Product'),
+		'add_new_item' 		=> __( 'Add New Test Product '),
+		'edit_item' 		=> __( 'Edit Test Product '),
+		'new_item' 			=> __( 'New Test Product '),
+		'view_item' 		=> __( 'View Test Product '),
+		'search_items' 		=> __( 'Search Test Products '),
+		'not_found' 		=>  __( 'No Test Product found' ),
+		'not_found_in_trash'=> __( 'No Test Products found in Trash' ),
+		'parent_item_colon' => ''
+	);
+	
+	$supports = array('title','editor','thumbnail','excerpt','post-formats','page-attributes');
+	
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'singular_label' 	=> __('Test Product'),
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> true,
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> true,
+		'rewrite' 			=> array('slug' => 'testproduct/%testproduct_cat%', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0,
+	 );
+	 register_post_type('tc_test_products',$post_type_args);
+	
+	
+	
+		$taxlabels = array( 
+	        'name' => _x( 'Test Taxonomies', 'test taxonomy' ),
+	        'singular_name' => _x( 'Test Taxonomy', 'test taxonomy' ),
+	        'search_items' => _x( 'Search Test Taxonomies', 'test taxonomy' ),
+	        'popular_items' => _x( 'Popular Test Taxonomies', 'test taxonomy' ),
+	        'all_items' => _x( 'All Test Taxonomies', 'test taxonomy' ),
+	        'parent_item' => _x( 'Parent Test Taxonomy', 'test taxonomy' ),
+	        'parent_item_colon' => _x( 'Parent Test Taxonomy:', 'test taxonomy' ),
+	        'edit_item' => _x( 'Edit Test Taxonomy', 'test taxonomy' ),
+	        'update_item' => _x( 'Update Test Taxonomy', 'test taxonomy' ),
+	        'add_new_item' => _x( 'Add New Test Taxonomy', 'test taxonomy' ),
+	        'new_item_name' => _x( 'New Test Taxonomy Name', 'test taxonomy' ),
+	        'separate_items_with_commas' => _x( 'Separate test taxonomys with commas', 'test taxonomy' ),
+	        'add_or_remove_items' => _x( 'Add or remove test taxonomys', 'test taxonomy' ),
+	        'choose_from_most_used' => _x( 'Choose from the most used test taxonomys', 'test taxonomy' ),
+	        'menu_name' => _x( 'Test Taxonomies', 'test taxonomy' ),
+	    );
+
+	    $args = array( 
+	        'labels' => $taxlabels,
+	        'public' => true,
+	        'show_in_nav_menus' => false,
+	        'show_ui' => true,
+	        'show_tagcloud' => true,
+	        'hierarchical' => false,
+			'rewrite' => array('slug' => 'testproduct', 'with_front' => false),
+	        // 'rewrite' => true,
+	        'query_var' => true,
+	    );
+
+	    register_taxonomy( 'test_taxonomy', array('tc_test_products'), $args );
+	
+}
+
+function filter_post_type_link($link, $post)
+{
+    if ($post->post_type != 'tc_test_products')
+        return $link;
+
+    if ($cats = get_the_terms($post->ID, 'test_taxonomy'))
+        $link = str_replace('%testproduct_cat%', array_pop($cats)->slug, $link);
+    return $link;
+}
+add_filter('post_type_link', 'filter_post_type_link', 10, 2);
+
 
 // ----------------  
 // Register Product Variation post types
