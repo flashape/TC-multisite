@@ -28,6 +28,7 @@ require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');
 
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
+add_filter('update_post_metadata', 'tc_update_post_metadata', 10, 4);
 
 
 function tc_cms_add_meta_boxes(){
@@ -68,6 +69,20 @@ function tc_cms_admin_enqueue_scripts(){
 }
 
 
+// The update_post_metadata filter is called before saving metadata to the db.
+// If anything is returned from this method, the metadata is not saved.
+function tc_update_post_metadata($dummy = NULL, $object_id, $meta_key, $meta_value){
+	//error_log("object_id : $object_id, meta_key : $meta_key, meta_value : $meta_value");
+	switch($meta_key){
+		case '_tc_order_assignee':
+			$oldValue = get_post_meta($object_id, '_tc_order_assignee', true);
+			if ($oldValue != $meta_value){
+				error_log('_tc_order_assignee CHANGED!!!');
+				wp_mail('rich@tastyclouds.com', 'An Order has been assigned to you', 'A new order has been assigned to you, click here to view: ');
+			}
+		break;
+	}
+}
 
 	
 // Styling for the custom post type icon

@@ -14,9 +14,6 @@ function tc_crm_add_meta_boxes(){
 	if (!is_order_post() ){
 		add_filter('title_save_pre','tc_crm_save_custom_contact_title');
 	}
-	
-   
-
 }
 
 

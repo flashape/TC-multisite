@@ -91,6 +91,22 @@ $coupon_save_metabox = new WPAlchemy_MetaBox(array
 ));
 
 
+$shipping_box_size_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'shipping_box_size',
+	'title' => 'Shipping Box Size',
+	'types' => array('tc_order'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_ship_box_size_',
+	'context' => 'side',
+	'save_filter' => 'onShippingBoxSizeSaveFilter', // defaults to NULL
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ShippingBoxSizeMetabox.php',
+));
+
+
+
+
+
 
 
 

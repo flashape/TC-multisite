@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</string>
+	<string>wp-content/plugins/tastyclouds-crm/js/tc/controller/TC_ProductManager.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -79,12 +79,26 @@
 				<integer>61</integer>
 			</dict>
 		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/includes/init_ajax.php</key>
+		<key>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>80</integer>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>344</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>322</integer>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-cms/metabox/ShippingBoxSizeMetabox.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
 				<key>line</key>
 				<integer>14</integer>
 			</dict>
@@ -93,120 +107,64 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</key>
+		<key>wp-content/plugins/tastyclouds-crm/includes/init_contacts.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>19</integer>
+				<integer>74</integer>
 				<key>line</key>
-				<integer>270</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>248</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>59</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>40</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/metabox/VariationItemsMetabox.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>8</integer>
+				<integer>97</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>67</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>66</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>97</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
+				<integer>83</integer>
+				<key>line</key>
+				<integer>97</integer>
+			</dict>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-crm/includes/init_payments.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>3</integer>
 			</dict>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>24</integer>
-				<key>line</key>
-				<integer>21</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-crm/includes/debug.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>33</integer>
-				<key>line</key>
-				<integer>23</integer>
-			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>1</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-crm/includes/init_taxonomies.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>24</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>17</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>57</integer>
+				<integer>42</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>24</integer>
+				<integer>3</integer>
 			</dict>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-crm/js/admin_orders.js</key>
@@ -214,14 +172,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>223</integer>
+				<integer>135</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>203</integer>
+			<integer>109</integer>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-crm/js/tc/controller/TC_ProductManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-crm/js/tc/view/mediators/OrderItemsViewMediator.js</key>
 		<dict>
@@ -237,19 +209,19 @@
 			<key>firstVisibleLine</key>
 			<integer>105</integer>
 		</dict>
-		<key>wp-content/tc_shared/css/jqueryui/smoothness/jquery-ui-1.8.16.custom.css</key>
+		<key>wp-content/plugins/tastyclouds-crm/tastyclouds-crm.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>49</integer>
+				<integer>20</integer>
 				<key>line</key>
-				<integer>46</integer>
+				<integer>208</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>32</integer>
+			<integer>200</integer>
 		</dict>
 		<key>wp-includes/js/jquery/jquery.form.dev.js</key>
 		<dict>
@@ -269,16 +241,12 @@
 	<key>openDocuments</key>
 	<array>
 		<string>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</string>
-		<string>wp-content/plugins/tastyclouds-crm/includes/debug.php</string>
-		<string>wp-content/debug.log</string>
-		<string>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</string>
-		<string>wp-content/plugins/tastyclouds-crm/includes/init_taxonomies.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/metabox/VariationItemsMetabox.php</string>
-		<string>wp-content/tc_shared/css/jqueryui/smoothness/jquery-ui-1.8.16.custom.css</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/init_ajax.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/ajax/ProductVariationRulesAjax.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/ajax/VariationItemAjax.php</string>
+		<string>wp-content/plugins/tastyclouds-crm/includes/init_payments.php</string>
+		<string>wp-content/plugins/tastyclouds-cms/metabox/ShippingBoxSizeMetabox.php</string>
+		<string>wp-content/plugins/tastyclouds-crm/js/admin_orders.js</string>
+		<string>wp-content/plugins/tastyclouds-crm/includes/init_contacts.php</string>
+		<string>wp-content/plugins/tastyclouds-crm/js/tc/controller/TC_ProductManager.js</string>
+		<string>wp-content/plugins/tastyclouds-crm/tastyclouds-crm.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -310,13 +278,6 @@
 									<true/>
 									<key>subItems</key>
 									<dict>
-										<key>includes</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
 										<key>metabox</key>
 										<dict>
 											<key>isExpanded</key>
@@ -337,9 +298,47 @@
 											<key>isExpanded</key>
 											<true/>
 											<key>subItems</key>
+											<dict>
+												<key>metabox</key>
+												<dict>
+													<key>isExpanded</key>
+													<true/>
+													<key>subItems</key>
+													<dict>
+														<key>templates</key>
+														<dict>
+															<key>isExpanded</key>
+															<true/>
+															<key>subItems</key>
+															<dict/>
+														</dict>
+													</dict>
+												</dict>
+											</dict>
+										</dict>
+										<key>js</key>
+										<dict>
+											<key>isExpanded</key>
+											<true/>
+											<key>subItems</key>
 											<dict/>
 										</dict>
 									</dict>
+								</dict>
+							</dict>
+						</dict>
+						<key>tc_shared</key>
+						<dict>
+							<key>isExpanded</key>
+							<true/>
+							<key>subItems</key>
+							<dict>
+								<key>js</key>
+								<dict>
+									<key>isExpanded</key>
+									<true/>
+									<key>subItems</key>
+									<dict/>
 								</dict>
 							</dict>
 						</dict>
@@ -349,6 +348,6 @@
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{43, 127}, {1824, 931}}</string>
+	<string>{{32, 90}, {1827, 967}}</string>
 </dict>
 </plist>
