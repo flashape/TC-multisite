@@ -8,6 +8,8 @@ add_action('init', 'register_tc_variation_item_posttype');
 add_action('init', 'register_tc_variation_rule_posttype');
 add_action('init', 'register_tc_coupon_posttype');
 add_action('init', 'register_tc_payment_posttype');
+add_action('init', 'register_tc_order_posttype');
+add_action('init', 'register_tc_contact_posttype');
 add_action('init', 'my_custom_init');
 
 
@@ -396,42 +398,87 @@ function register_tc_payment_posttype() {
 // Register Order post types
 // ---------------- 
 
-// function register_tc_order_posttype() {
-// 	$labels = array(
-// 	  'name' => _x('Orders', 'post type general name'),
-// 	  'singular_name' => _x('Order', 'post type singular name'),
-// 	  'add_new' => _x('Add New', 'Order'),
-// 	  'add_new_item' => __('Add New Order'),
-// 	  'edit_item' => __('Edit Order'),
-// 	  'new_item' => __('New Order'),
-// 	  'view_item' => __('View Orders'),
-// 	  'search_items' => __('Search Orders'),
-// 	  'not_found' =>  __('No Order found'),
-// 	  'not_found_in_trash' => __('No Orders found in Trash'),
-// 	  'parent_item_colon' => ''
-// 	);
-// 	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
-// 	//$supports = array('custom-fields', 'excerpt', 'comments', 'post-formats', 'page-attributes');
-// 	
-// 	$supports = array('title','editor');
-// 	
-// 
-// 	$post_type_args = array(
-// 		'labels' 			=> $labels,
-// 		'public' 			=> true,
-// 		'show_ui' 			=> true,
-// 		'publicly_queryable'=> true,
-// 		'query_var'			=> 'tc_crm_order',
-// 		'capability_type' 	=> 'post',
-// 		'has_archive' 		=> false,
-// 		'hierarchical' 		=> false,
-// 		'rewrite' 			=> array( 'slug' => 'orders', 'with_front' => false),
-// 		'supports' 			=> $supports,
-// 		'menu_position' 	=> 0
-// 	 );
-//   	register_post_type( 'tc_order', $post_type_args);
-// }
-// 
+function register_tc_order_posttype() {
+	$labels = array(
+	  'name' => _x('Orders', 'post type general name'),
+	  'singular_name' => _x('Order', 'post type singular name'),
+	  'add_new' => _x('Add New', 'Order'),
+	  'add_new_item' => __('Add New Order'),
+	  'edit_item' => __('Edit Order'),
+	  'new_item' => __('New Order'),
+	  'view_item' => __('View Orders'),
+	  'search_items' => __('Search Orders'),
+	  'not_found' =>  __('No Order found'),
+	  'not_found_in_trash' => __('No Orders found in Trash'),
+	  'parent_item_colon' => ''
+	);
+	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
+	//$supports = array('custom-fields', 'excerpt', 'comments', 'post-formats', 'page-attributes');
+	
+	$supports = array('title','editor');
+	
+
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> 'tc_order',
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> false,
+		'rewrite' 			=> array( 'slug' => 'orders', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0
+	 );
+  	register_post_type( 'tc_order', $post_type_args);
+}
+
+
+
+// ----------------  
+// Register Contact post types
+// ---------------- 
+
+function register_tc_contact_posttype() {
+	$labels = array(
+	  'name' => _x('Contacts', 'post type general name'),
+	  'singular_name' => _x('Contact', 'post type singular name'),
+	  'add_new' => _x('Add New', 'Contact'),
+	  'add_new_item' => __('Add New Contact'),
+	  'edit_item' => __('Edit Contact'),
+	  'new_item' => __('New Contact'),
+	  'view_item' => __('View Contacts'),
+	  'search_items' => __('Search Contacts'),
+	  'not_found' =>  __('No Contact found'),
+	  'not_found_in_trash' => __('No Contacts found in Trash'),
+	  'parent_item_colon' => ''
+	);
+	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
+	
+	$supports = array( 'comments');
+	
+
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> 'tc_contact',
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> false,
+		'rewrite' 			=> array( 'slug' => 'contact', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0
+	 );
+	
+  	register_post_type( 'tc_contact', $post_type_args);
+}
+
+
+
+
 
 
 

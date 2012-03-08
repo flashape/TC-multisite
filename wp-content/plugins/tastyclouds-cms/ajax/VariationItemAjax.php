@@ -73,12 +73,14 @@ class VariationItemAjax
 
 	
 	private function checkNotifications($model){
-
+		
 	}
 	
 		
-	public function getItemsForVariation(){
-		$thePostID = $_POST['postID'];
+	public function getItemsForVariation($thePostID = null, $returnArray = false){
+		if(empty($thePostID)){
+			$thePostID = $_POST['postID'];
+		}
 		
 		$connectedIDs = p2p_get_connections( 'variation_item_to_variation', array('to'=>$thePostID, 'fields'=>'p2p_from') );
 		
@@ -88,8 +90,14 @@ class VariationItemAjax
 			$variationItems[(int)$variationItemID] = json_decode(get_post_meta($variationItemID, '_variation_item_model', true));
 		}
 		ksort($variationItems, SORT_NUMERIC);
-		$result = self::createResult("Variation Items found for postID: $thePostID", true, array('variationItems'=>array_values($variationItems)) );
-		self::returnJson($result);
+		
+		if ($returnArray){
+			return $variationItems;
+		}else{
+			$result = self::createResult("Variation Items found for postID: $thePostID", true, array('variationItems'=>array_values($variationItems)) );
+			self::returnJson($result);		
+		}
+
 	}
 	
 			

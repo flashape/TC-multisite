@@ -142,30 +142,29 @@ class ProductVariationRulesAjax
 	}
 	
 		
-	public function getVariationsForProduct(){
-		$productID = $_POST['productID'];
+	public function getVariationsForProduct($productID = null, $returnArray = false){
+		if (empty($productID)){
+			$productID = $_POST['productID'];
+		}
 		
 		$connections = p2p_get_connections( 'variation_to_product', array('to'=>$productID, 'fields'=>'*') );
 		
 		$variationPosts = array();
 		
 		if (count($connections) == 0){
-			$result = self::createResult("No Variations found for productID $productID", true, array('variations'=>$variationPosts));
-		}else{
-			
-			$connectedIDs = array();
-			foreach($connections as $p2pConn){
-				
-				$variationPost = get_post($p2pConn->p2p_from);
-				$title = $variationPost->post_title;
-				$variationPostID = $variationPost->ID;
-				$p2p_id = $p2pConn->p2p_id;
-				$variationLabel = p2p_get_meta($p2pConn->p2p_id, 'variationLabel', true);
-				$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
-					
+			if ($returnArray){
+				return $variationPosts;
+			}else{
+				$result = self::createResult("No Variations found for productID $productID", true, array('variations'=>$variationPosts));
 			}
-			
-			$result = self::createResult("Variations found for productID $productID", true, array('variations'=>array_values($variationPosts)) );
+		}else{
+			$variationPosts = self::getVariationPostsArray($connections);
+			if ($returnArray){
+				return $variationPosts;
+			}else{
+				$result = self::createResult("Variations found for productID $productID", true, array('variations'=>array_values($variationPosts)) );
+				
+			}
 			
 		}
 		
@@ -173,16 +172,36 @@ class ProductVariationRulesAjax
 		self::returnJson($result);
 	}
 	
+	private function getVariationPostsArray($connections){
+		
+		$variationPosts = array();
+		
+		foreach($connections as $p2pConn){
+			
+			$variationPost = get_post($p2pConn->p2p_from);
+			$title = $variationPost->post_title;
+			$variationPostID = $variationPost->ID;
+			$p2p_id = $p2pConn->p2p_id;
+			$variationLabel = p2p_get_meta($p2pConn->p2p_id, 'variationLabel', true);
+			$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
+				
+		}
+		
+		return $variationPosts;
+	}
 	
-	public function getRulesForVariation(){
-		$productID = $_POST['productID'];
-		$variationID = $_POST['variationID'];
-		$variationToProduct_p2p_id = $_POST['variationToProduct_p2p_id'];
+	
+	public function getRulesForVariation($productID = null, $variationID = null, $variationToProduct_p2p_id = null, $returnArray = false){
+		if (empty($productID)){
+			$productID = $_POST['productID'];
+			$variationID = $_POST['variationID'];
+			$variationToProduct_p2p_id = $_POST['variationToProduct_p2p_id'];
+		}
 		
 		
 		$connected = new WP_Query( array(
 			'connected_type' => 'variation_rule_to_product',
-			'connected_items' => $productID ,
+			'connected_items' => $productID,
 			'connected_meta' => array( 'variationID' => $variationID, 'variationToProduct_p2p_id'=>$variationToProduct_p2p_id )
 		) );
 		
@@ -198,7 +217,14 @@ class ProductVariationRulesAjax
 		
 		
 		ksort($variationRules, SORT_NUMERIC);
-		$result = self::createResult("Variation Rules found for productID: $productID", true, array('rules'=>array_values($variationRules)) );
+		
+		if($returnArray){
+			return $variationRules;
+		}else{
+			$result = self::createResult("Variation Rules found for productID: $productID", true, array('rules'=>array_values($variationRules)) );
+			self::returnJson($result);			
+		}
+
 		
 		
 		
@@ -229,7 +255,6 @@ class ProductVariationRulesAjax
 		// }
 		
 
-		self::returnJson($result);
 	}
 	
 			

@@ -943,10 +943,10 @@ function tc_crm_admin_enqueue_scripts(){
 	wp_register_script('validate-additional-methods','http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js' , array('jquery'));
 	wp_enqueue_script( 'validate' ); 
 	wp_enqueue_script( 'validate-additional-methods' );
-	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_DIR .'/ba-debug.js', __FILE__ );
+	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_URL .'/ba-debug.js', __FILE__ );
 	
 
-	wp_enqueue_script('jquery-ui-datepicker', TC_JS_DIR . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+	wp_enqueue_script('jquery-ui-datepicker', TC_SHARED_JS_URL . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
 	wp_enqueue_style('jquery.ui.theme', plugins_url('/css/jqueryui/smoothness/jquery-ui-1.8.16.custom.css', __FILE__));
 
 	

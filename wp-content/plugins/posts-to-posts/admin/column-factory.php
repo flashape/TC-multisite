@@ -4,6 +4,24 @@ class P2P_Column_Factory {
 
 	private static $column_args = array();
 
+	static function init() {
+		add_filter( 'p2p_connection_type_args', array( __CLASS__, 'filter_args' ) );
+
+		add_action( 'admin_print_styles', array( __CLASS__, 'add_columns' ) );
+	}
+
+	static function filter_args( $args ) {
+		if ( isset( $args['admin_column'] ) ) {
+			$column_args = _p2p_pluck( $args, 'admin_column' );
+		} else {
+			$column_args = false;
+		}
+
+		self::register( $args['name'], $column_args );
+
+		return $args;
+	}
+
 	static function register( $p2p_type, $column_args ) {
 		if ( isset( self::$column_args[$p2p_type] ) )
 			return false;
@@ -44,5 +62,5 @@ class P2P_Column_Factory {
 	}
 }
 
-add_action( 'admin_print_styles', array( 'P2P_Column_Factory', 'add_columns' ) );
+P2P_Column_Factory::init();
 

@@ -1,4 +1,4 @@
-var AdminAjaxServiceClass = JS.Class({
+var OrdersAjaxServiceClass = JS.Class({
 	construct : function () {
         //this.list = new Array();
 		this.newCartItemAdded = new signals.Signal();

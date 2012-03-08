@@ -106,10 +106,60 @@ $shipping_box_size_metabox = new WPAlchemy_MetaBox(array
 
 
 
+$order_details_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'order_details',
+	'title' => 'Order Info',
+	'types' => array('tc_order'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_order_details_',
+	'hide_editor' => true,
+	'head_action'=>'onOrderDetailsMetaboxHeadAction',
+	'foot_action'=>'onOrderDetailsMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'OrderDetailsMetabox.php',
+));
 
 
 
 
+
+
+
+function onOrderDetailsMetaboxHeadAction(){
+	remove_meta_box( 'tagsdiv-tc_order_type', 'tc_order', 'side' );      
+	remove_meta_box( 'tc_event_typediv', 'tc_order', 'side' );      
+	
+	wp_enqueue_script( 'caret', TC_SHARED_JS_URL. 'jquery.caret.1.02.js');
+	//wp_enqueue_script( 'caret', TC_JS_DIR. 'jquery.caret.1.02.js');
+	//wp_enqueue_script('jquery-forcepriceonly', TC_JS_DIR.'tc/jquery.forcepriceonly.js', array('caret'));
+	wp_enqueue_script('jquery-forcepriceonly', TC_SHARED_JS_URL.'jquery.forcepriceonly.js', array('caret'));
+	
+	wp_enqueue_script('tc-utils', TC_SHARED_JS_URL.'utils.js');
+	
+	wp_enqueue_script( 'signals', TC_SHARED_JS_URL . 'signals.js');
+	wp_enqueue_script( 'js-class', TC_SHARED_JS_URL . 'jsclassextend/js.class.js');
+	wp_enqueue_script( 'js-error', TC_SHARED_JS_URL . 'jsclassextend/js.error.js');
+	wp_enqueue_script( 'js-eventdispatcher', TC_SHARED_JS_URL . 'jsclassextend/js.error.js');
+	wp_enqueue_script( 'js-interface', TC_SHARED_JS_URL . 'jsclassextend/js.interface.js');
+	wp_enqueue_script( 'js-utils', TC_SHARED_JS_URL . 'jsclassextend/js.utils.js');
+	
+	
+	//wp_enqueue_script('tc-signal-context', TC_SHARED_JS_URL.'SignalContext.js');
+	wp_enqueue_script('tc-orders-ajax-service', TC_SHARED_JS_URL.'orders/service/OrdersAjaxService.js');
+	wp_enqueue_script('tc-customer-info-view-mediator', TC_SHARED_JS_URL.'orders/view/mediators/CustomerInfoViewMediator.js');
+	wp_enqueue_script('tc-order-items-view-mediator', TC_SHARED_JS_URL.'orders/view/mediators/OrderItemsViewMediator.js');
+	wp_enqueue_script('tc-product-manager', TC_SHARED_JS_URL.'orders/controller/TC_ProductManager.js');
+	
+	
+	//wp_enqueue_script('tc-crm-move-order-metaboxes', TC_SHARED_JS_URL . 'admin_orders.js' );
+	wp_enqueue_script('jquery-ui-widget');
+	wp_enqueue_script('jquery-ui-autocomplete');
+	wp_enqueue_script( 'jquery-ui-tabs' );
+	wp_enqueue_script('jquery-ui-datepicker', TC_SHARED_JS_URL . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+	
+	//wp_enqueue_script('jquery-ui-accordion', TC_SHARED_JS_URL . 'jquery.ui.accordion.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-widget') );	
+	
+}
 
 
 

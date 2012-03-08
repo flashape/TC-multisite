@@ -3,16 +3,16 @@ var OrderItemsViewMediatorClass = JS.Class({
 	        this.view = orderItemsView;
 			this.enableSubtotalUpdates = true;
 			this.enableAjax = true;
-			adminAjaxService.newCustomCartItemAdded.add(this.onNewCustomCartItemAdded, this);
-			adminAjaxService.newCartItemAdded.add(this.onNewItemAddedToCart, this);
-			adminAjaxService.newCateringServiceCartItemAdded.add(this.onNewCateringServiceCartItemAdded, this);
-			adminAjaxService.newDeliveryCartItemAdded.add(this.onNewDeliveryCartItemAdded, this);
-			adminAjaxService.deliveryCartItemRemoved.add(this.onDeliveryCartItemRemoved, this);
-			adminAjaxService.couponValidationResult.add(this.onCouponValidationResult, this);
-			adminAjaxService.couponRemovedResult.add(this.onCouponRemovedResult, this);
-			adminAjaxService.shippingRateResultReceived.add(this.onShippingRateResultReceived, this);
-			adminAjaxService.getCartResultReceived.add(this.onGetCartResultReceived, this);
-			adminAjaxService.enableTaxResult.add(this.onEnableTaxResult, this);
+			ordersAjaxService.newCustomCartItemAdded.add(this.onNewCustomCartItemAdded, this);
+			ordersAjaxService.newCartItemAdded.add(this.onNewItemAddedToCart, this);
+			ordersAjaxService.newCateringServiceCartItemAdded.add(this.onNewCateringServiceCartItemAdded, this);
+			ordersAjaxService.newDeliveryCartItemAdded.add(this.onNewDeliveryCartItemAdded, this);
+			ordersAjaxService.deliveryCartItemRemoved.add(this.onDeliveryCartItemRemoved, this);
+			ordersAjaxService.couponValidationResult.add(this.onCouponValidationResult, this);
+			ordersAjaxService.couponRemovedResult.add(this.onCouponRemovedResult, this);
+			ordersAjaxService.shippingRateResultReceived.add(this.onShippingRateResultReceived, this);
+			ordersAjaxService.getCartResultReceived.add(this.onGetCartResultReceived, this);
+			ordersAjaxService.enableTaxResult.add(this.onEnableTaxResult, this);
 			
 	    },
 	
@@ -23,7 +23,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			//	- create the necessary item rows
 			//	- fill in necessary rows like discount / coupon
 			//	- enable and update totals
-			adminAjaxService.getCart();
+			ordersAjaxService.getCart();
 		},
 	
 		onGetCartResultReceived : function (serviceResult){
@@ -163,27 +163,27 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var productID = jQuery("#_tc_crm_product_list option:selected").val();
 			switch (productID){
 				case "101":
-					adminAjaxService.addServiceItemToCartSession("cottoncandy");
+					ordersAjaxService.addServiceItemToCartSession("cottoncandy");
 				break;				
 				
 				case "102":
-					adminAjaxService.addServiceItemToCartSession("snowcones");
+					ordersAjaxService.addServiceItemToCartSession("snowcones");
 				break;
 				
 				default:
 					// at the moment, the AdminAjaxService gathers the
 					// product data itself.
-					adminAjaxService.addItemToCartSession();
+					ordersAjaxService.addItemToCartSession();
 				break;
 			}
 		},
 	
 		onAddCustomItemClick : function (customItemType){
-			adminAjaxService.addCustomItemToCartSession(customItemType);
+			ordersAjaxService.addCustomItemToCartSession(customItemType);
 		},
 	
 		onAddDeliveryClick : function (){
-			adminAjaxService.addDeliveryItemToCartSession();
+			ordersAjaxService.addDeliveryItemToCartSession();
 		},
 
 	
@@ -385,13 +385,13 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var cartItemID = idParts[1];
 			
 			if(idParts[0] == "customItemRow"){
-				adminAjaxService.removeCustomCartItem(cartItemID);
+				ordersAjaxService.removeCustomCartItem(cartItemID);
 			}else if (idParts[0] == "cateringServiceItemRow") {
-				adminAjaxService.removeServiceCartItem(cartItemID);
+				ordersAjaxService.removeServiceCartItem(cartItemID);
 			}else if (idParts[0] == "deliveryItemRow") {
-				adminAjaxService.removeDeliveryCartItem(cartItemID);
+				ordersAjaxService.removeDeliveryCartItem(cartItemID);
 			}else{
-				adminAjaxService.removeCartItem(cartItemID);
+				ordersAjaxService.removeCartItem(cartItemID);
 			}
 			
 			orderItemsViewMediator.updateSubtotal();
@@ -444,7 +444,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var cartItemID = row.attr("id").split('_')[1];
 			
 			if (this.enableAjax){
-				adminAjaxService.updateCartItem(cartItemID,itemUpdateInfo);
+				ordersAjaxService.updateCartItem(cartItemID,itemUpdateInfo);
 			}
 		},
 		
@@ -483,7 +483,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			debug.log(idParts);
 			
 			if (this.enableAjax){
-				adminAjaxService.updateCustomCartItem(cartItemID, itemUpdateInfo);
+				ordersAjaxService.updateCustomCartItem(cartItemID, itemUpdateInfo);
 			}
 			
 
@@ -512,7 +512,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			
 			if (this.enableAjax){
-				adminAjaxService.updateDeliveryCartItem(cartItemID, itemUpdateInfo);
+				ordersAjaxService.updateDeliveryCartItem(cartItemID, itemUpdateInfo);
 			}
 			
 
@@ -563,7 +563,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			itemUpdateInfo.cartItemID = cartItemID;
 			
 			if (this.enableAjax){
-				adminAjaxService.updateServiceCartItem(cartItemID, itemUpdateInfo);
+				ordersAjaxService.updateServiceCartItem(cartItemID, itemUpdateInfo);
 			}
 		},
 		
@@ -599,7 +599,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 				orderItemsViewMediator.updateTotal(TC_ProductManager.SKIP_UPDATE_SHIPPING);
 			}
 			
-			adminAjaxService.updateDiscount({discount:discount, discountTotal:discountTotal, type:(selectedIndex == 0 ? '%' : '$')});
+			ordersAjaxService.updateDiscount({discount:discount, discountTotal:discountTotal, type:(selectedIndex == 0 ? '%' : '$')});
 			
 		},
 		
@@ -638,7 +638,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			jQuery("#validatingCoupon").show();
 			var code = jQuery('#couponCode').val();
 			
-			adminAjaxService.validateCoupon(code);
+			ordersAjaxService.validateCoupon(code);
 		},
                   			
 		removeCoupon : function (){   
@@ -646,7 +646,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			jQuery("#validatingCoupon").show();
 			
-			adminAjaxService.removeCoupon();
+			ordersAjaxService.removeCoupon();
 		},
                   			
 		updateCoupon : function (row, isSubtotalUpdate){	
@@ -768,9 +768,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 				subTotal += parseFloat(deliveryCharge);
 			}
 			
-			debug.log('check calling adminAjaxService.getShippingCharge()');
+			debug.log('check calling ordersAjaxService.getShippingCharge()');
 			if ( skipShippingUpdate != 'SKIP_UPDATE_SHIPPING' && TC_ProductManager.isValidZip() ){
-				adminAjaxService.getShippingCharge();
+				ordersAjaxService.getShippingCharge();
 			}else{
 				var total = subTotal;
 				
@@ -1041,7 +1041,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 		onShippingEnabledChange : function(){
 			if (jQuery('#_tc_crm_shipping_enabled').is(':checked')  ){
 				jQuery('#shippingRow').show();
-				adminAjaxService.getShippingCharge();
+				ordersAjaxService.getShippingCharge();
 				
 			}else{
 				jQuery('#shippingRow').hide();
@@ -1054,10 +1054,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 			if (jQuery('#_tc_crm_tax_enabled').is(':checked')  ){
 				//this.updateTax();
 				this.updateSubtotal();
-				adminAjaxService.enableTax(true);
+				ordersAjaxService.enableTax(true);
 			}else{
 				this.removeTax();
-				adminAjaxService.enableTax(false);
+				ordersAjaxService.enableTax(false);
 			}
 		},
 		

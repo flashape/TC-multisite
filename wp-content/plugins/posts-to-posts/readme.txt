@@ -3,7 +3,7 @@ Contributors: scribu, ciobi
 Tags: connections, custom post types, relationships, many-to-many, users
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 
 Efficient many-to-many connections between posts, pages, custom post types, users.
 
@@ -49,6 +49,13 @@ Make sure your host is running PHP 5. The only foolproof way to do this is to ad
 4. Widget
 
 == Changelog ==
+
+= 1.1.6 =
+* converted "View All" tab into button
+* refresh candidate list after deleting a connection
+* fixed cardinality check
+* introduced 'p2p_connection_type_args' filter
+* make 'connected_type' accept an array of connection type names
 
 = 1.1.5 =
 * added P2P_Connection_Type->replace() method
