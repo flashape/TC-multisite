@@ -140,6 +140,38 @@ $paymentRows = tc_get_order_payment_rows();
 		display:none;
 	}
 	
+	.itemName{
+		font-weight:bold;
+	}
+			
+	.titleColumn{
+		text-align:left;
+	}
+			
+	.descriptionColumn{
+		text-align:left;
+	}
+		
+			
+	.itemPriceColumn{
+		text-align:left;
+	}
+					
+	.quantityColumn{
+		text-align:left;
+	}
+		
+			
+	.rowTotalColumn{
+		text-align:right;
+	}
+					
+	.removeItemColumn{
+		text-align:right;
+	}
+		
+		
+	
 </style>
 
 
@@ -300,7 +332,14 @@ function onOrderDetailsMetaboxFooterAction() {
 	foreach ($productPosts as $product) {
 		$productName = $product->post_title;
 		$productID = $product->ID;
+		// $postMeta = get_post_custom($productID);
+		// error_log(var_export($postMeta, 1));
 		$productItem = array('label'=>$productName, 'value'=>$productID);
+		
+		$productItem['sku'] = get_post_meta( $productID, '_tc_product_details_sku', true );
+		$productItem['price'] = get_post_meta( $productID, '_tc_product_details_price', true );
+		$productItem['width'] = get_post_meta( $productID, '_tc_product_details_width', true );
+		$productItem['height'] = get_post_meta( $productID, '_tc_product_details_height', true );
 		
 		$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
 		
@@ -314,12 +353,12 @@ function onOrderDetailsMetaboxFooterAction() {
 			
 			
 			$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
-			error_log('VariationRules : ');
-			error_log(print_r($variation['rules'],1));
-			
-			error_log('Variation : ');
-			
-			error_log(print_r($variation,1));
+			// error_log('VariationRules : ');
+			// error_log(print_r($variation['rules'],1));
+			// 
+			// error_log('Variation : ');
+			// 
+			// error_log(print_r($variation,1));
 		}
 
 		$productItem['variations'] = $variations;
@@ -340,8 +379,8 @@ var orderItemsViewMediator;
 
 jQuery(document).ready(function($){
 	
-	var contactAutocompleteJSON = <?php echo $contactAutocompleteJSON ?>;
-	var productAutocompleteJSON = <?php echo $productAutocompleteJSON ?>;
+	contactAutocompleteJSON = <?php echo $contactAutocompleteJSON ?>;
+	productAutocompleteJSON = <?php echo $productAutocompleteJSON ?>;
 	
 	ordersAjaxService = new OrdersAjaxServiceClass();
 	customerInfoViewMediator = new CustomerInfoViewMediatorClass(jQuery('#client_information'));
@@ -440,6 +479,7 @@ jQuery(document).ready(function($){
 		select: function(event, ui) {
 					var selectedObj = ui.item;
 					$('#tc_product_input').val(selectedObj.label);
+					orderItemsViewMediator.addProductRow(selectedObj);
 					return false;
 				},		
 		focus: function(event, ui) {
@@ -448,7 +488,22 @@ jQuery(document).ready(function($){
 					return false;
 				}
 		})
+		
 	
+	
+
+	
+	$('#orderItemsTable').on('focusout', 'input.quantity', checkRowForUpdates)
+	$('#orderItemsTable').on('focusout', 'input.itemDescTextInput', checkRowForUpdates)
+	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
+	
+	function checkRowForUpdates(event){
+		var row = jQuery(this).closest('tr');
+		orderItemsViewMediator.checkItemUpdated(row);
+	}
+	
+	
+
 
 
 	
@@ -505,10 +560,78 @@ jQuery(document).ready(function($){
 	
 	jQuery('.tc_datepicker').datepicker();
 	
+	Object.equals = function( x, y ) {
+	  if ( x === y ) return true;
+	    // if both x and y are null or undefined and exactly the same
+
+	  if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) return false;
+	    // if they are not strictly equal, they both need to be Objects
+
+	  if ( x.constructor !== y.constructor ) return false;
+	    // they must have the exact same prototype chain, the closest we can do is
+	    // test there constructor.
+
+	  for ( var p in x ) {
+	    if ( ! x.hasOwnProperty( p ) ) continue;
+	      // other properties were tested using x.constructor === y.constructor
+
+	    if ( ! y.hasOwnProperty( p ) ) return false;
+	      // allows to compare x[ p ] and y[ p ] when set to undefined
+
+	    if ( x[ p ] === y[ p ] ) continue;
+	      // if they have the same strict value or identity then they are equal
+
+	    if ( typeof( x[ p ] ) !== "object" ) return false;
+	      // Numbers, Strings, Functions, Booleans must be strictly equal
+
+	    if ( ! Object.equals( x[ p ],  y[ p ] ) ) return false;
+	      // Objects and Arrays must be tested recursively
+	  }
+
+	  for ( p in y ) {
+	    if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) return false;
+	      // allows x[ p ] to be set to undefined
+	  }
+	  return true;
+	}
+	
+	
 	
 });
 
 </script>
+
+<?php
+
+// <tr>
+// 	<th class="row-title" style="text-align:left">Item</th>
+// 	<th style="text-align:left">Description</th>
+// 	<th style="text-align:left">Price</th>
+// 	<th style="text-align:left">Quantity</th>				
+// 	<th style="text-align:right">Total</th>
+// 	<th style="text-align:right">Remove Item</th>
+// </tr>
+
+
+?>
+
+<table id="orderItemsTableTemplate" style="display:none;">
+	
+	<tr id="productRowTemplate" class="productRow chargeRow">
+		<td width="200px" class="titleColumn"  ><span class="itemName"></span></td>
+
+		<td class="descriptionColumn"> <input type="text" class="itemDescTextInput" value="" /><br/><span class="description">(Optional)</span></td>
+		
+		<td class="itemPriceColumn"></td>
+		
+		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		
+		<td class="rowTotalColumn"></td>
+			
+		<td class="removeItemColumn"><a class="button-secondary" href="#" class="removeProductbutton" title="Remove">X</a></td>
+	<tr>
+		
+</table>
 
 <?php
 }

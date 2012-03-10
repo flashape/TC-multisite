@@ -7,10 +7,24 @@
 ?>
 
 <div class="tc_metabox">
-
 	SKU #:
 	<?php $mb->the_field('sku'); ?>
-	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/><br />	
+	
+	Price:
+	<?php $mb->the_field('price'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/><br />
+		
+	Width:
+	<?php $mb->the_field('width'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
+	
+		
+	Height:
+	<?php $mb->the_field('height'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
+	
+	
 	<p>
 		<?php $mb->the_field('autocompleteEnabled'); ?>
 		<input type="checkbox" name="<?php $mb->the_name(); ?>" id="<?php $mb->the_name(); ?>" value="on"<?php $mb->the_checkbox_state('on'); ?>/>
