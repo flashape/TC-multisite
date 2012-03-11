@@ -327,14 +327,14 @@ function onOrderDetailsMetaboxFooterAction() {
 
 	$productPosts = get_posts(array('post_type' => 'tc_products', 'numberposts'=>-1, 'meta_key'=>'_tc_product_details_autocompleteEnabled', 'meta_value'=>'on'));
 
-	$productAutocompleteItems = array();
+	$autocompleteItems = array();
 
 	foreach ($productPosts as $product) {
 		$productName = $product->post_title;
 		$productID = $product->ID;
 		// $postMeta = get_post_custom($productID);
 		// error_log(var_export($postMeta, 1));
-		$productItem = array('label'=>$productName, 'value'=>$productID);
+		$productItem = array('label'=>$productName, 'value'=>$productID, 'type'=>'tc_products');
 		
 		$productItem['sku'] = get_post_meta( $productID, '_tc_product_details_sku', true );
 		$productItem['price'] = get_post_meta( $productID, '_tc_product_details_price', true );
@@ -347,26 +347,29 @@ function onOrderDetailsMetaboxFooterAction() {
 		
 		foreach($variations as &$variation){
 			$variation['items'] = VariationItemAjax::getItemsForVariation($variation['id'], true);
-			// error_log('VariationItems : ');
-			// error_log(print_r($variation['items'],1));
-
 			
 			
 			$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
-			// error_log('VariationRules : ');
-			// error_log(print_r($variation['rules'],1));
-			// 
-			// error_log('Variation : ');
-			// 
-			// error_log(print_r($variation,1));
 		}
 
 		$productItem['variations'] = $variations;
 		
-		$productAutocompleteItems[] = $productItem;
+		$autocompleteItems[] = $productItem;
 	}
+	
+	
+	$servicePosts = get_posts(array('post_type' => 'tc_service', 'numberposts'=>-1));
+	foreach ($servicePosts as $service) {
+		$serviceName = $service->post_title;
+		$serviceID = $service->ID;
+		$serviceItem = array('label'=>$serviceName, 'value'=>$serviceID, 'type'=>'tc_service');
+		$serviceItem['defaults'] = get_post_meta( $serviceID, 'service_details', true );
+		
+		$autocompleteItems[] = $serviceItem;
+	}
+	
 
-	$productAutocompleteJSON = json_encode($productAutocompleteItems);
+	$productAutocompleteJSON = json_encode($autocompleteItems);
 	
 ?>
 	
@@ -478,8 +481,10 @@ jQuery(document).ready(function($){
 		source:productAutocompleteJSON,
 		select: function(event, ui) {
 					var selectedObj = ui.item;
-					$('#tc_product_input').val(selectedObj.label);
-					orderItemsViewMediator.addProductRow(selectedObj);
+					$('#tc_product_input').val('');
+					debug.log('selectedObj : ', selectedObj);
+					orderItemsViewMediator.addItemRow(selectedObj);
+					//orderItemsViewMediator.addProductRow(selectedObj);
 					return false;
 				},		
 		focus: function(event, ui) {
@@ -495,10 +500,19 @@ jQuery(document).ready(function($){
 	
 	$('#orderItemsTable').on('focusout', 'input.quantity', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.itemDescTextInput', checkRowForUpdates)
+	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
 	
 	function checkRowForUpdates(event){
-		var row = jQuery(this).closest('tr');
+		$elem = jQuery(this);
+		var row = $elem.closest('tr');
+		
+		//quick hack in case the price input field is empty
+		if ($elem.hasClass('priceInput') && $elem.val() == ''){
+			$elem.val('0');
+		}
+		
+		
 		orderItemsViewMediator.checkItemUpdated(row);
 	}
 	
@@ -618,11 +632,31 @@ jQuery(document).ready(function($){
 <table id="orderItemsTableTemplate" style="display:none;">
 	
 	<tr id="productRowTemplate" class="productRow chargeRow">
-		<td width="200px" class="titleColumn"  ><span class="itemName"></span></td>
+		<td width="300px" class="titleColumn"  ><span class="itemName"></span></td>
 
 		<td class="descriptionColumn"> <input type="text" class="itemDescTextInput" value="" /><br/><span class="description">(Optional)</span></td>
 		
 		<td class="itemPriceColumn"></td>
+		
+		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		
+		<td class="rowTotalColumn"></td>
+			
+		<td class="removeItemColumn"><a class="button-secondary" href="#" class="removeProductbutton" title="Remove">X</a></td>
+	<tr>
+		
+	<tr id="serviceRowTemplate" class="serviceRow chargeRow">
+		<td width="300px" class="titleColumn"  >
+			<span class="itemName"></span>
+			<div class="serviceDetailsDiv">
+				Hours: <input type="text" class="serviceHoursInput small-text"  maxlength="3"  /><br />
+				Servings: <input type="text" class="serviceServingsInput small-text"  maxlength="5"  /><br />
+			</div>
+		</td>
+
+		<td class="descriptionColumn"> <input type="text" class="itemDescTextInput" value="" /><br/><span class="description">(Optional)</span></td>
+		
+		<td class="itemPriceColumn"><input type="text" class="priceInput small-text" maxlength="3"  /></td>
 		
 		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
 		

@@ -2,6 +2,7 @@
 add_action('init', 'register_tc_testamonials_posttype');
 add_action('init', 'register_tc_press_posttype');
 add_action('init', 'register_tc_products_posttype');
+add_action('init', 'register_tc_service_posttype');
 add_action('init', 'register_tc_product_variation_posttype');
 add_action('init', 'register_tc_variation_group_posttype');
 add_action('init', 'register_tc_variation_item_posttype');
@@ -140,6 +141,46 @@ function register_tc_products_posttype() {
 		'menu_position' 	=> 0,
 	 );
 	 register_post_type('tc_products',$post_type_args);
+}
+
+
+
+// ----------------  
+// Register Service post types
+// ----------------
+
+function register_tc_service_posttype() {
+	$labels = array(
+		'name' 				=> _x( 'Services', 'post type general name' ),
+		'singular_name'		=> _x( 'Service', 'post type singular name' ),
+		'add_new' 			=> _x( 'Add New', 'Service'),
+		'add_new_item' 		=> __( 'Add New Service '),
+		'edit_item' 		=> __( 'Edit Service '),
+		'new_item' 			=> __( 'New Service '),
+		'view_item' 		=> __( 'View Service '),
+		'search_items' 		=> __( 'Search Services '),
+		'not_found' 		=>  __( 'No Service found' ),
+		'not_found_in_trash'=> __( 'No Services found in Trash' ),
+		'parent_item_colon' => ''
+	);
+	
+	$supports = array('title','editor','excerpt', 'page-attributes');
+	
+	$post_type_args = array(
+		'labels' 			=> $labels,
+		'singular_label' 	=> __('Service'),
+		'public' 			=> true,
+		'show_ui' 			=> true,
+		'publicly_queryable'=> true,
+		'query_var'			=> true,
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false,
+		'hierarchical' 		=> true,
+		'rewrite' 			=> array('slug' => 'services', 'with_front' => false),
+		'supports' 			=> $supports,
+		'menu_position' 	=> 0,
+	 );
+	 register_post_type('tc_service',$post_type_args);
 }
 
 

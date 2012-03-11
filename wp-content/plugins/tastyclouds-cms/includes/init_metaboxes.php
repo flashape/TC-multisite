@@ -122,6 +122,18 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 
 
 
+$service_default_details_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'service_details',
+	'title' => 'Default Details',
+	'types' => array('tc_service'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_service_details_',	
+	'context' => 'side',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ServiceDefaultDetailsMetabox.php',
+
+));
+
 
 
 

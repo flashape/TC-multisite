@@ -1116,27 +1116,48 @@ var OrderItemsViewMediatorClass = JS.Class({
 			row.find('.defaultState').hide();
 		},
 		
-		addProductRow : function (selectedObj){
+		addItemRow : function(selectedObj){
 			var model = this.createOrderItemModel(selectedObj);
+			switch(selectedObj.type){
+				case 'tc_products':
+					this.addProductRow(model);
+				break;
+				
+				case 'tc_service':
+					this.addServiceRow(model);
+				break;
+				
+				
+			}
+			
+		},
+		
+		addServiceRow : function (model){
+			var newRow = jQuery( this.getTemplateRowIDByType(model.type) ).clone();
+			newRow.removeAttr("id");
+
+			
+			this.insertRowIntoTable(newRow)
+			newRow.data("model", model);
+			debug.log("productModel : ", this.getProductById(model.productID));
+			newRow.data("productModel", this.getProductById(model.productID));
+			
+			this.initializeNewRow(newRow);
+			this.populateServiceRow(newRow);
+
+			this.checkItemUpdated(newRow);
+			return newRow;
+			
+		},
+		
+		
+		addProductRow : function (model){
+			
 			debug.log('addProductRow : ', model);
 			
 			var newRow = jQuery( this.getTemplateRowIDByType(model.type) ).clone();
 			newRow.removeAttr("id");
 
-
-			// if(targetTaskList){
-			// 	if (!model.hasOwnProperty('taskListId')){		
-			// 		var parentRow = targetTaskList.closest('tr');
-			// 		var taskListId = parentRow.data("model").id;
-			// 		model.taskListId = taskListId;
-			// 	}
-			// 	var li = jQuery('<li>')
-			// 	li.append(newRow);
-			// 	targetTaskList.append(li);
-			// }else{
-			// 	jQuery('#activityTable > tbody').prepend(newRow);
-			// }
-			// 
 			
 			this.insertRowIntoTable(newRow)
 			newRow.data("model", model);
@@ -1155,13 +1176,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 
 			this.populateProductRow(newRow);
 
+			this.checkItemUpdated(newRow);
 			return newRow;
 		},
 		
 		getTemplateRowIDByType : function(type) {
 			var typeIDMap = {};
-			typeIDMap['product'] = '#productRowTemplate';
-			// typeIDMap['revenue'] = '#revenueRowTemplate';
+			typeIDMap['tc_products'] = '#productRowTemplate';
+			typeIDMap['tc_service'] = '#serviceRowTemplate';
 			// typeIDMap['tasklist'] = '#tasklistRowTemplate';
 			// typeIDMap['task'] = '#taskRowTemplate';
 			// typeIDMap['note'] = '#noteRowTemplate';
@@ -1171,6 +1193,19 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 		},
 		
+		populateServiceRow : function (row){
+			var model = row.data("model");
+			var productModel = row.data("productModel");
+			row.find('.itemName').text( productModel.label );
+			row.find('.serviceHoursInput').val( model.hours );
+			row.find('.serviceServingsInput').val( model.servings );
+			row.find('.priceInput').val( model.price );
+			row.find('.itemDescTextInput').val( model.description );
+			
+		},
+		
+		
+		
 		populateProductRow : function (row){
 			var model = row.data("model");
 			
@@ -1178,11 +1213,12 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			
 			switch(model.type){
-				case 'product':
+				case 'tc_products':
 					var productModel = row.data("productModel");
 
 					row.find('.itemName').text( productModel.label );
-					row.find('.itemPriceColumn').text( this.priceToFixed(productModel.price) );
+					row.find('.itemPriceColumn').text( this.priceToFixed(model.price) );
+					row.find('.itemDescTextInput').val( model.description );
 				
 					// if (model.id != 0 ){
 					// 	row.find('.callDateTime').text(model.date)
@@ -1206,15 +1242,19 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var model = newRow.data('model');
 			var productModel = newRow.data('productModel');
 			
-			if (productModel.variations.length > 0){
-				this.generateVariationUIContent(newRow);
+			switch(productModel.type){
+				case 'tc_products':
+					if (productModel.variations.length > 0){
+						this.generateVariationUIContent(newRow);
+					}
+				break;
+				
+				case 'tc_service':
+					
+				break;
 			}
-			
-			
-			// // the HTML5 'input' event is fired whenever text is changed in the input field.
-			// newRow.find('.quantity').on('input', function(event){
-			// 	debug.log('quantity changed : ', event);
-			// })
+
+
 		},
 		
 		generateVariationUIContent : function(row){
@@ -1238,7 +1278,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 				var r = Math.floor(Math.random()*1000001);
 				var randomnumber= ts + r;
 				
-				variationsDiv += '<select id="variation_'+variation.id+'__p2pid_'+variation.p2p_id+'__r_'+randomnumber+'" class="variationDropdown" style="width:100px">';
+				variationsDiv += '<select id="variation_'+variation.id+'__p2pid_'+variation.p2p_id+'__r_'+randomnumber+'" class="variationDropdown" style="width:150px">';
 				
 				//generate the list of variationItems
 				jQuery.each(variation.items, function(key, variationItem) {
@@ -1277,8 +1317,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 			debug.log('newModel: ', newModel);
 			debug.log('Object.equals : '+Object.equals(oldModel, newModel));
 			
-			if(!Object.equals(oldModel, newModel)){
-				this.calculateRowTotal(row);
+			if( !Object.equals(oldModel, newModel) ){
+				row.data("model", newModel);
+				
+				var rowTotal = this.calculateRowTotal(row);
+				debug.log("returned rowTotal :", rowTotal);
+				
+				row.data("rowTotal", rowTotal);
+				row.find('.rowTotalColumn').text(this.priceToFixed(rowTotal));
 			}
 		},
 
@@ -1286,13 +1332,147 @@ var OrderItemsViewMediatorClass = JS.Class({
 		calculateRowTotal : function (row){
 			
 			// the info to send when updating the cart in the session
-			var itemUpdateInfo = {};
+			//var itemUpdateInfo = {};
+			var rowTotal;
+			
 			
 			var productModel = row.data('productModel');
 			var model = row.data('model');
 			
+			switch(productModel.type){
+				case 'tc_products':
+					rowTotal = this.calculateProductRowTotal(row);
+				break;
+				
+				case 'tc_service':
+					rowTotal = this.calculateServiceRowTotal(row);
+				break;
+				
+			}
 			
-			var startPrice = parseFloat( productModel.price );
+			return rowTotal;
+
+		},
+		
+		calculateServiceRowTotal : function (row){
+			var model = row.data('model');
+			
+			var rowTotal = parseFloat( model.price );
+			rowTotal *= model.quantity;
+			
+			
+			return rowTotal;
+		},
+		
+		
+		calculateProductRowTotal : function (row){
+			var model = row.data('model');
+			debug.log('calculateProductRowTotal , model : ', model);
+			var productModel = row.data('productModel');
+			
+			var startPrice = parseFloat( model.price );
+			debug.log("startPRice : ", startPrice);
+			var rowTotal = startPrice;
+			debug.log("rowTotal : ", rowTotal);
+			
+			
+			var hasVariations = (productModel.variations.length > 0);
+			
+			if(hasVariations){
+				// if the variation has rules associated with it,			
+				// check to see if they apply to the selected items
+				var numVariations = model.variations.length;
+				var i = 0;
+				var selectedVariationObj;
+				var variationRules;
+				var rule;
+				
+				for (i=0; i<numVariations; i++){
+					selectedVariationObj = model.variations[i];
+					
+					variationModel = this.getProductVariationDataByP2PId(productModel, selectedVariationObj.p2pid)
+					debug.log('variationModel : ', variationModel);
+				
+					if(variationModel.hasOwnProperty('rules')){
+						
+						variationRules = variationModel.rules;
+						debug.log('variationRules : ', variationRules);
+						
+						rule = this.getVariationRuleByP2PId(variationRules, selectedVariationObj.p2pid);
+						debug.log('rule : ', rule);
+						
+						//TODO: make this work with more than one selected variation
+						var selectedVariationItemID = selectedVariationObj.selected[0];
+						debug.log("selectedVariationItemID : ", selectedVariationItemID);
+						debug.log("jQuery.inArray( selectedVariationItemID, rule.selectedItems) : ", jQuery.inArray( selectedVariationItemID, rule.selectedItems));
+						
+						// if the selected variation item has a matching rule...
+						if ( jQuery.inArray( selectedVariationItemID, rule.selectedItems) > -1 ){
+							//process rule
+							var offsetAmount = parseFloat(rule.offsetAmount);
+							var offsetType = rule.offsetType;
+							
+							switch(offsetType){
+								case "total":
+									//charge specified price for item, overriding any rules
+									rowTotal = offsetAmount;
+									break;
+								break;
+								
+								case "addPercent":
+									// add specified percent to item
+									var percent = (offsetAmount/100);
+									debug.log("percent : ", percent);
+									amountToAdd = rowTotal * percent;
+									debug.log("amountToAdd : ", amountToAdd);
+									rowTotal += amountToAdd;
+								break;
+								
+								case "addDollars":
+									// add specified dollar amount to item
+									rowTotal += offsetAmount
+									
+								break;
+								
+								
+								case "addDollarsOnce":
+									// add specified dollar amount to item, if another product row has not done so already
+									//TODO:  add map for "once" items already calculated
+									rowTotal += offsetAmount;
+									
+								break;
+								
+																
+								case "minusPercent":
+									// subtract specified percent from item
+									//rowTotal *= (offsetAmount/100);
+									
+								break;
+								
+								case "minusDollars":
+									// subtract specified dollar amount from item
+									//rowTotal += offsetAmount
+									
+								break;
+								
+								
+								case "minusDollarsOnce":
+									// subtract specified dollar amount from item, if another product row has not done so already
+								break;
+							}
+							
+						}
+						
+					}
+				}
+			}
+			
+			
+			rowTotal *= model.quantity;
+			
+			return rowTotal;
+			
+			
 
 			
 			// // the info to send when updating the cart in the session
@@ -1332,19 +1512,65 @@ var OrderItemsViewMediatorClass = JS.Class({
 			// if (this.enableAjax){
 			// 	ordersAjaxService.updateCartItem(cartItemID,itemUpdateInfo);
 			// }
+			
 		},
+		
+		
+		parseVariationIdsFromDropdownID : function(){
+		},
+		
+		
+		
+		getProductVariationDataByP2PId : function(productModel, p2pid){
+			var numVariations = productModel.variations.length;
+			var i = 0;
+			var variationObj;
+			
+			for (i=0; i<numVariations; i++){
+				variationObj = productModel.variations[i];
+				
+				if (variationObj.p2p_id == p2pid){
+					return variationObj;
+				}
+			}
+		},
+		
+				
+		
+		getVariationRuleByP2PId : function(variationRules, p2pid){
+			var ruleObj;
+			for (var prop in variationRules){
+				ruleObj = variationRules[prop];
+				if (ruleObj.variationToProduct_p2p_id == p2pid){
+					return ruleObj;
+				}
+			}
+		},
+		
 		
 		
 		createOrderItemModel : function (selectedObj){
 			var model = {};
 			model.id = 0;
 			model.productID = selectedObj.value;
-			model.type = 'product';
+			model.type = selectedObj.type;
 			model.quantity = 1;
-			model.description = '';
-			
-			//TODO:  only use for products
-			model.variations = []; //an array of objects: {variationID:XXX, selected:[]}
+			model.description = ''			
+
+			if (model.type == 'tc_products'){
+				// will be an array of objects with properties: 
+				// - variationID
+				// - p2pid
+				// - selected (array of selected variationItemIDs)
+				model.variations = []; 
+				model.price = parseFloat(selectedObj.price);
+			}
+
+			if (model.type == 'tc_service'){
+				model.hours = selectedObj.defaults.default_hours; 
+				model.servings = selectedObj.defaults.default_servings; 
+				model.price = 0;				
+			}
 
 			//TODO Use the 'customPrice' property to allow for manual price changes on an item.
 			//model.customPrice = null;
@@ -1361,34 +1587,56 @@ var OrderItemsViewMediatorClass = JS.Class({
 			newModel.id = oldModel.id;
 			newModel.productID = oldModel.productID;
 			newModel.type = oldModel.type;
+			
+			
 			newModel.quantity = parseInt(row.find('.quantity').val());
 			newModel.description = row.find('.itemDescTextInput').val();
 			
-			
-			newModel.variations = [];
-						
-			variantDropDowns = row.find('.variationDropdown');
-			
-			//id="variation_'+variation+'__p2pid_'+variation.p2p_id+
-			
-			if ( variantDropDowns.length > 0){
-				jQuery.each(variantDropDowns, function(key, selectElem) {
-					
-					var dropdown = jQuery(selectElem);
-					var dropdownID = dropdown.attr('id');
-					
-					var idParts = dropdownID.split('__');
-					
-					// idParts = ['variation_XXX', 'p2pid_XXX']
-					var variation = {};
-					variation.variationID = idParts[0].split('_')[1];
-					variation.p2pid = idParts[1].split('_')[1];
-					variation.variationItemID = jQuery("#"+dropdownID+" option:selected").val();
-					
-					newModel.variations.push(variation);
-				});
-			
+			switch(oldModel.type){
+				
+				case 'tc_products':
+					newModel.variations = [];
+					newModel.price = oldModel.price;
+
+					variantDropDowns = row.find('.variationDropdown');
+
+					//id="variation_'+variation+'__p2pid_'+variation.p2p_id+
+
+					if ( variantDropDowns.length > 0){
+						jQuery.each(variantDropDowns, function(key, selectElem) {
+
+							var dropdown = jQuery(selectElem);
+							var dropdownID = dropdown.attr('id');
+
+							var idParts = dropdownID.split('__');
+
+							// idParts = ['variation_XXX', 'p2pid_XXX']
+							var variation = {};
+							variation.variationID = idParts[0].split('_')[1];
+							variation.p2pid = idParts[1].split('_')[1];
+
+
+							var variationItemID = jQuery("#"+dropdownID+" option:selected").val();
+							variation.selected = [variationItemID];
+
+							newModel.variations.push(variation);
+						});
+
+					}
+				break;
+				
+				
+				
+				case 'tc_service':
+					newModel.hours = row.find('.serviceHoursInput').val();
+					newModel.servings = row.find('.serviceServingsInput').val();
+					newModel.price = parseFloat(row.find('.priceInput').val());
+				break;
+				
+				
+				
 			}
+
 			
 			return newModel;
 			
