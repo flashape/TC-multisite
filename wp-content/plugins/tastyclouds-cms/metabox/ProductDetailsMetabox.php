@@ -15,6 +15,11 @@
 	<?php $mb->the_field('price'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/><br />
 		
+	Length:
+	<?php $mb->the_field('length'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
+	
+				
 	Width:
 	<?php $mb->the_field('width'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
@@ -23,6 +28,10 @@
 	Height:
 	<?php $mb->the_field('height'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
+	
+	Weight:
+	<?php $mb->the_field('weight'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> pounds<br />
 	
 	
 	<p>

@@ -12,6 +12,17 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
     define('TASTY_CMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 }
 
+add_action('plugins_loaded','tc_cms_init_session');
+
+function tc_cms_init_session(){
+	if (!session_id()){
+		error_log("\tc_cms_init_session , no session_id, starting new\n");
+		session_start();
+	}
+}
+
+
+
 
 // turn off wp 'doing it wrong' errors like "[somefunction]_called_incorrectly"
 add_filter('doing_it_wrong_trigger_error', 'on_doing_it_wrong_trigger_error_filter');
@@ -25,8 +36,11 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_taxonomies.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/AjaxUtils.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/CartAjax.php');
 
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
 add_filter('update_post_metadata', 'tc_update_post_metadata', 10, 4);

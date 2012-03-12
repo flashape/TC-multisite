@@ -5,6 +5,11 @@
 if (!defined('TASTY_CMS_PLUGIN_INC_DIR')) {
     define('TASTY_CMS_PLUGIN_INC_DIR', TASTY_CMS_PLUGIN_DIR . 'includes/');
     define('TASTY_CMS_PLUGIN_METABOX_DIR', TASTY_CMS_PLUGIN_DIR . 'metabox/');
+    define('TASTY_CMS_PLUGIN_LIBS_DIR', TASTY_CMS_PLUGIN_DIR . 'libs/');
+
+}
+
+if (!defined('TASTY_CMS_PLUGIN_LIBS_DIR')) {
 }
 
 if(!defined('TC_CMS_JS_DIR')){

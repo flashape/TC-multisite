@@ -1,8 +1,16 @@
 <?php
 
-global $post, $post_id;
+global $post, $post_id ,$pagenow;
 
-$enabledCheckboxID = '_tc_crm_shipping_enabled';
+global $cartID;
+error_log("pagenow : $pagenow");
+if ($pagenow == 'post-new.php'){
+	$cartID = CartAjax::create();
+	error_log("cartID : $cartID");
+	
+}
+
+$enabledCheckboxID = '_tc_shipping_enabled_checkbox';
 //$meta = get_post_meta( $post_id, $enabledCheckboxID, true );
 //$meta = get_post_meta( $post->ID, $enabledCheckboxID, true );
 $meta = get_metadata('post', $post->ID);
@@ -141,11 +149,18 @@ $paymentRows = tc_get_order_payment_rows();
 	}
 	
 	.itemName{
+		color:#990000;
+		font-weight:bold;
+	}
+	
+	.customItemTitleInput{
+		color:#990000;
 		font-weight:bold;
 	}
 			
 	.titleColumn{
 		text-align:left;
+		
 	}
 			
 	.descriptionColumn{
@@ -154,7 +169,7 @@ $paymentRows = tc_get_order_payment_rows();
 		
 			
 	.itemPriceColumn{
-		text-align:left;
+		text-align:right;
 	}
 					
 	.quantityColumn{
@@ -168,6 +183,18 @@ $paymentRows = tc_get_order_payment_rows();
 					
 	.removeItemColumn{
 		text-align:right;
+	}
+						
+	.addNextItemColumn{
+		text-align:right;
+	}
+	
+	.balanceDue {
+		text-align:right;
+		font-weight:bold;
+		font-size:14px !important;
+		color:#990000 !important;
+		
 	}
 		
 		
@@ -207,7 +234,10 @@ $paymentRows = tc_get_order_payment_rows();
 		
 		<div id="orderItemsTab" style="padding-left:0px;padding-right:0px;padding-top:0px;">
 			
-			<div>Product Select : <input type="text" id="tc_product_input"  /></div>
+			<div style="margin:10px;">
+				Select Product/Service : <input type="text" id="tc_product_input"  />
+				<a class="button-secondary" href="#" id="customItemButton" title="Add Custom Item">Add Custom Item</a>
+			</div>
 			
 			<table id="orderItemsTable" class="widefat">
 				<tr>
@@ -216,24 +246,27 @@ $paymentRows = tc_get_order_payment_rows();
 					<th style="text-align:left">Price</th>
 					<th style="text-align:left">Quantity</th>				
 					<th style="text-align:right">Total</th>
+					<th style="text-align:right">Add Item</th>
 					<th style="text-align:right">Remove Item</th>
 				</tr>
 				<tr id="subtotalRow" class="alternate">
 					<td colspan="4" style="text-align:right">Subtotal</td>
 					<td style="text-align:right" id="subtotalField">$0.00<td>
 					<td></td>
+					<td></td>
 				</tr>
 
 				<tr id="discountRow">
 					<td colspan="4" style="text-align:right">
 						Discount:
-						<input type="text" name="discountAmount" value="" id="discountAmount">
-						<select name="discountType" id="discountType" size="1">
+						<input type="text" value="0" id="discountAmountInput">
+						<select id="discountTypeDropdown"  size="1">
 							<option value="percent">% Off</option>
 							<option value="dollar">Dollars Off</option>
 						</select>
 					</td>
 					<td id="discountRowTotal" class="discountRowTotal" style="text-align:right"></td>
+					<td></td>
 					<td></td>
 				</tr>			
 				<tr id="shippingRow" style="display:none">
@@ -248,6 +281,7 @@ $paymentRows = tc_get_order_payment_rows();
 						  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Loading shipping...</p>
 						</div>
 					</td>
+					<td></td>
 				</tr>			
 				<tr id="shippingDiscountRow">
 					<td id="shippingDiscountTitle" colspan="4" style="text-align:right">
@@ -256,12 +290,14 @@ $paymentRows = tc_get_order_payment_rows();
 					<td>
 
 					</td>
+					<td></td>
+					
 				</tr>			
 				<tr id="couponRow">
 					<td colspan="4" style="text-align:right">
 						Coupon Code / Gift Certificate:
-						<input type="text" name="couponCode" value="" id="couponCode">
-						<a href="#" id="applyCouponButton" class="button-secondary">Apply Coupoon</a>
+						<input type="text" value="" id="couponCodeInput">
+						<a href="#" id="applyCouponButton" class="button-secondary">Apply Coupon</a>
 						<a href="#" id="removeCouponButton" class="button-secondary" style="display:none;">Remove Coupoon</a>
 						<div id="validatingCoupon">
 						  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Validating copon...</p>
@@ -270,11 +306,13 @@ $paymentRows = tc_get_order_payment_rows();
 					</td>
 					<td id="couponRowTotal" class="couponRowTotal" style="text-align:right"></td>
 					<td></td>
+					<td></td>
+					
 				</tr>
 
 				<tr id="taxRow">
 					<td id="taxRowTitle" colspan="4" style="text-align:right">
-						<input type="checkbox" name="_tc_crm_tax_enabled" id="_tc_crm_tax_enabled">
+						<input type="checkbox" id="_tc_tax_enabled">
 						Tax<br/>
 						<span class="description">Add 8.75% Tax to this order</span>
 					</td>
@@ -282,17 +320,21 @@ $paymentRows = tc_get_order_payment_rows();
 					<td>
 
 					</td>
+					<td></td>
+					
 				</tr>			
 				<tr id="totalRow">
-					<td colspan="4" style="text-align:right">Total</td>
+					<td colspan="4" style="text-align:right">Order Total</td>
 					<td style="text-align:right" id="totalField">$0.00<td>
 					<td></td>
 				</tr>
 				<?php echo $paymentRows ?>
 				<tr id="balanceDueRow">
-					<td colspan="4" style="text-align:right;font-weight:bold">Balance Due</td>
-					<td style="text-align:right;font-weight:bold" id="balanceDueField">$0.00<td>
+					<td colspan="4" class="balanceDue">Balance Due</td>
+					<td id="balanceDueField"  class="balanceDue">$0.00<td>
 					<td></td>
+					<td></td>
+					
 				</tr>	
 
 			</table>
@@ -313,63 +355,13 @@ $paymentRows = tc_get_order_payment_rows();
 
 <?php
 function onOrderDetailsMetaboxFooterAction() {
+	require_once(TASTY_CMS_PLUGIN_INC_DIR .'utils/AutocompleteUtils.php');
 	
-	$autoCompleteContacts = get_posts(array('post_type' => 'tc_contact', 'numberposts'=>-1));
-
-	$contactAutocompleteItems = array();
-
-	foreach ($autoCompleteContacts as $contact) {
-		$contactName = $contact->post_title;
-		$contactID = $contact->ID;
-		$contactAutocompleteItems[] = array('label'=>$contactName, 'value'=>$contactID);
-	}
-	$contactAutocompleteJSON = json_encode($contactAutocompleteItems);
-
-	$productPosts = get_posts(array('post_type' => 'tc_products', 'numberposts'=>-1, 'meta_key'=>'_tc_product_details_autocompleteEnabled', 'meta_value'=>'on'));
-
-	$autocompleteItems = array();
-
-	foreach ($productPosts as $product) {
-		$productName = $product->post_title;
-		$productID = $product->ID;
-		// $postMeta = get_post_custom($productID);
-		// error_log(var_export($postMeta, 1));
-		$productItem = array('label'=>$productName, 'value'=>$productID, 'type'=>'tc_products');
-		
-		$productItem['sku'] = get_post_meta( $productID, '_tc_product_details_sku', true );
-		$productItem['price'] = get_post_meta( $productID, '_tc_product_details_price', true );
-		$productItem['width'] = get_post_meta( $productID, '_tc_product_details_width', true );
-		$productItem['height'] = get_post_meta( $productID, '_tc_product_details_height', true );
-		
-		$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
-		
-		//$variation is array: array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
-		
-		foreach($variations as &$variation){
-			$variation['items'] = VariationItemAjax::getItemsForVariation($variation['id'], true);
-			
-			
-			$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
-		}
-
-		$productItem['variations'] = $variations;
-		
-		$autocompleteItems[] = $productItem;
-	}
+	$contactAutocompleteJSON = AutocompleteUtils::createContactModel();
+	$productAutocompleteJSON = AutocompleteUtils::createProductModel();
 	
-	
-	$servicePosts = get_posts(array('post_type' => 'tc_service', 'numberposts'=>-1));
-	foreach ($servicePosts as $service) {
-		$serviceName = $service->post_title;
-		$serviceID = $service->ID;
-		$serviceItem = array('label'=>$serviceName, 'value'=>$serviceID, 'type'=>'tc_service');
-		$serviceItem['defaults'] = get_post_meta( $serviceID, 'service_details', true );
-		
-		$autocompleteItems[] = $serviceItem;
-	}
-	
-
-	$productAutocompleteJSON = json_encode($autocompleteItems);
+	$shippingOptions = get_option('tc_shipping_options');
+	$shippingOptionsJSON = json_encode($shippingOptions);
 	
 ?>
 	
@@ -384,62 +376,46 @@ jQuery(document).ready(function($){
 	
 	contactAutocompleteJSON = <?php echo $contactAutocompleteJSON ?>;
 	productAutocompleteJSON = <?php echo $productAutocompleteJSON ?>;
+	shippingOptionsJSON = <?php echo $shippingOptionsJSON ?>;
 	
 	ordersAjaxService = new OrdersAjaxServiceClass();
 	customerInfoViewMediator = new CustomerInfoViewMediatorClass(jQuery('#client_information'));
-	orderItemsViewMediator = new OrderItemsViewMediatorClass(jQuery('#tc_crm_order_items'));
-	
-	
-	//TC_ProductManager.products = productsJson;
-
-	//TC_ProductManager.shippingOptions = shippingOptionsJson;
-	
-	$('#addProductButton').on('click', function() {
-		orderItemsViewMediator.onAddItemClick();
-	    return false;			
-	});		
-
-	$('#addCustomChargeButton').on('click', function() {
-		orderItemsViewMediator.onAddCustomItemClick();
-	    return false;			
-	});
-	
-	$('#addServingsButton').on('click', function() {
-		orderItemsViewMediator.onAddCustomItemClick("Additional Servings");
-	    return false;			
-	});		
-	$('#addHoursButton').on('click', function() {
-		orderItemsViewMediator.onAddCustomItemClick("Additional Hours");
-	    return false;			
-	});
-	
-	$('#addFlavorButton').on('click', function() {
-		orderItemsViewMediator.onAddCustomItemClick("Additional Flavors");
-	    return false;			
-	});
-	
-	
-	$('#addDeliveryButton').on('click', function() {
-		orderItemsViewMediator.onAddDeliveryClick();
-	    return false;			
-	});
+	orderItemsViewMediator = new OrderItemsViewMediatorClass(jQuery('#contactInfoTab'));
 	
 	$('#titlediv').hide();
 	$('#submitdiv').hide();
 	$("#loadingShipping").hide();
 	$("#validatingCoupon").hide();
 	
-	$('#addPaymentButton').on('click', function() {
-		$('#publish').click();
-	    return false;
+	
+	
+	var shippingDropDown = $('#shipmentType');
+	var fedExOptions = shippingOptionsJSON.FedEx.services;
+
+	
+	$.each(fedExOptions, function(key, shippingInfo) {
+		var optionValue = shippingInfo.value;
+		var option = $('<option>', { value : optionValue }).text(shippingInfo.name);
+		option.data('shippingMethod', shippingInfo);
+	    shippingDropDown.append(option); 
 	});
 	
-	$('#saveOrderButton').on('click', function() {
-		$('#publish').click();
-	    return false;
-	});
+	
+	
+	// $('#addPaymentButton').on('click', function() {
+	// 	$('#publish').click();
+	//     return false;
+	// });
+	// 
+	// $('#saveOrderButton').on('click', function() {
+	// 	$('#publish').click();
+	//     return false;
+	// });
+		
+
 	
 	$('#quickZip').addClass('copyZip');
+	
 	$('#_tc_crm_contact_personal_address_zip').addClass('copyZip');
 	
 	// keeps the "Quick Zip" and contact zip text fields in sync
@@ -483,25 +459,79 @@ jQuery(document).ready(function($){
 					var selectedObj = ui.item;
 					$('#tc_product_input').val('');
 					debug.log('selectedObj : ', selectedObj);
-					orderItemsViewMediator.addItemRow(selectedObj);
+					orderItemsViewMediator.addSelectedItemRow(selectedObj);
 					//orderItemsViewMediator.addProductRow(selectedObj);
 					return false;
 				},		
-		focus: function(event, ui) {
-					var selectedObj = ui.item;
-					$('#tc_product_input').val(selectedObj.label);
-					return false;
-				}
+		// focus: function(event, ui) {
+		// 			var selectedObj = ui.item;
+		// 			$('#tc_product_input').val(selectedObj.label);
+		// 			return false;
+		// 		}
 		})
 		
 	
 	
-
+	$('#applyCouponButton').on('click', function() {
+		orderItemsViewMediator.submitCouponCode();
+	    return false;
+	});	
+	
+	$('#removeCouponButton').on('click', function() {
+		orderItemsViewMediator.removeCoupon();
+	    return false;
+	});	
+	$('#customItemButton').on('click', function() {
+		orderItemsViewMediator.addSelectedItemRow({type:'custom'});
+	    return false;
+	});
 	
 	$('#orderItemsTable').on('focusout', 'input.quantity', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.itemDescTextInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
+	$('#orderItemsTable').on('focusout', 'input.customItemTitleInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
+	
+	$('#discountAmountInput').on('focusout', function(event){
+		orderItemsViewMediator.checkDiscountUpdated();
+	});
+	
+	$('#discountTypeDropdown').on('change', function(event){
+		orderItemsViewMediator.checkDiscountUpdated();
+	});
+		
+	$('#orderItemsTable').on('click', '.addNextItemButton', function(event){
+		$('#tc_product_input').focus();
+		debug.log('on addNextItembutton click!');
+		//event.stopPropagation();
+		// event.stopImmediatePropagation();
+		// event.preventDefault();
+		return false;
+	    
+	});		
+	$('#orderItemsTable').on('click', '.removeProductButton', function(event){
+		debug.log('on removeProductButton click!');
+		
+		$elem = jQuery(this);
+		var row = $elem.closest('tr');
+		orderItemsViewMediator.removeItemRow(row);
+		
+		
+		return false;
+	    
+	});
+	
+	$('#_tc_tax_enabled').on('change', function(){
+		orderItemsViewMediator.onTaxEnabledChange();
+	});
+	
+		
+	$('#_tc_shipping_enabled_checkbox').on('change', function(){
+		orderItemsViewMediator.onShippingEnabledChange();
+	});
+	
+	
+	$('#discountRow').data('discountModel', {amount:0, type:'percent'});
 	
 	function checkRowForUpdates(event){
 		$elem = jQuery(this);
@@ -511,7 +541,6 @@ jQuery(document).ready(function($){
 		if ($elem.hasClass('priceInput') && $elem.val() == ''){
 			$elem.val('0');
 		}
-		
 		
 		orderItemsViewMediator.checkItemUpdated(row);
 	}
@@ -623,6 +652,7 @@ jQuery(document).ready(function($){
 // 	<th style="text-align:left">Price</th>
 // 	<th style="text-align:left">Quantity</th>				
 // 	<th style="text-align:right">Total</th>
+// 	<th style="text-align:right">Add Item</th>
 // 	<th style="text-align:right">Remove Item</th>
 // </tr>
 
@@ -642,7 +672,13 @@ jQuery(document).ready(function($){
 		
 		<td class="rowTotalColumn"></td>
 			
-		<td class="removeItemColumn"><a class="button-secondary" href="#" class="removeProductbutton" title="Remove">X</a></td>
+		<!-- <td class="removeItemColumn"><a class="removeProductbutton button-secondary" href="#" title="Remove" tabIndex="-1">X</a></td>
+		<td class="addNextItemColumn"><a class="addNextItembutton button-secondary " href="#" title="Add Next Item" tabIndex="-1">Add Next Item</a></td>
+		 -->
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
+		
+		
 	<tr>
 		
 	<tr id="serviceRowTemplate" class="serviceRow chargeRow">
@@ -662,10 +698,33 @@ jQuery(document).ready(function($){
 		
 		<td class="rowTotalColumn"></td>
 			
-		<td class="removeItemColumn"><a class="button-secondary" href="#" class="removeProductbutton" title="Remove">X</a></td>
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
+		
+	<tr>
+		
+	<tr id="customRowTemplate" class="customRow chargeRow">
+		<td width="300px" class="titleColumn"  >
+			<input type="text" class="customItemTitleInput" value="" /><br />
+			<span class="description">Item title</span>
+		</td>
+
+		<td class="descriptionColumn"> <input type="text" class="itemDescTextInput" value="" /><br/><span class="description">(Optional)</span></td>
+		
+		<td class="itemPriceColumn"><input type="text" class="priceInput small-text" maxlength="3"  /></td>
+		
+		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		
+		<td class="rowTotalColumn"></td>
+			
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 	<tr>
 		
 </table>
+
+<input type="hidden" name="cartID" id="cartID" value="<?php global $cartID; echo $cartID ?>" />
+<input type="hidden" name="sessionID" id="sessionID" value="<?php echo session_id() ?>" />
 
 <?php
 }

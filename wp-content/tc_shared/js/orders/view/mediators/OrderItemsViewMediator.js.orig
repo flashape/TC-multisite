@@ -862,7 +862,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 					var variantDropDown = jQuery('<select></select>');
 					variantDropDown.attr("name", 'variantGroup'+variantGroup.groupID);
 					variantDropDown.attr("id", 'variantGroup'+variantGroup.groupID);
-
+					
 					jQuery.each(variantGroup.items, function(key, value) {
 						// TODO:  there is an empty variant in one of the groups, remove it.
 						if(value.shortDesc != ''){
@@ -890,14 +890,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 			jQuery('<td><input type="text" class="quantity cmb_text_tiny" value="1" maxlength="3"  ></td>').appendTo(row);
 			jQuery('<td style="text-align:right" id="rowTotal" class="rowTotal">'+price+'</td>').appendTo(row);
 			jQuery('<td style="text-align:right"><a class="button-secondary" href="#" id="removeProductbutton" title="Remove">X</a></td>').appendTo(row);
-
+			
 			//return row;
 
 			row.insertBefore(jQuery('#subtotalRow'));
 				
 			this.updateSubtotal();
 		},
-
+				
 		// adds a new cutom item row to the table.
 		// if a customItemName is provided,  it is used as the value
 		// for the customItemNameTextInput, which will then be disabled.
@@ -916,7 +916,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			//return row;
 			//debug.debug(row);
 			row.insertBefore(jQuery('#subtotalRow'));
-			jQuery('.customItemPriceTextInput').ForcePriceOnly();
+			jQuery('.customItemPriceTextInput' ).ForcePriceOnly();
 		},
 		
 		addDeliveryItemRow : function(cartItemID){

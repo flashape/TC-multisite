@@ -53,7 +53,7 @@ $product_variation_rules_metabox = new WPAlchemy_MetaBox(array
 $product_sku_metabox = new WPAlchemy_MetaBox(array
 (
 	'id' => 'product_details',
-	'title' => 'Product SKU And Details',
+	'title' => 'Product Details',
 	'types' => array('tc_products'),
 	'mode' => WPALCHEMY_MODE_EXTRACT,
 	'prefix' => '_tc_product_details_',
@@ -71,7 +71,7 @@ $coupon_details_metabox = new WPAlchemy_MetaBox(array
 	'id' => 'coupon_details',
 	'title' => 'Coupon Details',
 	'types' => array('tc_coupon'),
-	'mode' => WPALCHEMY_MODE_ARRAY,
+	'mode' => WPALCHEMY_MODE_EXTRACT,
 	'prefix' => '_tc_coupon_',	
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'CouponDetailsMetabox.php',
 
@@ -138,6 +138,7 @@ $service_default_details_metabox = new WPAlchemy_MetaBox(array
 
 
 function onOrderDetailsMetaboxHeadAction(){
+	
 	remove_meta_box( 'tagsdiv-tc_order_type', 'tc_order', 'side' );      
 	remove_meta_box( 'tc_event_typediv', 'tc_order', 'side' );      
 	

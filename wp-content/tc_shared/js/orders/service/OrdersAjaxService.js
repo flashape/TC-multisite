@@ -1,22 +1,10 @@
 var OrdersAjaxServiceClass = JS.Class({
 	construct : function () {
         //this.list = new Array();
-		this.newCartItemAdded = new signals.Signal();
-		this.cartItemRemoved = new signals.Signal();
-		this.cartItemUpdated = new signals.Signal();
-		
-		
-		this.newCustomCartItemAdded = new signals.Signal();	
-		this.customCartItemUpdated = new signals.Signal();
-		this.customCartItemRemoved = new signals.Signal();
-		
-		this.newCateringServiceCartItemAdded = new signals.Signal();
-		this.serviceCartItemUpdated = new signals.Signal();
-		this.serviceCartItemRemoved = new signals.Signal();	
-			
-		this.newDeliveryCartItemAdded = new signals.Signal();
-		this.deliveryCartItemUpdated = new signals.Signal();
-		this.deliveryCartItemRemoved = new signals.Signal();
+		this.addToCartResult = new signals.Signal();
+		this.removeFromCartResult = new signals.Signal();
+		this.updateCartItemResult = new signals.Signal();
+
 		
 		
 		this.discountUpdated = new signals.Signal();
@@ -34,129 +22,45 @@ var OrdersAjaxServiceClass = JS.Class({
 		var data = {action:'tc_crm_get_contact_details'};
 		data.selectedContactID = selectedContactID;
 		jQuery.post(ajaxurl, data, resultHandler, 'json');
-	},	
-		
-	addItemToCartSession : function (){
-		debug.log('addItemToCartSession()');
-		// currently will use the item selected in the products dropdown
-		
-		var data = this.createCartActionData('tc_add_to_cart');
-		
-		var cartItem = TC_ProductManager.getProductDefaultCartData();
-		
-		data.productID = cartItem.productID;
-		data.itemToAdd = stringify(cartItem);
-		debug.log(data);
-		this.doCartPost(data, 'newCartItemAdded', 'addItemToCartSession');
-		
-	},
-
-
-
-	updateCartItem : function (cartItemID, itemData){
-		debug.log('updateCartItem()');
-		
-		var data = this.createCartActionData('tc_update_item', cartItemID);
-		
-		data.itemData = stringify(itemData);
-		debug.log(data);
-		this.doCartPost(data, 'cartItemUpdated', 'updateCartItem');
 	},
 	
 	
-	removeCartItem : function (cartItemID){
+	addCartItem : function (model){
+		var data = this.createCartActionData('tc_add_cart_item');
+		data.rawModel = model;
+		data.model = JSON.stringify(model);
+		this.doCartPost(data, 'addToCartResult', 'addCartItem');
 		
-		var data = this.createCartActionData('tc_remove_from_cart', cartItemID);
-		this.doCartPost(data, 'cartItemRemoved', 'removeCartItem');
+		
+	},
+		
+	removeCartItem : function (model){
+		var data = this.createCartActionData('tc_remove_cart_item');
+		//data.model = model;
+		data.rawModel = model;
+		data.model = JSON.stringify(model);
+		this.doCartPost(data, 'removeFromCartResult', 'removeCartItem');
+		
+		
 	},
 	
-	
-	addCustomItemToCartSession : function (customItemType){
-		debug.log('addCustomItemToCartSession()');
+				
+	updateCartItem : function (model){
+		var data = this.createCartActionData('tc_update_cart_item');
+		//data.model = model;
+		data.rawModel = model;
+		data.model = JSON.stringify(model);
+		this.doCartPost(data, 'updateCartItemResult', 'updateCartItem');
 		
-		var data = this.createCartActionData('tc_add_custom_item_to_cart');
-		if (customItemType){
-			data.name = customItemType;
-		}
-		this.doCartPost(data, 'newCustomCartItemAdded', 'addCustomItemToCartSession');
 	},
-	
-	
-
-
-	updateCustomCartItem : function (cartItemID, itemData){
-		
-		var data = this.createCartActionData('tc_update_custom_item', cartItemID);
-		
-		data.itemData = stringify(itemData);
-		debug.log(data);
-		this.doCartPost(data, 'customCartItemUpdated', 'updateCustomCartItem');
-	},
-
-
-	removeCustomCartItem : function (cartItemID){
-		var data = this.createCartActionData('tc_remove_custom_item_from_cart', cartItemID);
-		this.doCartPost(data, 'customCartItemRemoved', 'removeCustomCartItem');
-	},
-	
-	
-	addServiceItemToCartSession : function (serviceType){
-		debug.log('addServiceItemToCartSession()');
-		
-		var data = this.createCartActionData('tc_add_service_item_to_cart');
-		data.serviceType = serviceType;
-		this.doCartPost(data, 'newCateringServiceCartItemAdded', 'addServiceItemToCartSession');
-	},
-	
-	
-	updateServiceCartItem : function (cartItemID, itemData){
-		
-		var data = this.createCartActionData('tc_update_service_item', cartItemID);
-		
-		data.itemData = stringify(itemData);
-		debug.log(data);
-		this.doCartPost(data, 'serviceCartItemUpdated', 'updateServiceCartItem');
-	},
-
-
-	removeServiceCartItem : function (cartItemID){
-		var data = this.createCartActionData('tc_remove_service_item_from_cart', cartItemID);
-		this.doCartPost(data, 'serviceCartItemRemoved', 'removeServiceCartItem');
-	},
-	
-	
-		
-	addDeliveryItemToCartSession : function (){
-		debug.log('addDeliveryItemToCartSession()');
-		
-		var data = this.createCartActionData('tc_add_delivery_item_to_cart');
-		this.doCartPost(data, 'newDeliveryCartItemAdded', 'addDeliveryItemToCartSession');
-	},
-	
-	
-	updateDeliveryCartItem : function (cartItemID, itemData){
-		
-		var data = this.createCartActionData('tc_update_delivery_item', cartItemID);
-		
-		data.itemData = stringify(itemData);
-		debug.log(data);
-		this.doCartPost(data, 'deliveryCartItemUpdated', 'updateDeliveryCartItem');
-	},
-
-
-	removeDeliveryCartItem : function (cartItemID){
-		var data = this.createCartActionData('tc_remove_delivery_item_from_cart', cartItemID);
-		this.doCartPost(data, 'deliveryCartItemRemoved', 'removeDeliveryCartItem');
-	},
-	
-	
-	
 	
 	updateDiscount : function (discountInfo){
 		var data = this.createCartActionData('tc_update_discount');
 		data.discountData = stringify(discountInfo);
 		this.doCartPost(data, 'discountUpdated', 'updateDiscount');
 	},
+	
+	
 	validateCoupon : function (couponCode){
 		var data = this.createCartActionData('tc_validate_coupon');
 		data.couponCode = couponCode;
@@ -185,11 +89,12 @@ var OrdersAjaxServiceClass = JS.Class({
 	
 	doCartPost : function (data, resultSignal, methodName ){
 		var service = this;
-		
+		debug.log('doCartPost : action : ', data.action, ' data : ', data);
 		jQuery.post(ajaxurl, data, 
 			function (result){
 				debug.log(methodName+' result:');
 				debug.log(result);
+				result.postData = data;
 				service[resultSignal].dispatch(result);
 			},
 			'json'
@@ -211,31 +116,28 @@ var OrdersAjaxServiceClass = JS.Class({
 	
 
 
-
-	getShippingCharge : function(){
+	
+	getShippingCharge : function(shippingData){
 		jQuery('#shippingRowTotal').text('');
-
-		var data = customerInfoViewMediator.getShippingData();
 		
-		if (!data){ return };
+		//var data = customerInfoViewMediator.getShippingData();
+		var data = shippingData;
 		
-		if (!(jQuery('#_tc_crm_shipping_enabled').is(':checked')) ){
-			return;
-		}
-		
-		if (data.shippingItems.length == 0){
-			jQuery('#shippingRowTotal').text('');
-			return;
-		}
+		// if (!(jQuery('#_tc_crm_shipping_enabled').is(':checked')) ){
+		// 	return;
+		// }
+		// 
+		// if (data.shippingItems.length == 0){
+		// 	jQuery('#shippingRowTotal').text('');
+		// 	return;
+		// }
 
 		debug.log('getShippingCharge()');
 
-		data.serviceType = jQuery('#shipmentType').val();
 		data.cartID = jQuery('#cartID').val();
 		
 		this.doCartPost(data, 'shippingRateResultReceived', 'getShippingCharge');
 		
-		jQuery("#loadingShipping").show();
 
 		return false;
 	},
