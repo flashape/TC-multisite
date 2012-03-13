@@ -1,8 +1,5 @@
 <?php
-/**
-* At the moment, CartAjax is pretty much a ModelLocator 
-* working with cart objects stored in the session.
-*/
+
 class ShippingAjax
 {
 	
@@ -18,8 +15,18 @@ class ShippingAjax
 
 		$fedExService = new FedExService();
 		$shippingItems = $_POST['shippingItems'];
-		$customerInfo = $_POST['customerInfo'];
+		$customerInfo = $_POST['customerData'];
 		$serviceType = $_POST['serviceType'];
+		
+		error_log("Shipping items : ");
+		error_log(print_r($shippingItems, 1));
+		
+		error_log("customerInfo : ");
+		error_log(print_r($customerInfo, 1));
+		
+		error_log("serviceType : $serviceType");
+		
+		
 
 		/***************************
 		* Add Recipient
@@ -49,7 +56,10 @@ class ShippingAjax
 		****************************/
 
 		foreach($shippingItems as $item){
-			$itemWeight = number_format(@$item['weight'], 2);
+			$productModel = $item['productModel'];
+			
+			
+			$itemWeight = number_format(@$productModel['weight'], 2);
 
 			$totalWeight = $itemWeight * $item['quantity'];
 
@@ -65,6 +75,24 @@ class ShippingAjax
 			$fedExService->addPackageLineItem($packageLineItem);
 
 		}
+		// 
+		// foreach($shippingItems as $item){
+		// 	$itemWeight = number_format(@$item['weight'], 2);
+		// 
+		// 	$totalWeight = $itemWeight * $item['quantity'];
+		// 
+		// 	$packageLineItem = array(
+		// 		'SequenceNumber'=>1,
+		// 		'GroupPackageCount'=>1,
+		// 		'Weight' => array(
+		// 			'Value' => $totalWeight,
+		// 			'Units' => 'LB'
+		// 		)
+		// 	);
+		// 
+		// 	$fedExService->addPackageLineItem($packageLineItem);
+		// 
+		// }
 
 		// $packageLineItem = array(
 		// 	'SequenceNumber'=>1,
@@ -93,9 +121,12 @@ class ShippingAjax
 		$cartID = $_POST['cartID'];
 
 		$shipping = array('amount'=>$result['amount'], 'serviceType'=>$result['serviceType']);
-		$shippingResult = TastyCart::setShipping($cartID, $shipping);
+		
+		$shippingResult = CartAjax::setShipping($cartID, $shipping);
+		//error_log(print_r($shippingResult, 1));
 
 		$result['shippingResult'] = $shippingResult;
+		error_log(print_r($result, 1));
 
 		echo json_encode($result);
 

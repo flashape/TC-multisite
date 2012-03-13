@@ -19,11 +19,11 @@ $enabledValue = @$meta[$enabledCheckboxID] ? $meta[$enabledCheckboxID] : 'off';
 $checkBoxField = "<input type='checkbox' id='{$enabledCheckboxID}' name='{$enabledCheckboxID}' " . checked( esc_attr( $enabledValue  ), 'on', false ) . " />";
 $checkBoxLabel = "<label for='{$enabledCheckboxID}'>Calculate Shipping : </label> ";
 //$desc = '<p class="howto">Quick zip is a shortcut to the Contact Info\'s zip field.</p>';
-$quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value=""  class="small-text" maxlength="5" />';
+$quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value="11730"  class="small-text" maxlength="5" />';
 
 $meta_contact_id = @$meta['_tc_contact_id'][0];
 
-$contactSelectDiv = '<div class="alignright" style="margin-right:300px;" id="quick_contact_select">Quick Contact Select : <input type="text" id="tc_contact_input"  /><input type="hidden" name="tc_selected_contact" id="tc_selected_contact" value="'.$meta_contact_id.'" /> </div>';
+$contactSelectDiv = '<div class="alignright" style="margin-right:100px;" id="quick_contact_select">Quick Contact Select : <input type="text" id="tc_contact_input"  /><input type="hidden" name="tc_selected_contact" id="tc_selected_contact" value="'.$meta_contact_id.'" /> </div>';
 
 
 $shipCheckboxDiv = "<div id='shipCheckboxDiv' style='margin-right:0px;clear:both;'>$checkBoxLabel $checkBoxField $quickZip </div>";
@@ -127,6 +127,85 @@ $paymentRows = tc_get_order_payment_rows();
 ?>
 
 <style type="text/css">
+
+/* Column Classes
+------------------------------------------------------------ */
+
+.five-sixths,
+.four-fifths,
+.four-sixths,
+.one-fifth,
+.one-fourth,
+.one-half,
+.one-sixth,
+.one-third,
+.three-fifths,
+.three-fourths,
+.three-sixths,
+.two-fifths,
+.two-fourths,
+.two-sixths,
+.two-thirds {
+	float: left;
+	margin: 0 0 20px;
+	padding-left: 3%;
+}
+
+.one-half,
+.three-sixths,
+.two-fourths {
+	width: 48%;
+}
+
+.one-third,
+.two-sixths {
+	width: 31%;
+}
+
+.four-sixths,
+.two-thirds {
+	width: 65%;
+}
+
+.one-fourth {
+	width: 22.5%;
+}
+
+.three-fourths {
+	width: 73.5%;
+}
+
+.one-fifth {
+	width: 17.4%;
+}
+
+.two-fifths {
+	width: 37.8%;
+}
+
+.three-fifths {
+	width: 58.2%;
+}
+
+.four-fifths {
+	width: 78.6%;
+}
+
+.one-sixth {
+	width: 14%;
+}
+
+.five-sixths {
+	width: 82%;
+}
+
+.first {
+	clear: both;
+	padding-left: 0;
+}
+
+
+
 	.order-items-radio {
 		margin-left:15px
 	}	
@@ -188,6 +267,12 @@ $paymentRows = tc_get_order_payment_rows();
 	.addNextItemColumn{
 		text-align:right;
 	}
+							
+	.address-form-label-column{
+		text-align:right;
+		font-size:12px;
+		color:#555;
+	}
 	
 	.balanceDue {
 		text-align:right;
@@ -197,7 +282,28 @@ $paymentRows = tc_get_order_payment_rows();
 		
 	}
 		
-		
+	#addressDiv{
+		width:825px;
+		clear:both;
+	}
+					
+
+								
+	#billingAddressDiv{
+		float:left; 
+		width: 400px; 
+		padding: 5px 0px 5px 0px; 
+		text-align: left;
+	}
+			
+
+	#shippingAddressDiv{
+		float:right;
+		width: 400px; 
+		padding: 5px 0px 5px 0px; 
+		text-align: right; 
+
+	}
 	
 </style>
 
@@ -226,7 +332,7 @@ $paymentRows = tc_get_order_payment_rows();
 	</div>
 	
 	<div id="orderDetailsTabs" >
-		
+		<?php echo $contactSelectDiv ?>
 		<ul id="orderDetailsTabsList">
 			<li><a href="#orderItemsTab">Order Items</a></li>
 			<li><a href="#contactInfoTab">Contact Information</a></li>
@@ -341,9 +447,141 @@ $paymentRows = tc_get_order_payment_rows();
 		</div>
 		
 				
-		<div id="contactInfoTab" style="padding-left:0px;padding-right:0px;padding-top:0px;">
+		<div id="contactInfoTab" style="padding-left:0px;padding-right:0px;padding-top:0px;text-align:center;width:100%;">
+			<div style="width: 600px;margin: 0 auto">
+			<div class="one-half first">
+				<table id="customerAddressTable">
+					<tbody>
+						<tr>
+							<td class="address-form-label-column">First Name:</td>
+							<td style="text-align:left"> <input type="text" name="customer_address_first_name"  id="customer_address_first_name"  /></td>
+						</tr>
+						<tr>
+							<td class="address-form-label-column">Last Name:</td>
+							<td style="text-align:left"> <input type="text" name="customer_address_last_name"  id="customer_address_last_name"  /></td>
+						</tr>
+						<tr>
+							<td class="address-form-label-column">Email:</td>
+							<td style="text-align:left"> <input type="text" name="customer_email"  id="customer_email"  /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="one-half">
+				<table id="customerAddressTable2">
+					<tbody>
+						<tr>
+							<td class="address-form-label-column">Phone:</td>
+							<td style="text-align:left"> <input type="text" name="customer__phone"  id="customer__phone"  /></td>
+						</tr>
+						<tr>
+							<td class="address-form-label-column">Company:</td>
+							<td style="text-align:left"> <input type="text" name="customer_company"  id="customer_company"  /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 
+			</div>	
+			<div id="addressDiv" >
+				<div id="billingAddressDiv">
+					<table id="billingAddressTable" class="widefat">
+						<tbody>
+							<tr>
+								<td class="address-form-label-column">Address Book:</td>
+								<td style="text-align:left"><select id="addressBookSelect"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">First Name:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_first_name"  id="billing_address_first_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Last Name:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_last_name"  id="billing_address_last_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Company:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_company"  id="billing_address_company"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Address Line 1:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_line_1"  id="billing_address_line_1"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Address Line 2:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_line_2"  id="billing_address_line_2"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">City:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_city"  id="billing_address_city"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">State:</td>
+								<td style="text-align:left"> <select name="billing_address_state"  id="billing_address_state"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Zip:</td>
+								<td style="text-align:left"> <select name="billing_address_zip"  id="billing_address_zip"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Country:</td>
+								<td style="text-align:left"> <input type="text" name="billing_address_city"  id="billing_address_city"  /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<div id="shippingAddressDiv">
+					<table id="shippingAddressTable" class="widefat">
+						<tbody>
+							<tr>
+								<td class="address-form-label-column">Address Book:</td>
+								<td style="text-align:left"><select id="addressBookSelect"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">First Name:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_first_name"  id="shipping_address_first_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Last Name:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_last_name"  id="shipping_address_last_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Company:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_company"  id="shipping_address_company"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Address Line 1:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_line_1"  id="shipping_address_line_1"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Address Line 2:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_line_2"  id="shipping_address_line_2"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">City:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_city"  id="shipping_address_city"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">State:</td>
+								<td style="text-align:left"> <select name="shipping_address_state"  id="shipping_address_state"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Zip:</td>
+								<td style="text-align:left"> <select name="shipping_address_zip"  id="shipping_address_zip"></select></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Country:</td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_city"  id="shipping_address_city"  /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div style="clear: both"></div>
+			</div>
 		</div>
+		<div style="clear: both"></div>
+		
 		
 		
 		
@@ -356,7 +594,6 @@ $paymentRows = tc_get_order_payment_rows();
 <?php
 function onOrderDetailsMetaboxFooterAction() {
 	require_once(TASTY_CMS_PLUGIN_INC_DIR .'utils/AutocompleteUtils.php');
-	
 	$contactAutocompleteJSON = AutocompleteUtils::createContactModel();
 	$productAutocompleteJSON = AutocompleteUtils::createProductModel();
 	
@@ -402,15 +639,17 @@ jQuery(document).ready(function($){
 	
 	
 	
-	// $('#addPaymentButton').on('click', function() {
-	// 	$('#publish').click();
-	//     return false;
-	// });
-	// 
-	// $('#saveOrderButton').on('click', function() {
-	// 	$('#publish').click();
-	//     return false;
-	// });
+	$('#addPaymentButton').on('click', function() {
+		$('#publish').click();
+	    return false;
+	});
+	
+	
+	
+	$('#saveOrderButton').on('click', function() {
+		$('#publish').click();
+	    return false;
+	});
 		
 
 	
@@ -581,7 +820,7 @@ jQuery(document).ready(function($){
 		       	}
 			},			
 			
-			_tc_crm_contact_personal_email	: {
+			customer_email	: {
 				required : {
 			         depends: function(element) {
 			           return $("#_tc_order_type-event-catering").is(':checked');
@@ -593,7 +832,7 @@ jQuery(document).ready(function($){
 		{
 	        _tc_order_type: "Please select an order type.",
 	        _tc_event_type: "Please select an event type.",
-	        _tc_crm_contact_personal_email: "An email is required for event orders.",
+	        customer_email: "An email is required for event orders.",
 		},
 		invalidHandler: function(event, validator) { 
 			$('#publish').removeClass('button-primary-disabled'); $('#ajax-loading').css('visibility', 'hidden'); 

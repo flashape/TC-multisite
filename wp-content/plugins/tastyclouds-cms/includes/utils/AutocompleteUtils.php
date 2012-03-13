@@ -21,6 +21,10 @@ class AutocompleteUtils
 			$contactAutocompleteItems[] = array('label'=>$contactName, 'value'=>$contactID);
 		}
 		
+		$contactAutocompleteItems[] = array('label'=>'Test Contact 1', 'value'=>"1");
+		$contactAutocompleteItems[] = array('label'=>'Rich Rodecker', 'value'=>"2");
+		$contactAutocompleteItems[] = array('label'=>'Tom Brady', 'value'=>"3");
+		
 		return $json ? json_encode($contactAutocompleteItems) : $contactAutocompleteItems;
 		
 		

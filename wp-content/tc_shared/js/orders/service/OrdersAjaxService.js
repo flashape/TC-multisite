@@ -118,11 +118,10 @@ var OrdersAjaxServiceClass = JS.Class({
 
 	
 	getShippingCharge : function(shippingData){
-		jQuery('#shippingRowTotal').text('');
 		
 		//var data = customerInfoViewMediator.getShippingData();
 		var data = shippingData;
-		
+		data.action = "tc_update_shipping_rates";
 		// if (!(jQuery('#_tc_crm_shipping_enabled').is(':checked')) ){
 		// 	return;
 		// }

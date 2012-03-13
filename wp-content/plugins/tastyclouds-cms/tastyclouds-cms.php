@@ -41,6 +41,7 @@ require_once(TASTY_CMS_PLUGIN_DIR .'ajax/AjaxUtils.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/CartAjax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ShippingAjax.php');
 
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
 add_filter('update_post_metadata', 'tc_update_post_metadata', 10, 4);

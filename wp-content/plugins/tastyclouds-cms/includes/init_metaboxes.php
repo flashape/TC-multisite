@@ -114,10 +114,61 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_order_details_',
 	'hide_editor' => true,
+	'init_action'=>'onOrderDetailsMetaboxInitAction',
 	'head_action'=>'onOrderDetailsMetaboxHeadAction',
 	'foot_action'=>'onOrderDetailsMetaboxFooterAction',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'OrderDetailsMetabox.php',
 ));
+
+
+function onOrderDetailsMetaboxInitAction() {
+	add_filter( 'post_updated_messages', 'tc_order_messages_filter' );
+}
+
+function tc_order_messages_filter($messages){
+	$messages['tc_order'][6] =  __('New order saved successfully.');
+	return $messages;
+}
+
+
+
+
+
+$order_status_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'order_status',
+	'title' => 'Order Status',
+	'types' => array('tc_order'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_order_status_',
+	'hide_editor' => true,
+	// 'head_action'=>'onOrderStatusMetaboxHeadAction',
+	// 'foot_action'=>'onOrderStatusMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'OrderStatusMetabox.php',
+));
+
+
+
+$enter_payment_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => 'enter_payment',
+	'title' => 'Enter Payment',
+	'types' => array('tc_order'),
+	'mode' => WPALCHEMY_MODE_ARRAY,
+	'prefix' => '_tc_enter_payment_',
+	//'output_filter'=>'enterPaymentMetaboxOutputFilter',
+	// 'head_action'=>'onOrderStatusMetaboxHeadAction',
+	// 'foot_action'=>'onOrderStatusMetaboxFooterAction',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'PaymentMetabox.php',
+));
+
+function enterPaymentMetaboxOutputFilter(){
+	global $pagenow;
+	// $isEditPost = $pagenow == 'post.php';
+	// return $isEditPost;
+	
+	return $pagenow != 'post-new.php';
+}
 
 
 
@@ -208,13 +259,37 @@ function tc_disable_autosave_for_coupons(){
 }
 
 
+// function foobar_updated_messages($messages ) {
+//     global $post, $post_ID;
+// 
+//     $name = $this->get_foobar_name();
+// 
+//     $messages['foobar'] = array(
+//         0 => '', // Unused. Messages start at index 1.
+//         1 => __($name . ' updated.'),
+//         2 => '', //not used
+//         3 => '', //not used
+//         4 => __($name . ' updated.'),
+//         /* translators: %s: date and time of the revision */
+//         5 => '', //not used
+//         6 => __($name . ' created'),
+//         7 => __($name . ' saved.'),
+//         8 => '', //not used
+//         9 => sprintf( __($name . ' scheduled for: <strong>%1$s</strong>'),
+//         // translators: Publish box date format, see http://php.net/date
+//         date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ) ),
+//         10 => __($name . ' draft updated')
+//     );
+// 
+//     return $messages;
+// }
+
 
 
 
 
 // function onVariantOptionsMetaboxInitAction() {
 // 	add_filter( 'post_updated_messages', 'variant_options_messages_filter' );
-// 	
 // }
 
 function variant_options_messages_filter($messages){

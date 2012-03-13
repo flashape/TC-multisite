@@ -62,18 +62,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		onShippingRateResult: function (serviceResult){
 			if (serviceResult.success){
-				// var amount = parseFloat( serviceResult.amount );
-				// var markup = parseFloat(TC_ProductManager.shippingOptions.FedEx.markupAmount);
-				// amount +=  markup;
-				// jQuery('#shippingRowTotal').text(TC_ProductManager.priceToFixed(amount));
-				// 
-				// 
-				// this.updateShippingDiscount();
-				// 
-				// 
-				// 
-				// this.updateTotal(TC_ProductManager.SKIP_UPDATE_SHIPPING);
-				// jQuery("#loadingShipping").hide();
+				var serviceType = serviceResult.serviceType;
+				var amount = parseFloat( serviceResult.amount );
+				var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
+				amount +=  markup;
+				jQuery('#shippingRow').data('shippingModel', {amount:amount, serviceType:serviceType, markup:markup});
+				jQuery("#loadingShipping").hide();
+
+				this.calculateTotal();
 				
 			}else{
 				alert('Error : '+JSON.stringify(serviceResult));
@@ -84,7 +80,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		removeItemRow : function(row){			
 			ordersAjaxService.removeCartItem(row.data("model"));
-
+			row.remove();
+			this.calculateTotal();
 		}, 
 		
 		
@@ -603,6 +600,20 @@ var OrderItemsViewMediatorClass = JS.Class({
 			return taxTotal;
 		},
 		
+		calculateShippingTotal : function(){
+			var shippingTotal = 0;
+			
+			//TODO:  check for free shipping coupons
+			if( this.isShippingEnabled() && this.hasShipping() ){
+				var shippingModel = jQuery('#shippingRow').data('shippingModel');
+				shippingTotal = shippingModel.amount;
+			}
+			debug.log('returning shippingTotal : ', shippingTotal);
+			return shippingTotal;
+		},
+		
+		
+		
 		
 		
 		
@@ -612,22 +623,21 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			
 			var subTotal = this.calculateChargeItemsTotal();
-			
 			cartTotal += subTotal;
 			
 			var discountTotal = this.calculateDiscountTotal();
-						
 			cartTotal -= discountTotal;
 			
 			var taxTotal = this.calculateTaxTotal();
-			
 			cartTotal += taxTotal;
 			
 			var paymentTotal = 0;
 			
 			var couponDiscountTotal = this.calculateCouponDiscountTotal();
-			
 			cartTotal -= couponDiscountTotal;
+			
+			var shippingTotal = this.calculateShippingTotal();
+			cartTotal += shippingTotal;
 			
 			var balanceDue = cartTotal - paymentTotal;
 			
@@ -638,6 +648,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 			jQuery('#discountRowTotal').text('$'+ discountTotal.toFixed(2));
 			jQuery('#taxRowTotal').text('$'+ taxTotal.toFixed(2));
 			jQuery('#couponRowTotal').text('$'+ couponDiscountTotal.toFixed(2));
+			//jQuery('#shippingRowTotal').text(this.priceToFixed(amount));
+			jQuery('#shippingRowTotal').text('$'+ shippingTotal.toFixed(2));
 			jQuery('#totalField').text('$'+ cartTotal.toFixed(2));
 			jQuery('#balanceDueField').text('$'+ balanceDue.toFixed(2));
 			
@@ -791,6 +803,13 @@ var OrderItemsViewMediatorClass = JS.Class({
 			// jQuery.hasData() needs to check the actual html element, not the selector result
 			return jQuery.hasData(couponRow[0]);
 		},
+				
+		hasShipping : function (){
+			var shippingRow = jQuery("#shippingRow");  
+			
+			// jQuery.hasData() needs to check the actual html element, not the selector result
+			return jQuery.hasData(shippingRow[0]);
+		},
 		
 		
 		submitCouponCode : function (){
@@ -902,7 +921,6 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var productRows = jQuery('.productRow');
 			var shippingItem;
 			productRows.each(function(key, value) {
-				//alert('row id : '+row.attr('id'));
 				var row = jQuery(value);
 				var product = row.data('productModel');
 				var rowModel = row.data('model');
@@ -910,9 +928,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 					shippingItem = {};
 					shippingItem.productModel = product;
 					shippingItem.quantity = rowModel.quantity;
-					data.shippingItems.push(shippingItem);
+					shippingItems.push(shippingItem);
 				}
 			});
+			
+			return shippingItems;
 		},
 		
 		getShippingCharge : function (){
@@ -933,11 +953,13 @@ var OrderItemsViewMediatorClass = JS.Class({
 			}
 			
 			var shippingData = {};
-			shippingData.shippingItems
-			shippingData.customerData = customerInfoViewMediator.getCustomerShippingData();
+			shippingData.shippingItems = this.getShippingItems();
+			shippingData.customerData = {zip:zipValue}
+			//shippingData.customerData = customerInfoViewMediator.getCustomerShippingData();
 			shippingData.serviceType = jQuery('#shipmentType').val();
 			
 			jQuery("#loadingShipping").show();
+			jQuery('#shippingRowTotal').text('');
 			
 			ordersAjaxService.getShippingCharge(shippingData);
 			
