@@ -472,7 +472,7 @@ $paymentRows = tc_get_order_payment_rows();
 					<tbody>
 						<tr>
 							<td class="address-form-label-column">Phone:</td>
-							<td style="text-align:left"> <input type="text" name="customer__phone"  id="customer__phone"  /></td>
+							<td style="text-align:left"> <input type="text" name="customer_phone"  id="customer__phone"  /></td>
 						</tr>
 						<tr>
 							<td class="address-form-label-column">Company:</td>
@@ -521,11 +521,11 @@ $paymentRows = tc_get_order_payment_rows();
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Zip:</td>
-								<td style="text-align:left"> <select name="billing_address_zip"  id="billing_address_zip"></select></td>
+								<td style="text-align:left"> <input type="text" name="billing_address_zip"  id="billing_address_zip"  /></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Country:</td>
-								<td style="text-align:left"> <input type="text" name="billing_address_city"  id="billing_address_city"  /></td>
+								<td style="text-align:left"> <input type="text" name="billing_address_country"  id="billing_address_country"  /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -568,11 +568,11 @@ $paymentRows = tc_get_order_payment_rows();
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Zip:</td>
-								<td style="text-align:left"> <select name="shipping_address_zip"  id="shipping_address_zip"></select></td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_zip"  id="shipping_address_zip"  /></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Country:</td>
-								<td style="text-align:left"> <input type="text" name="shipping_address_city"  id="shipping_address_city"  /></td>
+								<td style="text-align:left"> <input type="text" name="shipping_address_country"  id="shipping_address_country"  /></td>
 							</tr>
 						</tbody>
 					</table>

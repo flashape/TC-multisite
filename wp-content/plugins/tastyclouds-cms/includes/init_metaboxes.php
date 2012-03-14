@@ -114,11 +114,37 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_order_details_',
 	'hide_editor' => true,
+	'autosave' => FALSE,
 	'init_action'=>'onOrderDetailsMetaboxInitAction',
 	'head_action'=>'onOrderDetailsMetaboxHeadAction',
 	'foot_action'=>'onOrderDetailsMetaboxFooterAction',
+	'save_action'=>'onOrderDetailsMetaboxSaveAction',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'OrderDetailsMetabox.php',
 ));
+
+
+function onOrderDetailsMetaboxSaveAction($meta, $post_id){
+	global $order_details_metabox;
+
+	// remove the save action handler so it doesnt fire if/when we need to save new posts of other types (like contacts or payments)
+	$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
+	
+	// if the tc_selected_contact var is empty, and user info was submitted, save a new contact
+	$customerFirstName = $_POST['customer_address_first_name'];
+	$customerLastName = $_POST['customer_address_last_name'];
+	$customerEmail = $_POST['customer_email'];
+	$customerPhone = $_POST['customer_phone'];
+	$customerCompany = $_POST['customer_company'];
+	error_log('onOrderDetailsMetaboxSaveAction, post type: ' .get_post_type($post_id));
+	error_log(print_r($_POST, 1));
+	if( get_post_type($post_id) == 'tc_order'){
+		if (empty($_POST['tc_selected_contact'] ) ){
+			if( !empty($customerFirstName) || !empty($customerLastName) || !empty($customerEmail) || !empty($customerPhone) || !empty($customerCompany) ){
+	 			do_action('tc_create_contact', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
+			}
+		}
+	}
+}
 
 
 function onOrderDetailsMetaboxInitAction() {

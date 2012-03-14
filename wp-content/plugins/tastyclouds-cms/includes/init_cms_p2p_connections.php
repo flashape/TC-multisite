@@ -38,5 +38,15 @@ function register_p2p_connections() {
 		'cardinatlity'=>'many-to-one',
 		'admin_box' => false
 		) 
+	);	
+	
+	p2p_register_connection_type( array(
+		'name' => 'contact_to_order',
+		'from' => 'tc_contact',
+		'to' => 'tc_order',
+		'reciprocal' => true,
+		'cardinatlity'=>'one-to-one',
+		'admin_box' => false
+		) 
 	);
 }
