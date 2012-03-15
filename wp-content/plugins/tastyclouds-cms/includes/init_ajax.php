@@ -31,7 +31,9 @@ add_action( 'wp_ajax_tc_enable_tax', array('CartAjax', 'enableTax') );
 add_action( 'wp_ajax_tc_update_shipping_rates',  array('ShippingAjax', 'retrieveShippingRates') );
 
 
-// add_action( 'wp_ajax_tc_update_variation_item', array('VariationItemAjax', 'updateVariationItem') );
-// add_action( 'wp_ajax_tc_delete_variation_item', array('VariationItemAjax', 'deleteVariationItem') );
-// add_action( 'wp_ajax_tc_get_variation_items', array('VariationItemAjax', 'getItemsForVariation') );
+add_action( 'wp_ajax_tc_insert_activity', array('ActivityAjax', 'insertActivity') );
+add_action( 'wp_ajax_tc_update_activity', array('ActivityAjax', 'updateActivity') );
+add_action( 'wp_ajax_tc_delete_activity', array('ActivityAjax', 'deleteActivity') );
+add_action( 'wp_ajax_tc_get_activities_for_post', array('ActivityAjax', 'getActivitiesForPost') );
+add_action( 'wp_ajax_tc_get_mail_for_contact', array('MailAjax', 'getMailForContact') );
 ?>

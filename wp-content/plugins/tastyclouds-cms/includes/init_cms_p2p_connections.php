@@ -11,7 +11,7 @@ function register_p2p_connections() {
 		'from' => 'tc_variation_item',
 		'to' => 'tc_product_variation',
 		'reciprocal' => true,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		
 		) 
@@ -24,7 +24,7 @@ function register_p2p_connections() {
 		'to' => 'tc_products',
 		'reciprocal' => true,
 		'prevent_duplicates' => false,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		) 
 	);
@@ -35,7 +35,7 @@ function register_p2p_connections() {
 		'from' => 'tc_variation_rule',
 		'to' => 'tc_products',
 		'reciprocal' => true,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		) 
 	);	
@@ -45,7 +45,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinatlity'=>'one-to-one',
+		'cardinality'=>'one-to-one',
 		'admin_box' => false
 		) 
 	);
@@ -55,7 +55,7 @@ function register_p2p_connections() {
 		'from' => 'tc_payment',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		) 
 	);
@@ -65,7 +65,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact_address',
 		'to' => 'tc_contact',
 		'reciprocal' => true,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		) 
 	);
@@ -74,7 +74,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact_address',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinatlity'=>'one-to-one',
+		'cardinality'=>'one-to-one',
 		'admin_box' => false
 		) 
 	);
@@ -84,8 +84,32 @@ function register_p2p_connections() {
 		'from' => 'tc_contact_address',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinatlity'=>'many-to-one',
+		'cardinality'=>'many-to-one',
 		'admin_box' => false
 		) 
 	);
+	
+	p2p_register_connection_type( array(
+		'name' => 'activity_to_contact',
+		'from' => 'tc_activity',
+		'to' => 'tc_contact',
+		'reciprocal' => true,
+		'cardinality'=>'many-to-one',
+		'admin_box' => false
+		
+		) 
+	);
+	
+	p2p_register_connection_type( array(
+		'name' => 'activity_to_project',
+		'from' => 'tc_activity',
+		'to' => 'tc_project',
+		'reciprocal' => true,
+		'cardinality'=>'many-to-one',
+		'admin_box' => false
+		
+		) 
+	);
+	
+	
 }

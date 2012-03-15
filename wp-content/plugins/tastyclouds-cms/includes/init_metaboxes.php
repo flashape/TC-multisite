@@ -246,6 +246,92 @@ $service_default_details_metabox = new WPAlchemy_MetaBox(array
 ));
 
 
+$activity_metabox = new WPAlchemy_MetaBox(array
+(
+	'id' => '_activity_metabox',
+	'title' => 'Activities',
+	'types' => array('tc_contact', 'tc_project'),
+	'mode' => WPALCHEMY_MODE_EXTRACT,
+	'prefix' => '_tc_activity_',
+	'foot_action' => 'onActivityMetaboxFooterAction',
+	'output_filter' => 'activityMetaboxOutputFilter',
+	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ActivityMetabox.php',
+	
+));
+add_action( 'add_meta_boxes_tc_contact', 'onActivityMetaboxInit' );
+add_action( 'add_meta_boxes_tc_project', 'onActivityMetaboxInit' );
+add_action( 'add_meta_boxes_tc_project', 'add_metaboxes_tc_project' );
+
+function add_metaboxes_tc_project(){
+	global $pagenow;
+	
+	if ( $pagenow != "post.php"){
+		add_action('admin_footer', 'tc_project_admin_footer');
+	}
+}
+function tc_project_admin_footer(){
+	global $pagenow;
+	
+	if ( $pagenow != "post.php"){
+	?>
+	<script>
+		jQuery(document).ready(function($){
+			if (adminpage != 'post-php'){
+				$('#titlewrap').append('<span class="description">Enter title of project and save to enable Activities.</span>');
+			}
+		});
+	</script>
+	<?php	
+	}
+}
+
+
+
+
+function onActivityMetaboxInit(){
+	//remove_meta_box( 'submitdiv', 'tc_crm_coupon', 'normal' );     
+	error_log('onActivityMetaboxInit'); 
+	remove_meta_box( 'commentsdiv', 'tc_contact', 'normal' );      
+	remove_meta_box( 'commentstatusdiv', 'tc_contact', 'normal' );      	
+	remove_meta_box( 'commentsdiv', 'tc_project', 'normal' );      
+	remove_meta_box( 'commentstatusdiv', 'tc_project', 'normal' );      
+	add_action( 'admin_enqueue_scripts', 'tc_enqueue_contact_scripts' );
+}
+
+function activityMetaboxOutputFilter(){
+	global $pagenow;
+	
+	$isEditPost = $pagenow == 'post.php';
+	
+	return $isEditPost;
+}
+
+
+function tc_enqueue_contact_scripts(){
+	error_log('tc_enqueue_contact_scripts');
+	wp_enqueue_script( 'jquery-ui-core' );
+	wp_enqueue_script( 'jquery-ui-button' );
+	
+	wp_enqueue_script('tc-activities-js', TC_SHARED_JS_URL . 'activities.js' );
+	wp_enqueue_script('jquery-calendrical-js', TC_SHARED_JS_URL . 'jquery.calendrical.js' );
+	wp_enqueue_script('jquery-tablesorter-js', TC_SHARED_JS_URL . 'jquery.tablesorter.min.js', array('jquery') );
+	wp_enqueue_script('jquery-ui-datepicker', TC_SHARED_JS_URL . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+	wp_enqueue_script( 'caret', TC_SHARED_JS_URL. 'jquery.caret.1.02.js');
+	wp_enqueue_script('jquery-forcepriceonly', TC_SHARED_JS_URL.'jquery.forcepriceonly.js', array('caret'));
+	
+	wp_enqueue_script('timeago', TC_SHARED_JS_URL . 'jquery.timeago.js' );
+	wp_enqueue_style('calendrical', TC_SHARED_CSS_URL .'calendrical.css');
+	
+	wp_enqueue_script( 'jquery-ui-tabs' );
+	wp_enqueue_style('jquery.tablesorter.blue', TC_SHARED_CSS_URL .'tablesorter/style.css');
+	
+
+
+	
+}
+
+
+
 
 
 function onOrderDetailsMetaboxHeadAction(){
