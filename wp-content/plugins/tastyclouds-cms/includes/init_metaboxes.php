@@ -129,21 +129,27 @@ function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 	// remove the save action handler so it doesnt fire if/when we need to save new posts of other types (like contacts or payments)
 	$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
 	
+	
+	
 	// if the tc_selected_contact var is empty, and user info was submitted, save a new contact
 	$customerFirstName = $_POST['customer_address_first_name'];
 	$customerLastName = $_POST['customer_address_last_name'];
 	$customerEmail = $_POST['customer_email'];
 	$customerPhone = $_POST['customer_phone'];
 	$customerCompany = $_POST['customer_company'];
-	error_log('onOrderDetailsMetaboxSaveAction, post type: ' .get_post_type($post_id));
-	error_log(print_r($_POST, 1));
-	if( get_post_type($post_id) == 'tc_order'){
-		if (empty($_POST['tc_selected_contact'] ) ){
-			if( !empty($customerFirstName) || !empty($customerLastName) || !empty($customerEmail) || !empty($customerPhone) || !empty($customerCompany) ){
-	 			do_action('tc_create_contact', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
-			}
+	
+	if (empty($_POST['tc_selected_contact'] ) ){
+		if( !empty($customerFirstName) || !empty($customerLastName) || !empty($customerEmail) || !empty($customerPhone) || !empty($customerCompany) ){
+ 			do_action('tc_create_contact', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
 		}
 	}
+	
+	
+	// save payment info if submitted with order
+	if (!empty($_POST['payment_amount'] ) ){
+ 		do_action('tc_create_payment', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
+	}
+	
 }
 
 

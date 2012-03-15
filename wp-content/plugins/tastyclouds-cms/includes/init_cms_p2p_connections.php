@@ -49,4 +49,14 @@ function register_p2p_connections() {
 		'admin_box' => false
 		) 
 	);
+	
+	p2p_register_connection_type( array(
+		'name' => 'payment_to_order',
+		'from' => 'tc_payment',
+		'to' => 'tc_order',
+		'reciprocal' => true,
+		'cardinatlity'=>'many-to-one',
+		'admin_box' => false
+		) 
+	);
 }

@@ -93,6 +93,10 @@ define( 'PATH_CURRENT_SITE', '/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
 
+define('AUTOSAVE_INTERVAL', 300 ); // seconds
+
+define('WP_POST_REVISIONS', false );
+
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */

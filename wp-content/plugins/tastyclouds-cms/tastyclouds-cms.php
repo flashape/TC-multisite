@@ -13,12 +13,19 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
 }
 
 add_action('plugins_loaded','tc_cms_init_session');
+add_action('plugins_loaded','tc_cms_dequeue_autosave');
+
+function tc_cms_deque_autosave(){
+	wp_dequeue_script('autosave');
+}
 
 function tc_cms_init_session(){
 	if (!session_id()){
 		error_log("\tc_cms_init_session , no session_id, starting new\n");
 		session_start();
 	}
+	
+	
 }
 
 

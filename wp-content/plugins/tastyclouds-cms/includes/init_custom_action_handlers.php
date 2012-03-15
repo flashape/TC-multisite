@@ -1,6 +1,7 @@
 <?php
 add_action( 'tc_create_contact', 'insertNewContact' );
 add_action( 'tc_update_contact_meta', 'updateContactMeta', 10, 2 );
+add_action( 'tc_create_payment', 'insertNewPayment', 10, 2 );
 
 function insertNewContact($data){
 	error_log("insertNewContact()");
@@ -28,7 +29,7 @@ function insertNewContact($data){
 		'customerLastName'=>$customerLastName,
 		'customerEmail'=>$customerEmail,
 		'customerPhone'=>$customerPhone,
-		'customerCompany'=>$customecustomerCompanyrPhone
+		'customerCompany'=>$customerCompany
 	);
 	
 	do_action('tc_update_contact_meta', $contactID, $newMeta);
@@ -92,6 +93,47 @@ function updateContactMeta($contactID, $newMeta){
 	// 	$integers = array_map ('intval', $_POST['tax_input']['panalo_poc']);
 	// 	wp_set_object_terms( $post_id, $integers, 'panalo_poc' );
 	// };
+	
+}
+
+function insertNewPayment($data){
+	if( $data['use_post'] ){
+		$paymentType = $_POST['payment_type'];
+		$paymentAmount = $_POST['payment_amount'];
+		$paymentNote = $_POST['payment_amount'];
+	}
+	
+	$orderID = $data['attach_to_order_id'];
+	
+	
+	if (!empty($paymentType) && !empty($paymentAmount)){
+		$model = array(
+			'paymentType' => $paymentType,
+			'paymentAmount' => $paymentAmount,
+			'paymentNote' => $paymentNote,
+		);
+	   $payment = array(
+			'post_title' => 'Payment For Order ID '.$orderID .'(via '.$paymentType.') : '.$paymentAmount,
+			'post_content' => "$paymentType payment for orderID  $orderID",
+			'post_status' => 'publish',
+			'post_type' => "tc_payment"
+	             );
+	
+		$paymentID = wp_insert_post($payment);
+		
+		if ($paymentID > 0){
+			
+			if( isset($data['attach_to_order_id']) ){
+				p2p_type( 'payment_to_order' )->connect( $paymentID, $orderID, array(
+					'date' => current_time('mysql'),			
+				) );
+			}
+			
+			update_post_meta($paymentID, 'paymentModel', $model);
+		}
+	}
+	
+
 	
 }
 
