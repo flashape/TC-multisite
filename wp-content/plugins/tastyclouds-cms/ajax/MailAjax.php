@@ -153,8 +153,9 @@ class MailAjax
 		// This is for dev only.
 		//On the live site, use the code above.
 		
+		error_log("calling wp_remote_get : http://www.f1fd.com/tc/panalo_mail.php");
 		
-		$mailResult = wp_remote_get('http://www.tastyclouds.com/php/panalo_mail.php', array('timeout'=>240));
+		$mailResult = wp_remote_get('http://www.f1fd.com/tc/panalo_mail.php', array('timeout'=>240));
 		error_log("mailResult:");
 		error_log(var_export($mailResult, 1));
 		$emails = json_decode(wp_remote_retrieve_body($mailResult));

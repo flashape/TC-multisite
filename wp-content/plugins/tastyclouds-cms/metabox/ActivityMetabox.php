@@ -168,7 +168,7 @@
 		
 		
 		<div id="mailTab">
-			<div class="mailScroller" style="display:none;">
+			<div class="mailScroller">
 			
 				<div id="fetchingMail">
 					<p>Fetching mail...</p>
@@ -290,6 +290,8 @@ function onActivityMetaboxFooterAction() {
 		debug.log('onTabsShow event : ', event, 'Ui : ', ui);
 		
 		if (ui.panel.id == "mailTab" && jQuery('#mailTable').data('mailLoaded') != true ){
+			//jQuery('#mailTab').show();
+			jQuery('#mailScroller').show();
 			loadMail();
 		}
 			
