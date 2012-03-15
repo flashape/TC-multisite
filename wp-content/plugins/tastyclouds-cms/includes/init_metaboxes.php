@@ -147,8 +147,36 @@ function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 	
 	// save payment info if submitted with order
 	if (!empty($_POST['payment_amount'] ) ){
- 		do_action('tc_create_payment', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
+	 		do_action('tc_create_payment', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
 	}
+
+	// When we create the custom taxonomies for tc_contact posts,
+	// we also assign them to tc_order posts just so we can get 
+	// the taxonomy metaboxes on the order screen.
+	// WP will automatically assign those terms to the order,
+	// so we remove them here, and they will be assigned to the 
+	// contact using updateContactTaxonomyTerms().
+	wp_set_object_terms($post_id, array(), 'tc_how_heard');
+	wp_set_object_terms($post_id, array(), 'tc_inq_reason');
+	wp_set_object_terms($post_id, array(), 'tc_inquirer_type');
+	wp_set_object_terms($post_id, array(), 'tc_poc');
+	
+	
+	update_post_meta( $post_id, '_tc_order_type', $_POST['_tc_order_type'] );
+	wp_set_object_terms( $post_id, (int)$_POST['_tc_order_type'], 'tc_order_type' );
+	
+	if(isset($_POST['_tc_event_type'])){
+		update_post_meta( $post_id, '_tc_event_type', $_POST['_tc_event_type'] );	
+		wp_set_object_terms( $post_id, (int)$_POST['_tc_event_type'], 'tc_event_type' );
+		
+	}
+	if(isset($_POST['_tc_event_date'])){
+		update_post_meta( $post_id, '_tc_event_date', $_POST['_tc_event_date'] );					
+	}
+	
+	
+	
+
 	
 }
 

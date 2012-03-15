@@ -93,6 +93,7 @@ define( 'PATH_CURRENT_SITE', '/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
 
+// note: autosave is dequeued in tastyclouds-cms.php "tc_cms_dequeue_autosave" 
 define('AUTOSAVE_INTERVAL', 300 ); // seconds
 
 define('WP_POST_REVISIONS', false );

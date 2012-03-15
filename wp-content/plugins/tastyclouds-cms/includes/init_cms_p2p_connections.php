@@ -59,4 +59,33 @@ function register_p2p_connections() {
 		'admin_box' => false
 		) 
 	);
+	
+	p2p_register_connection_type( array(
+		'name' => 'address_to_contact',
+		'from' => 'tc_contact_address',
+		'to' => 'tc_contact',
+		'reciprocal' => true,
+		'cardinatlity'=>'many-to-one',
+		'admin_box' => false
+		) 
+	);
+	p2p_register_connection_type( array(
+		'name' => 'billing_address_to_order',
+		'from' => 'tc_contact_address',
+		'to' => 'tc_order',
+		'reciprocal' => true,
+		'cardinatlity'=>'one-to-one',
+		'admin_box' => false
+		) 
+	);
+	
+	p2p_register_connection_type( array(
+		'name' => 'shipping_address_to_order',
+		'from' => 'tc_contact_address',
+		'to' => 'tc_order',
+		'reciprocal' => true,
+		'cardinatlity'=>'many-to-one',
+		'admin_box' => false
+		) 
+	);
 }
