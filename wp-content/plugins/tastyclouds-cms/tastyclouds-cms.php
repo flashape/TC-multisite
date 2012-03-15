@@ -45,6 +45,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/AjaxUtils.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');

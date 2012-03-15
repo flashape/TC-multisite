@@ -140,7 +140,12 @@ class ActivityAjax
 			
 			case "followup":
 				if ($model->sendEmailNow){
-					tc_send_followup_assigned_email($model->assignee, $model,  $_POST['postID']);
+					$data = array(
+						'userID'=>$model->assignee,
+						'activityModel'=>$model,
+						'postID'=>$_POST['postID'],
+					);
+					tc_send_followup_assigned_email($data);
 				}
 				
 				wp_schedule_single_event(time()+20, 'tc_followup_reminder_cron_hook', array($model->assignee, $model,  $_POST['postID']));
@@ -152,7 +157,12 @@ class ActivityAjax
 			
 			case "task":
 			if ($model->sendEmailNow){
-				tc_send_task_assigned_email($model->assignee, $model,  $_POST['postID']);
+				$data = array(
+					'userID'=>$model->assignee,
+					'activityModel'=>$model,
+					'postID'=>$_POST['postID'],
+				);
+				tc_send_task_assigned_email($data);
 			}			
 			break;
 			

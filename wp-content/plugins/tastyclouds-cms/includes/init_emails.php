@@ -1,33 +1,46 @@
 <?php
-function tc_send_followup_assigned_email($userID, $model, $postID){
-	$user = new WP_user($userID);
-	//error_log(var_export($user,1));
+
+add_action( 'tc_followup_reminder_cron_hook', 'tc_send_followup_reminder_email', 10, 3);
+
+
+
+function tc_send_followup_assigned_email($data){
+	$user = new WP_user($data['userID']);
+	$postID = $data['postID'];
+	// error_log(var_export($data,1));
+	// error_log(var_export($user,1));
 	//wp_mail($user->user_email, 'An Follow-Up has been assigned to you', 'A new follow-up has been assigned to you, click here to view: ');
 	
-	$link = "http://crm.tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
+	$link = "http://tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
 	
-	wp_mail('rich@tastyclouds.com', "A Follow-Up has been assigned to you", "A new follow-up has been assigned to you  : \n\n".$model->description ."\n\nClick here to view: $link");
+	wp_mail('rich@tastyclouds.com', "A Follow-Up has been assigned to you", "A new follow-up has been assigned to you  : \n\n".$data['activityModel']->description ."\n\nClick here to view: $link");
 	
 }
 
 
 function tc_send_followup_reminder_email($userID, $model, $postID){
+	error_log('tc_send_followup_reminder_email ');
 	$user = new WP_user($userID);
+	//$postID = $data['postID'];
+	
 	//error_log(var_export($userID,1));
 	
-	$link = "http://crm.tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
+	$link = "http://tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
 	
 	wp_mail('rich@tastyclouds.com', "Reminder: A Follow-Up has been assigned to you", "You have an upcoming follow-up : \n\n".$model->description ."\n\nClick here to view: $link");
 	
 }
 
 
-function tc_send_task_assigned_email($userID, $model, $postID){
-	$user = new WP_user($userID);
+function tc_send_task_assigned_email($data){
+	$user = new WP_user($data['userID']);
+	$postID = $data['postID'];
+	
+	//$user = new WP_user($userID);
 	//error_log(var_export($user,1));
 	//wp_mail($user->user_email, 'An Follow-Up has been assigned to you', 'A new follow-up has been assigned to you, click here to view: ');
-	
-	$link = "http://crm.tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
+	$model = $data['activityModel'];
+	$link = "http://tastyclouds.com/wp-admin/post.php?post={$postID}&action=edit";
 	
 	$title = $model->title;
 	$description = $model->description;

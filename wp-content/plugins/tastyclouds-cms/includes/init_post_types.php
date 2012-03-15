@@ -422,7 +422,7 @@ function register_tc_payment_posttype() {
 	$post_type_args = array(
 		'labels' 			=> $labels,
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_payment',
 		'capability_type' 	=> 'post',
@@ -552,7 +552,7 @@ function register_tc_contact_address_posttype() {
 	$post_type_args = array(
 		'labels' 			=> $labels,
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_contact_address',
 		'capability_type' 	=> 'post',
@@ -639,7 +639,7 @@ function register_tc_activity_posttype() {
 	$post_type_args = array(
 		'labels' 			=> $labels,
 		'public' 			=> true,
-		'show_ui' 			=> true,
+		'show_ui' 			=> false,
 		'publicly_queryable'=> true,
 		'query_var'			=> 'tc_activity',
 		'capability_type' 	=> 'post',

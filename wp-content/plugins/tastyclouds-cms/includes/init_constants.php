@@ -28,4 +28,9 @@ if(!defined('TC_SHARED_CSS_URL')){
     define('TC_SHARED_CSS_URL', WP_CONTENT_URL . '/tc_shared/css/');
 }
 
+define('SWIFTMAIL_REQUIRED_FILE', ABSPATH . 'swiftmailer/lib/swift_required.php');
+
+
+
+
 ?>
