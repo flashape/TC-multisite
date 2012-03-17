@@ -311,6 +311,8 @@ $paymentRows = tc_get_order_payment_rows();
 
 
 <div class="tc_metabox">
+	<input type="hidden" name="cartID" id="cartID" value="<?php global $cartID; echo $cartID ?>" />
+	<input type="hidden" name="sessionID" id="sessionID" value="<?php echo session_id() ?>" />
 	<div id="submitErrorBox" class="form-invalid"> 
 	  <ul></ul> 
 	</div>
@@ -786,7 +788,12 @@ jQuery(document).ready(function($){
 	
 	
 
+	$("#billing_address_state").html(states);
+	$("#shipping_address_state").html(states);
 
+	
+	$("#billing_address_state").val("CA");
+	$("#shipping_address_state").val("CA");
 
 	
 	/*
@@ -962,8 +969,7 @@ jQuery(document).ready(function($){
 		
 </table>
 
-<input type="hidden" name="cartID" id="cartID" value="<?php global $cartID; echo $cartID ?>" />
-<input type="hidden" name="sessionID" id="sessionID" value="<?php echo session_id() ?>" />
+
 
 <?php
 }

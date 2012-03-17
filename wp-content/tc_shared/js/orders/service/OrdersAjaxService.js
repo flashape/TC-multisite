@@ -56,7 +56,7 @@ var OrdersAjaxServiceClass = JS.Class({
 	
 	updateDiscount : function (discountInfo){
 		var data = this.createCartActionData('tc_update_discount');
-		data.discountData = stringify(discountInfo);
+		data.discountData = JSON.stringify(discountInfo);
 		this.doCartPost(data, 'discountUpdated', 'updateDiscount');
 	},
 	

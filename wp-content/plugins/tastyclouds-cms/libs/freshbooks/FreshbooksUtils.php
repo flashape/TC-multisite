@@ -3,105 +3,139 @@
 class FreshbooksUtils
 {
 	
-	public static function getInvoiceFromCart($newFBClientID, $cart){
+	
+	public static function getFreshbooksClientID($contactID){
+		$fbClientID = get_post_meta($contactID, '_tc_fb_id', true);
+		return $fbClientID;
+	}
+	
+	
+	
+	
+	
+	public static function getInvoiceFromCart($fbClientID, $cart){
 		$invoice = array();
-		$invoice['client_id'] = $newFBClientID;
+		$invoice['client_id'] = $fbClientID;
 		$invoice['lines'] = array();
 		$invoice['lines']['line'] = array();
 
-
-		$productsArray = get_option('tc_crm_product_order_items');
+		error_log("cart: ");
+		error_log(var_export($cart, 1));
+		error_log("");
+		error_log("");
 		
-		if (isset($cart['items'])){
-		
-			$cartProductItems = $cart['items'];
 
-			$chargeItemsTotal = 0;
-		
-			foreach ($cartProductItems as $productItem) {
+		$cartItems = $cart['items'];
 
-				$lineItem = array();
-				//$lineItem['type'] = 'Item';	
+		$chargeItemsTotal = 0;
+	
+		foreach ($cartItems as $cartItem) {
+			// error_log("cartItem: ");
+			// error_log(var_export($cartItem, 1));
+			// error_log("");
+			// error_log("");
+			$lineItem = array();
+			$lineItem['description'] = $cartItem->description;
+			
+			// 'id' => 0,
+			// 			   'productID' => 1235,
+			// 			   'cartItemID' => '4f6395f799b26',
+			// 			   'type' => 'tc_products',
+			// 			   'quantity' => 1,
+			// 			   'description' => 'qweqwe2',
+			// 			   'variations' =>
 
-
-				if( !is_array($productItem) || empty($productItem['productID']) ){
-					$lineItem['name'] = $productItem->name;
-					$lineItem['description'] = $productItem->description;
-					$lineItem['unit_cost'] = $productItem->price;
-					$lineItem['quantity'] = 1;
+			// custom items don't have a product id
+			if( $cartItem->type != 'tc_products' ){
+				$lineItem['name'] = $cartItem->itemName;
+				$lineItem['description'] = $cartItem->description;
+				$lineItem['unit_cost'] = $cartItem->price;
+				$lineItem['quantity'] = 1;
+			
+			}else{
 				
-				}else{
-					$product = getProductByID($productItem['productID'], $productsArray );
+				// $productModel['type'] = 'tc_products';
+				// $productModel['productName'] = $productPost->post_title;
+				// $productModel['productID'] = $productID;
+				// $productModel['sku'] = get_post_meta( $productID, '_tc_product_details_sku', true );
+				// $productModel['price'] = get_post_meta( $productID, '_tc_product_details_price', true );
+				// $productModel['width'] = get_post_meta( $productID, '_tc_product_details_width', true );
+				// $productModel['height'] = get_post_meta( $productID, '_tc_product_details_height', true );
+				// $productModel['length'] = get_post_meta( $productID, '_tc_product_details_length', true );
+				// $productModel['weight'] = get_post_meta( $productID, '_tc_product_details_weight', true );
+				
+				$productModel = ProductProxy::getProductByID($cartItem->productID);
+				// error_log("productModel: ");
+				// error_log(var_export($productModel, 1));
+				$productID = $productModel['productID'];
+				//error_log("productID: $productID");
+				
 
+				$lineItem['name'] = $productModel['productName'];
 
+				$basePrice = $productModel['price'];
+				
+				$itemPrice = $basePrice;
 
-					$lineItem['name'] = $product['itemName'];
+				$variantPriceOffset = 0;
 
-					$basePrice = $product['price'];
-
-					$variantPriceOffset = 0;
-
-					$flavorsArray = array();
-
-					if (!empty( $productItem['data']->variantGroups )){
-						foreach ($productItem['data']->variantGroups as $variant) {
-							$variantPriceOffset += ($variant->priceOffset + $variantPriceOffset);
-							$flavor = (empty($variant->shortDesc) && $variant->variantID == 10) ? "Apple Verde" :  $variant->shortDesc;
-							$flavorsArray[] = $flavor;
+				$flavorsArray = array();
+				
+				if (!empty($cartItem->variations)){
+					// for each variation, get the selected variation item,
+					// then check to see there are any rules to adjust the price.
+					foreach ($cartItem->variations as $variation) {
+						// $variation['p2p_id']
+						// $variation['selected'] // array
+						// $variation['variationID']
+						// error_log("Variation: ");
+						// error_log(var_export($variation, 1));
+						// error_log("");
+						// error_log("");
+						$variationItemID = $variation->selected[0]; //for now, selected items will only be a single element array
+						//error_log("variationItemID : $variationItemID");
+						$variationItemModel = json_decode(ProductProxy::getVariationItemByID($variationItemID));
+						// error_log("variationItemModel: ");
+						// error_log(var_export($variationItemModel, 1));
+						// error_log("");
+						// error_log("");
+						// // $variationItem
+						// //     "1152":
+	                    // {
+	                    //     "title":"Apple Verde",
+	                    //     "skuExtension":"",
+	                    //     "id":1152
+	                    // },
+	
+						$flavorsArray[] = $variationItemModel->title;
+	
+						$rules = ProductVariationRulesAjax::getRulesForVariation($productID, $variation->variationID, $variation->p2pid, true);
+						// error_log("rules: ");
+						// error_log(var_export($rules, 1));
+						// error_log("");
+						// error_log("");
+						if (!empty($rules)){
+							$itemPrice = FreshbooksUtils::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
 						}
 					}
-
-					$flavorsDesc = 'Selected Flavors : ' . implode(", ", $flavorsArray);
-					$lineItem['description'] = $flavorsDesc;
-
-					$unitCost = $basePrice + $variantPriceOffset;
-					$lineItem['unit_cost'] = number_format($unitCost, 2, '.', '');
-					$lineItem['quantity'] = $productItem['data']->quantity;
-					// $lineItem['tax1_name'] = '';
-					// $lineItem['tax2_name'] = '';
-					// $lineItem['tax1_percent'] = '';
-					// $lineItem['tax2_percent'] = '';
+					
 				}
-
-				$chargeItemsTotal += ($lineItem['unit_cost'] * $lineItem['quantity']);
-
-				$invoice['lines']['line'][] = $lineItem;	
+				
+				$flavorsDesc = 'Selected Flavors : ' . implode(", ", $flavorsArray);
+				$lineItem['description'] .= "\n\n$flavorsDesc";
+				
+				$lineItem['unit_cost'] = number_format($itemPrice, 2, '.', '');
+				
+				
 			}
+			
+			
+			$lineItem['quantity'] = $cartItem->quantity;
+
+			$chargeItemsTotal += ($lineItem['unit_cost'] * $lineItem['quantity']);
+
+			$invoice['lines']['line'][] = $lineItem;	
 		}
-		
-		
-		
-		
-
-		if (isset($cart['services'])){
-
-			$cartServiceItems = $cart['services'];
-			if (!empty($cartServiceItems)){
-				foreach ($cartServiceItems as $serviceItem) {
-
-					$lineItem = array();
-					//$lineItem['type'] = 'Item';	
-					$serviceName = $serviceItem->serviceType == "cottoncandy" ? "Cotton Candy" : "Snow Cone";
-					$servings = $serviceItem->servings;
-					$hours = $serviceItem->hours;
-					$price = $serviceItem->price;
-					$flavorsArray = array($serviceItem->flavor1, $serviceItem->flavor2, $serviceItem->flavor3);
-					$desc = "Catered Machine Rental Service for $hours hours and $servings servings\nSelected Flavors: ".implode(", ", $flavorsArray);
-					$lineItem['name'] = "Catered $serviceName Service";
-					$lineItem['description'] = $desc;
-					$lineItem['unit_cost'] = $price;
-					$lineItem['quantity'] = 1;
-
-					$chargeItemsTotal += ($lineItem['unit_cost'] * $lineItem['quantity']);
-
-					$invoice['lines']['line'][] = $lineItem;	
-
-				}
-			}
-		}
-
-
-
 		
 
 		
@@ -110,7 +144,7 @@ class FreshbooksUtils
 
 			if (!empty($shipping)){
 				error_log(var_export($shipping, 1));
-				$shippingOptions = get_option('tc_crm_shipping_options');
+				$shippingOptions = get_option('tc_shipping_options');
 				$fedExServices = $shippingOptions['FedEx']['services'];
 			
 				$lineItem = array();
@@ -130,21 +164,29 @@ class FreshbooksUtils
 		}
 		
 		
-		if (isset($cart['coupon'])){
+		if (isset($cart['couponModel'])){
 		
-			$coupon = $cart['coupon'];
+			$couponModel = $cart['couponModel'];
 
-		
-			if (!empty($coupon)){
-				error_log(var_export($coupon, 1));
+			//$couponModel = array();
+			// $couponModel['discountAmount'] = (float)$couponMeta['_tc_coupon_discount_amount'][0];
+			// $couponModel['discountType'] = $couponMeta['_tc_coupon_priceOffsetType'][0];    
+			// $couponModel['code'] = $couponMeta['_tc_coupon_code'][0];  
+			// $freeShipping = $couponMeta['_tc_coupon_free_shipping'][0];
+			// $couponModel['freeShipping'] = ( !empty($freeShipping) && $freeShipping == "on" ) ? true : false;    
+			// $couponModel['title'] = $couponPost->post_title;
+			
+			
+			if (!empty($couponModel)){
+				error_log(var_export($couponModel, 1));
 				$lineItem = array();
 				$lineItem['name'] = "Coupon Code / Gift Cert";
-				$lineItem['description'] = $coupon['title'];
+				$lineItem['description'] = $couponModel['title'];
 			
-				$discountAmount = $coupon['discountAmount'];
+				$discountAmount = $couponModel['discountAmount'];
 			
-			
-				if ($coupon['discountType'] == 1){ // 1 is dollars off
+				
+				if ($couponModel['discountType'] == "dollarsOffTotal"){ // 1 is dollars off
 					$lineItem['unit_cost'] = '-'.$discountAmount;
 				}else{
 					$lineItem['unit_cost'] = '-'.($chargeItemsTotal * ($discountAmount/100));
@@ -155,7 +197,7 @@ class FreshbooksUtils
 				$invoice['lines']['line'][] = $lineItem;
 			
 			
-				if ( @$coupon['freeShipping'] == "on" && !empty($shipping) ){
+				if ( @$coupon['freeShipping'] && !empty($shipping) ){
 					$lineItem['name'] = "Free Shipping Discount";
 					$lineItem['unit_cost'] = '-'.($shipping['amount'] + $shippingOptions['FedEx']['markupAmount']);
 					$lineItem['quantity'] = 1;
@@ -169,31 +211,34 @@ class FreshbooksUtils
 		}
 		
 		if (isset($cart['discount'])){
-		
-			$discount = $cart['discount'];
-			// if it's a percent discount, we can use Freshbook's built-in discounting,
-			// otherwise we add the discount as a line item
-			if (!empty($discount)){
+			error_log("cart: ");
+			error_log(var_export($cart, 1));
+			error_log("");
+			error_log("");
+			$discountModel = $cart['discount'];
 			
-				if($discount->type == '%'){
-					if ( !empty($coupon) ){
+			// if it's a percent discount, we can either use Freshbook's built-in discounting,
+			// or if it's either a dollar amount or we already have a coupon for this cart, 
+			// we add the discount as a line item.
+			if (!empty($discountModel)){
+			
+				if($discountModel->type == 'percent'){
+
+					if ( !empty($couponModel) ){
 						$lineItem = array();
 						$lineItem['name'] = "Discount";
-						$lineItem['description'] = $discount->discount . '% Off';
-						//$lineItem['unit_cost'] = '-'.$discount->discount;
-						$lineItem['unit_cost'] = '-'.($chargeItemsTotal * ($discount->discount/100));
-					
+						$lineItem['description'] = $discountModel->amount . '% Off';
+						$lineItem['unit_cost'] = '-'.($chargeItemsTotal * ($discountModel->amount/100));
 						$lineItem['quantity'] = 1;
-
 						$invoice['lines']['line'][] = $lineItem;
 					}else{
-						$invoice['discount'] = $discount->discount;
+						$invoice['discount'] = $discountModel->amount;
 					}
 				}else{
 					$lineItem = array();
 					$lineItem['name'] = "Discount";
 					//$lineItem['description'] = $desc;
-					$lineItem['unit_cost'] = '-'.$discount->discount;
+					$lineItem['unit_cost'] = '-'.$discountModel->amount;
 					$lineItem['quantity'] = 1;
 
 					$invoice['lines']['line'][] = $lineItem;
@@ -208,71 +253,151 @@ class FreshbooksUtils
 	}
 	
 	
-	public static function createNewClientObjectFromPost(){
-		require_once(TASTY_PLUGIN_INC_DIR.'states_list.php');
+	
+	
+	public static function getAdjustedPriceFromRules($itemPrice, $variationItemID, $p2pid, $rules){
+		// $variationRule['id']
+		// $variationRule['offsetAmount'] 
+		// $variationRule['offsetType'] 
+		// $variationRule['selectedItems'] // array
+		// $variationRule['ruleName']
+		// $variationRule['variationID']
+		// $variationRule['variationToProduct_p2p_id']
+		
+		
+		$variationRule;
+		foreach($rules as $rule){
+			if ($rule->variationToProduct_p2p_id == $p2pid){
+				$variationRule = $rule;
+				break;
+			}
+		}
+		
+		
+		if ( in_array( $variationItemID, $variationRule->selectedItems) ){
+			//process rule
+			$offsetAmount = $variationRule->offsetAmount; 
+			$offsetType = $variationRule->offsetType;
+		
+			switch($offsetType){
+				case "total":
+					//charge specified price for item, overriding any rules
+					$itemPrice  = $offsetAmount;
+					break;
+				break;
+
+				case "addPercent":
+					// add specified percent to item
+					$percent = ($offsetAmount/100);
+					$amountToAdd = $itemPrice * $percent;
+					$itemPrice += $amountToAdd;
+				break;
+
+				case "addDollars":
+					// add specified dollar amount to item
+					$itemPrice += $offsetAmount;
+				break;
+
+
+				case "addDollarsOnce":
+					// add specified dollar amount to item, if another product row has not done so already
+					//TODO:  add map for "once" items already calculated
+					$itemPrice += $offsetAmount;
+				break;
+			}
+		}
+		
+		return $itemPrice;
+		
+	}
+	
+	
+	public static function createClientObject($data){
+		// $contactModel = array(
+		// 	'customerFirstName'=>$customerFirstName,
+		// 	'customerLastName'=>$customerLastName,
+		// 	'customerEmail'=>$customerEmail,
+		// 	'customerPhone'=>$customerPhone,
+		// 	'customerCompany'=>$customerCompany
+		// );
+		$contactModel = $data['contact'];
+		
+		// $address['firstName'] = $_POST[$type.'_address_first_name'];
+		// $address['lastName'] = $_POST[$type.'_address_last_name'];
+		// $address['addressLine1'] = $_POST[$type.'_address_line_1'];
+		// $address['addressLine2'] = $_POST[$type.'_address_line_2'];
+		// $address['city'] = $_POST[$type.'_address_city'];
+		// $address['state'] = $_POST[$type.'_address_state'];
+		// $address['zip'] = $_POST[$type.'_address_zip'];
+		// $address['company'] = $_POST[$type.'_address_company'];
+		$address = $data['address'];
+		
+		require_once(TASTY_CMS_PLUGIN_INC_DIR.'utils/states_list.php');
 
 		$client = array();
 		$tstamp = time();
-		$firstName = $_POST['_tc_crm_contact_first_name'];
-		$lastName = $_POST['_tc_crm_contact_last_name'];
-		$company = $_POST['_tc_crm_contact_company'];
+		
+		$firstName = $contactModel['customerFirstName'];
+		$lastName = $contactModel['customerLastName'];
+		$company = $contactModel['customerCompany'];
+		$email = $contactModel['customerEmail'];
+		$phone = $contactModel['customerPhone'];
 
-		$contact_url = $_POST['_tc_crm_contact_url'];
-		$personal_email = $_POST['_tc_crm_contact_personal_email'];
-		$personal_phone = $_POST['_tc_crm_contact_personal_phone'];
-		$personal_address_1 = $_POST['_tc_crm_contact_personal_address_1'];
-		$personal_address_2 = $_POST['_tc_crm_contact_personal_address_2'];
-		$personal_address_city = $_POST['_tc_crm_contact_personal_address_city'];
-		$personal_address_state = $_POST['_tc_crm_contact_personal_address_state'];
-		$personal_address_zip = $_POST['_tc_crm_contact_personal_address_zip'];
-		// $business_email = $_POST['_tc_crm_contact_business_email'];
-		// $business_phone = $_POST['_tc_crm_contact_business_phone'];
-		// $business_address_1 = $_POST['_tc_crm_contact_business_address_1'];
-		// $business_address_2 = $_POST['_tc_crm_contact_business_address_2'];
-		// $business_address_city = $_POST['_tc_crm_contact_business_address_city'];
-		// $business_address_state = $_POST['_tc_crm_contact_business_address_state'];
-		// $business_address_zip = $_POST['_tc_crm_contact_business_address_zip'];
-
-
-
-
-		if (empty($personal_email)){
-			$personal_email = "noemailprovided@tastyclouds.com";
+		//$contact_url = $_POST['_tc_crm_contact_url'];
+		$address_1 = $address['addressLine1'];
+		$address_2 = $address['addressLine2'];
+		$address_city = $address['city'];
+		$address_state = $address['state'];
+		$address_zip = $address['zip'];
+		
+		if (empty($email)){
+			$email = "noemailprovided@tastyclouds.com";
 		}
 
-		$client['first_name'] = $firstName;
-		$client['last_name'] = $lastName;
-
+		// Company name is required by Freshbooks,
+		// so if none was submitted use first and last name
 		$companyName = '';
+		
 		if (!empty($company)){
 			$companyName = $company;
 		}else{
 			$companyName = $client['first_name'] . ' ' . $client['last_name'];
 		}
+		
+		
+		$client['first_name'] = $firstName;
+		$client['last_name'] = $lastName;
+
 		$client['organization'] = $companyName;
 
 		// prefix with timestamp for dev testing
-		$client['email'] = $personal_email;
+		$client['email'] = $email;
 		//$client['email'] = $tstamp.'@visible-form.com';
 		//$client['email'] = $tstamp.'_'.$personal_email;
-		$client['p_street1'] = $personal_address_1; 
-		$client['p_street2'] = $personal_address_2; 
-		$client['p_city'] = $personal_address_city;   
-		$client['p_state'] = $state_list[$personal_address_state]; 
+		$client['p_street1'] = $address_1; 
+		$client['p_street2'] = $address_2; 
+		$client['p_city'] = $address_city;   
+		$client['p_state'] = $state_list[$address_state]; 
 		$client['p_country'] = "United States";
-		$client['p_code'] = $personal_address_zip;
+		$client['p_code'] = $address_zip;
 
-		return $client;	
+		return $client;		
+		
 	}
 	
+	
+	
+	
+
+	
 	public static function createNewInvoicePaymentFromPost($invoiceID){
-		$paymentType = $_POST['_tc_crm_payment_type'];
-		$paymentAmount = $_POST['_tc_crm_payment_amount'];
+		$paymentType = $_POST['payment_type'];
+		$paymentAmount = $_POST['payment_amount'];
 		
 		$payment = array();
 		$payment['amount'] =  $paymentAmount;
 		$payment['invoice_id'] =  $invoiceID;
-		$payment['notes'] =  $_POST['_tc_crm_payment_note'];
+		$payment['notes'] =  $_POST['payment_note'];
 		
 		// $fbPaymentType = '';
 		// 
@@ -283,7 +408,10 @@ class FreshbooksUtils
 		
 		return $payment;
 		
-	} 
+	}
+	
+	
+	
 
 
 

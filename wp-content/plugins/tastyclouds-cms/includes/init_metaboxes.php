@@ -99,7 +99,7 @@ $shipping_box_size_metabox = new WPAlchemy_MetaBox(array
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_ship_box_size_',
 	'context' => 'side',
-	'save_filter' => 'onShippingBoxSizeSaveFilter', // defaults to NULL
+	//'save_filter' => 'onShippingBoxSizeSaveFilter', // defaults to NULL
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'ShippingBoxSizeMetabox.php',
 ));
 
@@ -125,7 +125,7 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 
 function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 	global $order_details_metabox;
-
+	$orderID = $post_id;
 	// remove the save action handler so it doesnt fire if/when we need to save new posts of other types (like contacts or payments)
 	$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
 	
@@ -138,43 +138,196 @@ function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 	$customerPhone = $_POST['customer_phone'];
 	$customerCompany = $_POST['customer_company'];
 	
+	$contactModel = array(
+		'customerFirstName'=>$customerFirstName,
+		'customerLastName'=>$customerLastName,
+		'customerEmail'=>$customerEmail,
+		'customerPhone'=>$customerPhone,
+		'customerCompany'=>$customerCompany
+	);
+	
 	if (empty($_POST['tc_selected_contact'] ) ){
 		if( !empty($customerFirstName) || !empty($customerLastName) || !empty($customerEmail) || !empty($customerPhone) || !empty($customerCompany) ){
- 			do_action('tc_create_contact', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
+ 			
+			$contactID = ContactProxy::createNew(array('use_post'=>true));
+
+			//store the contact meta info with the post
+			$contactModel['contactID'] = $contactID;
+			ContactProxy::updateMeta($contactModel);
+			
+			// link the order with the contact
+			p2p_type( 'contact_to_order' )->connect( $contactID, $orderID, array(
+				'date' => current_time('mysql'),			
+			) );
+		}
+	}else{
+		$contactID = $_POST['tc_selected_contact'];
+	}
+	
+	// check for billing address submission
+	$billingAddress = ContactProxy::getAddressFromPost('billing');
+	$billingAddressString = implode('', $billingAddress);
+	if (!empty($billingAddressString)){
+		$addressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$billingAddress, 'type'=>'billing'));
+		
+		//TODO:  might have to move this when we use a previously saved billing address
+		if( isset($data['attach_to_order_id']) ){
+			p2p_type( $addressType.'_address_to_order' )->connect( $addressID, $orderID );
+		}
+	}
+	
+		
+	// check for shipping address submission
+	$shippingAddress = ContactProxy::getAddressFromPost('shipping');
+	$shippingAddressString = implode('', $shippingAddress);
+	if (!empty($shippingAddressString)){
+		$addressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$shippingAddress, 'type'=>'shipping'));
+		
+		//TODO:  might have to move this when we use a previously saved shipping address
+		if( isset($data['attach_to_order_id']) ){
+			p2p_type( $addressType.'_address_to_order' )->connect( $addressID, $orderID );
 		}
 	}
 	
 	
 	// save payment info if submitted with order
 	if (!empty($_POST['payment_amount'] ) ){
-	 		do_action('tc_create_payment', array('use_post'=>true, 'attach_to_order_id'=>$post_id));
-	}
-
-	// When we create the custom taxonomies for tc_contact posts,
-	// we also assign them to tc_order posts just so we can get 
-	// the taxonomy metaboxes on the order screen.
-	// WP will automatically assign those terms to the order,
-	// so we remove them here, and they will be assigned to the 
-	// contact using updateContactTaxonomyTerms().
-	wp_set_object_terms($post_id, array(), 'tc_how_heard');
-	wp_set_object_terms($post_id, array(), 'tc_inq_reason');
-	wp_set_object_terms($post_id, array(), 'tc_inquirer_type');
-	wp_set_object_terms($post_id, array(), 'tc_poc');
+		$paymentID = PaymentProxy::insertNew(array('use_post'=>true, 'orderID'=>$orderID));
 	
-	
-	update_post_meta( $post_id, '_tc_order_type', $_POST['_tc_order_type'] );
-	wp_set_object_terms( $post_id, (int)$_POST['_tc_order_type'], 'tc_order_type' );
-	
-	if(isset($_POST['_tc_event_type'])){
-		update_post_meta( $post_id, '_tc_event_type', $_POST['_tc_event_type'] );	
-		wp_set_object_terms( $post_id, (int)$_POST['_tc_event_type'], 'tc_event_type' );
+		p2p_type( 'payment_to_order' )->connect( $paymentID, $orderID, array(
+			'date' => current_time('mysql'),			
+		) );
 		
 	}
+
+	OrderProxy::removeContactTaxonomyTerms($orderID);
+	
+	OrderProxy::setOrderTypeTaxonomyTerms($orderID);
+	
 	if(isset($_POST['_tc_event_date'])){
-		update_post_meta( $post_id, '_tc_event_date', $_POST['_tc_event_date'] );					
+		update_post_meta( $orderID, '_tc_event_date', $_POST['_tc_event_date'] );					
 	}
 	
 	
+	
+	if ( defined( 'IS_NEW_ORDER_POST' ) ){
+		//if this is a new order, check to see if we need to create an invoice on Freshbooks.
+		
+		$cartID = $_POST['cartID'];
+		$cart = CartAjax::getCartById($cartID);
+
+		OrderProxy::saveCart($cart, $orderID, $cartID);
+		
+		// TODO: determine if we want to save this invoice to FB.
+		$orderType = $_POST['_tc_order_type'];
+		
+		// if we are saving any type of order except "Walk In", link with freshbooks
+		// to send customer an invoice.
+		if ($orderType == "36"){ // 36 is a walk-in order, we dont need an invoice on Freshbooks for that.
+			return;
+		}
+		
+		// Freshbooks requires a valid email address for a client,
+		// so make sure we have one before attempting to add. 
+		if (empty($customerEmail) || filter_var($customerEmail, FILTER_VALIDATE_EMAIL) === FALSE){
+			error_log("\n\nNo valid email provided, skipping Freshbooks invoice.\n\n");								
+			return;
+		}
+		
+		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksService.php');
+		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksUtils.php');
+		$freshbooksService = new FreshbooksService();
+		
+		$fbClientID = FreshbooksUtils::getFreshbooksClientID($contactID);
+		
+		if (empty($fbClientID)){
+			$clientObj = FreshbooksUtils::createClientObject(array('contact'=>$contactModel, 'address'=>$billingAddress));
+			
+			$createClientResult = $freshbooksService->createNewClient($clientObj);
+			$response = $createClientResult['response'];
+			
+			if ($createClientResult['success']){
+				error_log("\n\nSuccessfully created new client on freshbooks!");
+				$fbClientID = $response['client_id'];
+				update_post_meta($contactID, '_tc_fb_id', $fbClientID);
+			}else{
+				// throw a fit
+				error_log("\n\nError adding client to freshbooks");
+				error_log(print_r($response, 1));
+				error_log(print_r($createClientResult['error'], 1));
+				return;
+			}	
+		}
+		
+		/**********************************************
+		 * Now that we have a client id for Freshbooks,
+		 * create a new invoice for the order.
+		//  **********************************************/
+		$invoice = FreshbooksUtils::getInvoiceFromCart($fbClientID, $cart);
+		error_log(var_export($invoice,1));
+		
+		$createInvoiceResult = $freshbooksService->createInvoice($invoice);
+		$invoiceResponse = $createInvoiceResult['response'];
+		
+		if ($createInvoiceResult['success']){
+			error_log("\n\nSuccessfully created new invoice on freshbooks!");								
+			$invoiceID = $invoiceResponse['invoice_id'];
+		}else{
+			error_log("\n\nError adding invoice to fresbooks");
+			error_log(print_r($invoiceResponse, 1));
+			error_log(print_r($createInvoiceResult['error'], 1));
+			return;
+		}
+		
+		
+		/**********************************************
+		 * If there was a payment submitted with this order,
+		 * save the payment as a post, save it to Freshbooks, 
+		 * and add the payment to the invoice
+		//  **********************************************/
+		if ( isset($paymentID) ){
+			// save payment to Freshbooks
+			$payment = FreshbooksUtils::createNewInvoicePaymentFromPost($invoiceID);
+			$createPaymentResult = $freshbooksService->createPaymentForInvoice($payment);
+			$paymentResponse = $createPaymentResult['response'];
+			
+			if ($createPaymentResult['success']){
+				error_log("\n\nSuccessfully created new payment on freshbooks!");
+				$invoicePaymentID = $paymentResponse['payment_id'];
+				update_post_meta($paymentID, '_tc_fb_payment_id', $invoicePaymentID);
+			}else{
+				error_log("\n\nError adding payment to freshbooks");
+				error_log(print_r($paymentResponse, 1));
+				error_log(print_r($createPaymentResult['error'], 1));
+				return;
+			}
+		}
+		
+		
+		/**********************************************
+		 * Now that the invoice is ready, email to the client
+		//  **********************************************/
+		$emailInfo = array();
+		$emailInfo['invoice_id'] = $invoiceID;
+		$emailInfo['message'] = 'You have a new invoice. Get it here: ::invoice link::';
+		$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Invoice';
+		
+		$sendInvoiceResult = $freshbooksService->sendInvoiceByEmail($emailInfo);
+		$sendInvoiceResponse = $sendInvoiceResult['response'];
+		
+		if ($sendInvoiceResult['success']){
+			error_log("\n\nSuccessfully send email!");
+			
+		}else{
+			error_log("\n\nError sending email");
+			error_log(print_r($sendInvoiceResponse, 1));
+			error_log(print_r($sendInvoiceResult['error'], 1));
+			return;
+		}
+		
+		
+			
+	}
 	
 
 	

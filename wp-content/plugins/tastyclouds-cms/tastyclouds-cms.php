@@ -29,6 +29,28 @@ function tc_cms_init_session(){
 }
 
 
+add_action('transition_post_status','tc_on_order_transition_post_status',10,3);
+
+function tc_on_order_transition_post_status($new, $old, $post){
+    // Make sure the post obj is present and complete. If not, bail.
+    if(!is_object($post) || !isset($post->post_type)) {
+        return;
+    }
+
+    if($post->post_type == 'tc_order') {
+			
+		if ($new == 'publish' && $old != 'publish'){
+			error_log("\n tc_on_order_transition_post_status \n");
+			// the transition_post_status hook fires immediately before the save_post hook,
+			// so we define a constant here that the OrderDetailsMetabox save_action handler will look for.
+			define('IS_NEW_ORDER_POST', true);
+			//update_post_meta($post->ID, '_is_new_order', true);
+		}
+	}
+	
+}
+
+
 
 
 // turn off wp 'doing it wrong' errors like "[somefunction]_called_incorrectly"
@@ -46,6 +68,11 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
+//require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/CartProxy.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ContactProxy.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/OrderProxy.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/PaymentProxy.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ProductProxy.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/AjaxUtils.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');

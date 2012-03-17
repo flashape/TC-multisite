@@ -310,7 +310,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 			if( !Object.equals(oldDiscountModel, newDiscountModel) ){
 				row.data("discountModel", newDiscountModel);
 				this.calculateTotal();
+				ordersAjaxService.updateDiscount(newDiscountModel);
 			}
+			
+			
 			
 		},
 		
@@ -784,6 +787,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 				break;
 				
 				case 'custom':
+					newModel.itemName = row.find('.customItemTitleInput').val();
 					newModel.price = parseFloat(row.find('.priceInput').val());
 				break;
 				
