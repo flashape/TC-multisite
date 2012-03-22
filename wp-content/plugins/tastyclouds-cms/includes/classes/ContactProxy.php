@@ -45,11 +45,15 @@ class ContactProxy
 		
 		// first check to see if our Contact's first and last names have changed,
 		// if they have update the post title
-		$oldFirstName = get_post_meta( $contactID,'customer_adddress_first_name', true);
-		$oldLastName = get_post_meta( $contactID,'customer_adddress_last_name', true);
+		$oldFirstName = get_post_meta( $contactID,'customerFirstName', true);
+		$oldLastName = get_post_meta( $contactID,'customerLastName', true);
 
-		$newFirstName = @$newMeta['customer_adddress_first_name'];
-		$newLastName = @$newMeta['customer_adddress_last_name'];
+		$newFirstName = @$newMeta['customerFirstName'];
+		$newLastName = @$newMeta['customerLastName'];
+		error_log("oldFirstName : $oldFirstName");
+		error_log("oldLastName : $oldLastName");
+		error_log("newFirstName : $newFirstName");
+		error_log("newLastName : $newLastName");
 
 
 		if ($newFirstName != $oldFirstName || $newLastName != $oldLastName ){
@@ -63,6 +67,55 @@ class ContactProxy
 			update_post_meta( $contactID, $key, $value );
 		}
 		
+		
+	}
+	
+	public static function getContactByID($contactID){
+		
+		// if the tc_selected_contact var is empty, and user info was submitted, save a new contact
+		$customerFirstName = 	get_post_meta( $contactID,'customerFirstName', true);
+		$customerLastName = 	get_post_meta( $contactID,'customerLastName', true);
+		$customerEmail = 		get_post_meta( $contactID,'customerEmail', true);
+		$customerPhone = 		get_post_meta( $contactID,'customerPhone', true);
+		$customerCompany = 		get_post_meta( $contactID,'customerCompany', true);
+		$contactID = 			get_post_meta( $contactID,'contactID', true);
+
+		$contactModel = array(
+			'contactID'=>$contactID,
+			'customerFirstName'=>$customerFirstName,
+			'customerLastName'=>$customerLastName,
+			'customerEmail'=>$customerEmail,
+			'customerPhone'=>$customerPhone,
+			'customerCompany'=>$customerCompany
+		);
+		
+		
+		
+		
+		$connections = p2p_get_connections( 'address_to_contact', array('to'=>$contactID, 'fields'=>'*') );
+		
+		$addresses = array();
+		
+		foreach($connections as $p2pConn){
+			$address = get_post_meta($p2pConn->p2p_from, 'addressModel', true);
+			$p2p_id = $p2pConn->p2p_id;
+			$addressType = p2p_get_meta($p2pConn->p2p_id, 'addressType', true);
+			$address['addressType'] = $addressType;
+			
+			$addresses[] = $address;
+		}
+		
+		
+		// 
+		// foreach($connectedIDs as $addressID){
+		// 	$addresses[(int)$addressID] = json_decode(get_post_meta($addressID, 'addressModel', true));
+		// }
+		// 
+		
+		$contactModel['addresses'] = $addresses;
+		
+		
+		return $contactModel;
 		
 	}
 	
@@ -142,6 +195,10 @@ class ContactProxy
 		
 	}
 	
+	public static function getAddressByID($addressID){
+		return get_post_meta($addressID, 'addressModel', true);
+	}
+	
 	public static function getAddressFromPost($type){
 		//$type should be either 'billing' or 'shipping'
 		$address = array();
@@ -157,6 +214,30 @@ class ContactProxy
 		
 		return $address;
 	}
+	
+	// generates the autocomplete data used in the quick contact select dropdown in the admin order input form.
+	public function createAutocompleteModel($json = true)
+	{
+		$autoCompleteContacts = get_posts(array('post_type' => 'tc_contact', 'numberposts'=>-1));
+
+		$contactAutocompleteItems = array();
+
+		foreach ($autoCompleteContacts as $contact) {
+			$contactName = $contact->post_title;
+			$contactID = $contact->ID;
+			$contactAutocompleteItems[] = array('label'=>$contactName, 'value'=>$contactID);
+		}
+		// 
+		// $contactAutocompleteItems[] = array('label'=>'Test Contact 1', 'value'=>"1");
+		// $contactAutocompleteItems[] = array('label'=>'Rich Rodecker', 'value'=>"2");
+		// $contactAutocompleteItems[] = array('label'=>'Tom Brady', 'value'=>"3");
+		
+		return $json ? json_encode($contactAutocompleteItems) : $contactAutocompleteItems;
+		
+		
+	}
+	
+	
 	
 	
 	

@@ -17,9 +17,10 @@ var OrdersAjaxServiceClass = JS.Class({
 		this.getCartResultReceived = new signals.Signal();
     },
 
+
 	getContactDetails : function (selectedContactID, resultHandler){
 		debug.log('getContactDetails : '+selectedContactID);
-		var data = {action:'tc_crm_get_contact_details'};
+		var data = {action:'tc_get_contact_details'};
 		data.selectedContactID = selectedContactID;
 		jQuery.post(ajaxurl, data, resultHandler, 'json');
 	},

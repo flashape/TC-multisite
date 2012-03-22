@@ -77,6 +77,7 @@ require_once(TASTY_CMS_PLUGIN_DIR .'ajax/AjaxUtils.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/VariationItemAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ProductVariationRulesAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/CartAjax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ContactAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ShippingAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ActivityAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/MailAjax.php');

@@ -126,9 +126,9 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 	global $order_details_metabox;
 	$orderID = $post_id;
+	
 	// remove the save action handler so it doesnt fire if/when we need to save new posts of other types (like contacts or payments)
 	$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
-	
 	
 	
 	// if the tc_selected_contact var is empty, and user info was submitted, save a new contact
@@ -146,48 +146,81 @@ function onOrderDetailsMetaboxSaveAction($meta, $post_id){
 		'customerCompany'=>$customerCompany
 	);
 	
-	if (empty($_POST['tc_selected_contact'] ) ){
-		if( !empty($customerFirstName) || !empty($customerLastName) || !empty($customerEmail) || !empty($customerPhone) || !empty($customerCompany) ){
- 			
+	$contactID = $_POST['tc_selected_contact'];
+	
+	$contactModelString = implode('', $contactModel);
+	
+	if ( !empty($contactModelString) ){
+		error_log("contactModelString not empty!");
+		if( empty($contactID) ){
 			$contactID = ContactProxy::createNew(array('use_post'=>true));
-
-			//store the contact meta info with the post
-			$contactModel['contactID'] = $contactID;
-			ContactProxy::updateMeta($contactModel);
-			
-			// link the order with the contact
-			p2p_type( 'contact_to_order' )->connect( $contactID, $orderID, array(
-				'date' => current_time('mysql'),			
-			) );
 		}
-	}else{
-		$contactID = $_POST['tc_selected_contact'];
+		
+		//store the contact meta info with the post
+		$contactModel['contactID'] = $contactID;
+		ContactProxy::updateMeta($contactModel);
+		
+		// link the order with the contact
+		p2p_type( 'contact_to_order' )->connect( $contactID, $orderID, array(
+			'date' => current_time('mysql'),			
+		) );
 	}
+	
+	
 	
 	// check for billing address submission
 	$billingAddress = ContactProxy::getAddressFromPost('billing');
 	$billingAddressString = implode('', $billingAddress);
-	if (!empty($billingAddressString)){
-		$addressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$billingAddress, 'type'=>'billing'));
-		
-		//TODO:  might have to move this when we use a previously saved billing address
-		if( isset($data['attach_to_order_id']) ){
-			p2p_type( $addressType.'_address_to_order' )->connect( $addressID, $orderID );
-		}
+	$billingAddressID = $_POST['tc_selected_billing_addr'];
+	
+	// if the address is empty and an addressID was selected...
+	if (empty($billingAddressString) && !empty($billingAddressID)){
+		$billingAddress = ContactProxy::getAddrressByID($billingAddressID);
 	}
 	
-		
+	// if we have an address and there was no addressID selected, it's new....
+	if (!empty($billingAddressString) && empty($billingAddressID)){
+		$billingAddressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$billingAddress, 'type'=>'billing'));
+	}
+			
+	// if we have an address and there was also addressID selected, save it as a new address...
+	if (!empty($billingAddressString) && !empty($billingAddressID)){
+		$billingAddressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$billingAddress, 'type'=>'billing'));
+	}
+	
+	// if we have an address and an order id, link the billing address with the order.
+	if (!empty($billingAddressString) && !empty($billingAddressID)){
+		p2p_type('billing_address_to_order' )->connect( $billingAddressID, $orderID );
+	}
+	
+	
+	
 	// check for shipping address submission
 	$shippingAddress = ContactProxy::getAddressFromPost('shipping');
 	$shippingAddressString = implode('', $shippingAddress);
-	if (!empty($shippingAddressString)){
-		$addressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$shippingAddress, 'type'=>'shipping'));
-		
-		//TODO:  might have to move this when we use a previously saved shipping address
-		if( isset($data['attach_to_order_id']) ){
-			p2p_type( $addressType.'_address_to_order' )->connect( $addressID, $orderID );
-		}
+	$shippingAddressID = $_POST['tc_selected_shipping_addr'];
+	
+	// if the address is empty and an addressID was selected...
+	if (empty($shippingAddressString) && !empty($shippingAddressID)){
+		$shippingAddress = ContactProxy::getAddrressByID($shippingAddressID);
 	}
+	
+	// if we have an address and there was no addressID selected, it's new....
+	if (!empty($shippingAddressString) && empty($shippingAddressID)){
+		$shippingAddressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$shippingAddress, 'type'=>'shipping'));
+	}
+	
+	// if we have an address and there was also addressID selected, save it as a new address...
+	if (!empty($shippingAddressString) && !empty($shippingAddressID)){
+		$shippingAddressID = ContactProxy::insertNewAddress(array('contactID'=>$contactID, 'address'=>$shippingAddress, 'type'=>'shipping'));
+	}
+	
+	// if we have an address and an order id, link the shipping address with the order.
+	if (!empty($shippingAddressString) && !empty($shippingAddressID)){
+		p2p_type('shipping_address_to_order' )->connect( $shippingAddressID, $orderID );
+	}
+	
+
 	
 	
 	// save payment info if submitted with order

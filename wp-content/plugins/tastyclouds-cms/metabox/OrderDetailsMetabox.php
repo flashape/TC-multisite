@@ -273,6 +273,17 @@ $paymentRows = tc_get_order_payment_rows();
 		font-size:12px;
 		color:#555;
 	}
+								
+	.shippingRadio{
+		font-size:12px;
+		color:#555;
+	}
+									
+	.addressFormHeader{
+		font-size:12px;
+		font-weight:bold;
+		color:#000;
+	}
 	
 	.balanceDue {
 		text-align:right;
@@ -289,7 +300,7 @@ $paymentRows = tc_get_order_payment_rows();
 					
 
 								
-	#billingAddressDiv{
+/*	#billingAddressDiv{
 		float:left; 
 		width: 400px; 
 		padding: 5px 0px 5px 0px; 
@@ -303,7 +314,7 @@ $paymentRows = tc_get_order_payment_rows();
 		padding: 5px 0px 5px 0px; 
 		text-align: right; 
 
-	}
+	}*/
 	
 </style>
 
@@ -450,43 +461,49 @@ $paymentRows = tc_get_order_payment_rows();
 		
 				
 		<div id="contactInfoTab" style="padding-left:0px;padding-right:0px;padding-top:0px;text-align:center;width:100%;">
+			
 			<div style="width: 600px;margin: 0 auto">
-			<div class="one-half first">
-				<table id="customerAddressTable">
-					<tbody>
-						<tr>
-							<td class="address-form-label-column">First Name:</td>
-							<td style="text-align:left"> <input type="text" name="customer_address_first_name"  id="customer_address_first_name"  /></td>
-						</tr>
-						<tr>
-							<td class="address-form-label-column">Last Name:</td>
-							<td style="text-align:left"> <input type="text" name="customer_address_last_name"  id="customer_address_last_name"  /></td>
-						</tr>
-						<tr>
-							<td class="address-form-label-column">Email:</td>
-							<td style="text-align:left"> <input type="text" name="customer_email"  id="customer_email"  /></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="one-half">
-				<table id="customerAddressTable2">
-					<tbody>
-						<tr>
-							<td class="address-form-label-column">Phone:</td>
-							<td style="text-align:left"> <input type="text" name="customer_phone"  id="customer__phone"  /></td>
-						</tr>
-						<tr>
-							<td class="address-form-label-column">Company:</td>
-							<td style="text-align:left"> <input type="text" name="customer_company"  id="customer_company"  /></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="one-half first" style="margin-bottom:0px;">
+					<table id="customerAddressTable">
+						<tbody>
+							<tr>
+								<td class="address-form-label-column">First Name:</td>
+								<td style="text-align:left"> <input type="text" name="customer_address_first_name"  id="customer_address_first_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Last Name:</td>
+								<td style="text-align:left"> <input type="text" name="customer_address_last_name"  id="customer_address_last_name"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Email:</td>
+								<td style="text-align:left"> <input type="text" name="customer_email"  id="customer_email"  /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="one-half">
+					<table id="customerAddressTable2">
+						<tbody>
+							<tr>
+								<td class="address-form-label-column">Phone:</td>
+								<td style="text-align:left"> <input type="text" name="customer_phone"  id="customer_phone"  /></td>
+							</tr>
+							<tr>
+								<td class="address-form-label-column">Company:</td>
+								<td style="text-align:left"> <input type="text" name="customer_company"  id="customer_company"  /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div style="clear:both;margin-bottom:20px;"><label><input type="checkbox" id="editCustomerCheckbox" />Edit Customer Info</label><br /></div>
+				
+
 			</div>
 
-			</div>	
-			<div id="addressDiv" >
-				<div id="billingAddressDiv">
+			
+			<div id="addressDiv" style="width: 600px;margin: 0 auto" >
+				<div id="billingAddressDiv" class="one-half first">
+					<span class="addressFormHeader">Billing Address:</span>
 					<table id="billingAddressTable" class="widefat">
 						<tbody>
 							<tr>
@@ -533,8 +550,10 @@ $paymentRows = tc_get_order_payment_rows();
 					</table>
 				</div>
 				
-				<div id="shippingAddressDiv">
-					<table id="shippingAddressTable" class="widefat">
+				<div id="shippingAddressDiv" class="one-half">
+
+					<span class="addressFormHeader">Shipping Address:</span><br />
+					<table id="shippingAddressTable" class="widefat" style="display:none;" >
 						<tbody>
 							<tr>
 								<td class="address-form-label-column">Address Book:</td>
@@ -578,6 +597,10 @@ $paymentRows = tc_get_order_payment_rows();
 							</tr>
 						</tbody>
 					</table>
+					
+					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="radioShipping_0" checked="checked" />Use Billing Address</label><br />
+					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="radioShipping_1" />Specify Different Shipping Address</label>
+					
 				</div>
 				<div style="clear: both"></div>
 			</div>
@@ -595,9 +618,9 @@ $paymentRows = tc_get_order_payment_rows();
 
 <?php
 function onOrderDetailsMetaboxFooterAction() {
-	require_once(TASTY_CMS_PLUGIN_INC_DIR .'utils/AutocompleteUtils.php');
-	$contactAutocompleteJSON = AutocompleteUtils::createContactModel();
-	$productAutocompleteJSON = AutocompleteUtils::createProductModel();
+	//require_once(TASTY_CMS_PLUGIN_INC_DIR .'utils/AutocompleteUtils.php');
+	$contactAutocompleteJSON = ContactProxy::createAutocompleteModel();
+	$productAutocompleteJSON = ProductProxy::createAutocompleteModel();
 	
 	$shippingOptions = get_option('tc_shipping_options');
 	$shippingOptionsJSON = json_encode($shippingOptions);
@@ -683,7 +706,7 @@ jQuery(document).ready(function($){
 					var selectedObj = ui.item;
 					$('#tc_contact_input').val(selectedObj.label);
 					$('#tc_selected_contact').val(selectedObj.value);
-					//customerInfoViewMediator.onContactChanged();
+					customerInfoViewMediator.onContactSelected();
 					return false;
 				},		
 		focus: function(event, ui) {
@@ -732,7 +755,7 @@ jQuery(document).ready(function($){
 	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.customItemTitleInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
-	
+
 	$('#discountAmountInput').on('focusout', function(event){
 		orderItemsViewMediator.checkDiscountUpdated();
 	});
@@ -744,9 +767,6 @@ jQuery(document).ready(function($){
 	$('#orderItemsTable').on('click', '.addNextItemButton', function(event){
 		$('#tc_product_input').focus();
 		debug.log('on addNextItembutton click!');
-		//event.stopPropagation();
-		// event.stopImmediatePropagation();
-		// event.preventDefault();
 		return false;
 	    
 	});		
@@ -762,6 +782,19 @@ jQuery(document).ready(function($){
 	    
 	});
 	
+	$('#contactInfoTab').on('change', 'input.shippingRadioInput', function(event){
+		debug.log('on shippingRadio change!');
+		if ($('#shippingRadioInput2').is(':checked')){
+			$('#shippingAddressTable').show();
+		}else{
+			$('#shippingAddressTable').hide();
+			
+		}
+		return false;
+	    
+	});
+	
+	
 	$('#_tc_tax_enabled').on('change', function(){
 		orderItemsViewMediator.onTaxEnabledChange();
 	});
@@ -769,6 +802,11 @@ jQuery(document).ready(function($){
 		
 	$('#_tc_shipping_enabled_checkbox').on('change', function(){
 		orderItemsViewMediator.onShippingEnabledChange();
+	});
+	
+			
+	$('#editCustomerCheckbox').on('change', function(){
+		customerInfoViewMediator.onEditCustomerCheckboxChange();
 	});
 	
 	
@@ -792,10 +830,10 @@ jQuery(document).ready(function($){
 	$("#shipping_address_state").html(states);
 
 	
-	$("#billing_address_state").val("CA");
-	$("#shipping_address_state").val("CA");
+	// $("#billing_address_state").val("CA");
+	// $("#shipping_address_state").val("CA");
 
-	
+	$("#post").attr("autocomplete", "off");
 	/*
 		From the jquery validation docs re: errorContainer : http://docs.jquery.com/Plugins/Validation/validate#toptions
 		
@@ -848,6 +886,29 @@ jQuery(document).ready(function($){
 	});
 	
 	jQuery('.tc_datepicker').datepicker();
+	
+	
+	$( "#customer-info-changed-dialog" ).dialog({
+		width:550,
+		height:200,
+		modal: true,
+		autoOpen: false,
+		resizable: false,
+		zIndex: 3999,
+		closeOnEscape:false,
+		buttons: {
+			"Continue with new data": function() {
+				$( this ).dialog( "close" );
+				$('#editCustomerCheckbox').attr('checked', 'checked');
+			},
+			"Revert to previously saved data": function() {
+				customerInfoViewMediator.populateContactForm();
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	
+	
 	
 	Object.equals = function( x, y ) {
 	  if ( x === y ) return true;
@@ -969,7 +1030,14 @@ jQuery(document).ready(function($){
 		
 </table>
 
-
+<div id="customer-info-changed-dialog" title="Customer Info Changed">
+	<p>
+		You have made changes to the contact info.  Unchecking this checkbox will revert to the previously saved data, and no changes will be made to this contact's info.
+	</p>
+	<p>
+		Select an option below to continue.
+	</p>
+</div>
 
 <?php
 }

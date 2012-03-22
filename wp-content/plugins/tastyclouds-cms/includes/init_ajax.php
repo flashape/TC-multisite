@@ -36,4 +36,5 @@ add_action( 'wp_ajax_tc_update_activity', array('ActivityAjax', 'updateActivity'
 add_action( 'wp_ajax_tc_delete_activity', array('ActivityAjax', 'deleteActivity') );
 add_action( 'wp_ajax_tc_get_activities_for_post', array('ActivityAjax', 'getActivitiesForPost') );
 add_action( 'wp_ajax_tc_get_mail_for_contact', array('MailAjax', 'getMailForContact') );
+add_action( 'wp_ajax_tc_get_contact_details', array('ContactAjax', 'getContactById') );
 ?>
