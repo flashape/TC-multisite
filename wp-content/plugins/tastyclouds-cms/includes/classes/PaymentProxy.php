@@ -18,7 +18,7 @@ class PaymentProxy
 		if( $data['use_post'] ){
 			$paymentType = $_POST['payment_type'];
 			$paymentAmount = $_POST['payment_amount'];
-			$paymentNote = $_POST['payment_amount'];
+			$paymentNote = $_POST['payment_note'];
 		}
 
 		$orderID = $data['orderID'];

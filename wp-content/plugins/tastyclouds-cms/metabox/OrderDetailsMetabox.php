@@ -8,6 +8,64 @@ if ($pagenow == 'post-new.php'){
 	$cartID = CartAjax::create();
 	error_log("cartID : $cartID");
 	
+}else{
+	$cartID = get_post_meta( $post->ID, '_cartID', true);
+	$serializedCart = get_post_meta( $post->ID, '_tc_cart', true);
+	
+	$cart = unserialize(base64_decode($serializedCart));
+	$cart['session_id'] = session_id();
+	CartAjax::overwriteCartInSession($cart);
+	
+	error_log("saved cartID : $cartID");
+	error_log(var_export($cart, 1));
+	
+	
+	// $lineItem['name'] = $cartItem->itemName;
+	// $lineItem['description'] = $cartItem->description;
+	// $lineItem['unit_cost'] = $cartItem->price;
+	// $lineItem['quantity'] = 1;
+		// for now this is the same as the Freshbooks invoice data
+		global $cartID;
+		global $post;
+		$orderSummary = OrderProxy::getOrderSummary(CartAjax::getCartByID($cartID));
+		$summaryRows = '';
+		
+		foreach ($orderSummary['lines']['line'] as $lineItem){
+			$row = '<tr>';
+				$row  .= '<td style="text-align:left">'.$lineItem['quantity'].'</td>';
+				$row  .= '<td style="text-align:left">'.$lineItem['name'].'</td>';
+				$row  .= '<td style="text-align:left">'.$lineItem['description'].'</td>';
+				$itemPrice = ($lineItem['unit_cost'] * $lineItem['quantity'] );
+				$row  .= '<td style="text-align:left">'.number_format($itemPrice, 2, '.', '').'</td>';
+			$row  .= '</tr>';
+			
+			$summaryRows .= $row;
+		}
+		
+		if (isset($orderSummary['discount'])){
+			$row = '<tr>';
+				$row  .= '<td style="text-align:left">'.$lineItem['quantity'].'</td>';
+				$row  .= '<td style="text-align:left">'.$lineItem['name'].'</td>';
+				$row  .= '<td style="text-align:left">Discount</td>';
+				$row  .= '<td style="text-align:left">'.$orderSummary['discount'].'</td>';
+			$row  .= '</tr>';
+		}
+		
+		$payments = OrderProxy::getPaymentsForOrder($post->ID);
+		foreach ($payments as $paymentModel){
+			error_log(var_export($paymentModel, 1));
+			$row = '<tr>';
+				$row  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+				$row  .= '<td style="background-color:#CCCCCC;text-align:left">Payment ('.$paymentModel['paymentType'].')</td>';
+				$row  .= '<td style="background-color:#CCCCCC;text-align:left">'.$paymentModel['paymentNote'].'</td>';
+				$row  .= '<td style="background-color:#CCCCCC;text-align:left">'.number_format($paymentModel['paymentAmount'], 2, '.', '').'</td>';
+			$row  .= '</tr>';
+			
+			$summaryRows .= $row;
+		}
+		
+		
+		
 }
 
 $enabledCheckboxID = '_tc_shipping_enabled_checkbox';
@@ -284,6 +342,11 @@ $paymentRows = tc_get_order_payment_rows();
 		font-weight:bold;
 		color:#000;
 	}
+										
+	.addressBookDropdown{
+		width:200px;
+		
+	}
 	
 	.balanceDue {
 		text-align:right;
@@ -299,22 +362,6 @@ $paymentRows = tc_get_order_payment_rows();
 	}
 					
 
-								
-/*	#billingAddressDiv{
-		float:left; 
-		width: 400px; 
-		padding: 5px 0px 5px 0px; 
-		text-align: left;
-	}
-			
-
-	#shippingAddressDiv{
-		float:right;
-		width: 400px; 
-		padding: 5px 0px 5px 0px; 
-		text-align: right; 
-
-	}*/
 	
 </style>
 
@@ -346,117 +393,136 @@ $paymentRows = tc_get_order_payment_rows();
 	
 	<div id="orderDetailsTabs" >
 		<?php echo $contactSelectDiv ?>
+		<input type="hidden" name="tc_selected_billing_addr" id="tc_selected_billing_addr" value="" />
+		<input type="hidden" name="tc_selected_shipping_addr" id="tc_selected_shipping_addr" value="" />
 		<ul id="orderDetailsTabsList">
 			<li><a href="#orderItemsTab">Order Items</a></li>
 			<li><a href="#contactInfoTab">Contact Information</a></li>
 		</ul>
 		
 		<div id="orderItemsTab" style="padding-left:0px;padding-right:0px;padding-top:0px;">
-			
-			<div style="margin:10px;">
-				Select Product/Service : <input type="text" id="tc_product_input"  />
-				<a class="button-secondary" href="#" id="customItemButton" title="Add Custom Item">Add Custom Item</a>
+			<div id="orderSummary">
+				<div class="one-half first">
+					<table id="orderSummaryTable" class="widefat" style="width:400px">
+						<tbody>
+							<?php echo $summaryRows ?>
+						</tbody>
+					</table>
+				</div>
+				<div class="one-half" style="padding:15px;">
+					<a class="button-secondary" href="#" id="editOrderButton" title="Edit Order">Edit Order</a><br /><br />
+					<p class="description"><b>WARNING</b>: Editing items in an existing order may possibly cause pricing calculation changes.</p>
+					<p class="description">You may add payments, update the order status, and make other changes without editing the contents of this order.</p>
+				</div>
 			</div>
+			<div id="orderForm">
+				
+
+				<div style="margin:10px;">
+					Select Product/Service : <input type="text" id="tc_product_input"  />
+					<a class="button-secondary" href="#" id="customItemButton" title="Add Custom Item">Add Custom Item</a>
+				</div>
 			
-			<table id="orderItemsTable" class="widefat">
-				<tr>
-					<th class="row-title" style="text-align:left">Item</th>
-					<th style="text-align:left">Description</th>
-					<th style="text-align:left">Price</th>
-					<th style="text-align:left">Quantity</th>				
-					<th style="text-align:right">Total</th>
-					<th style="text-align:right">Add Item</th>
-					<th style="text-align:right">Remove Item</th>
-				</tr>
-				<tr id="subtotalRow" class="alternate">
-					<td colspan="4" style="text-align:right">Subtotal</td>
-					<td style="text-align:right" id="subtotalField">$0.00<td>
-					<td></td>
-					<td></td>
-				</tr>
+				<table id="orderItemsTable" class="widefat">
+					<tr>
+						<th class="row-title" style="text-align:left">Item</th>
+						<th style="text-align:left">Description</th>
+						<th style="text-align:left">Price</th>
+						<th style="text-align:left">Quantity</th>				
+						<th style="text-align:right">Total</th>
+						<th style="text-align:right">Add Item</th>
+						<th style="text-align:right">Remove Item</th>
+					</tr>
+					<tr id="subtotalRow" class="alternate">
+						<td colspan="4" style="text-align:right">Subtotal</td>
+						<td style="text-align:right" id="subtotalField">$0.00<td>
+						<td></td>
+						<td></td>
+					</tr>
 
-				<tr id="discountRow">
-					<td colspan="4" style="text-align:right">
-						Discount:
-						<input type="text" value="0" id="discountAmountInput">
-						<select id="discountTypeDropdown"  size="1">
-							<option value="percent">% Off</option>
-							<option value="dollar">Dollars Off</option>
-						</select>
-					</td>
-					<td id="discountRowTotal" class="discountRowTotal" style="text-align:right"></td>
-					<td></td>
-					<td></td>
-				</tr>			
-				<tr id="shippingRow" style="display:none">
-					<td colspan="4" style="text-align:right">
-						Shipping:
-						<select name="shipmentType" id="shipmentType" size="1">
-						</select>
-					</td>
-					<td id="shippingRowTotal" class="shippingRowTotal" style="text-align:right"></td>
-					<td>
-						<div id="loadingShipping">
-						  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Loading shipping...</p>
-						</div>
-					</td>
-					<td></td>
-				</tr>			
-				<tr id="shippingDiscountRow">
-					<td id="shippingDiscountTitle" colspan="4" style="text-align:right">
-					</td>
-					<td id="shippingDiscountRowTotal" class="shippingDiscountRowTotal" style="text-align:right"></td>
-					<td>
+					<tr id="discountRow">
+						<td colspan="4" style="text-align:right">
+							Discount:
+							<input type="text" value="0" id="discountAmountInput">
+							<select id="discountTypeDropdown"  size="1">
+								<option value="percent">% Off</option>
+								<option value="dollar">Dollars Off</option>
+							</select>
+						</td>
+						<td id="discountRowTotal" class="discountRowTotal" style="text-align:right"></td>
+						<td></td>
+						<td></td>
+					</tr>			
+					<tr id="shippingRow" style="display:none">
+						<td colspan="4" style="text-align:right">
+							Shipping:
+							<select name="shipmentType" id="shipmentType" size="1">
+							</select>
+						</td>
+						<td id="shippingRowTotal" class="shippingRowTotal" style="text-align:right"></td>
+						<td>
+							<div id="loadingShipping">
+							  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Loading shipping...</p>
+							</div>
+						</td>
+						<td></td>
+					</tr>			
+					<tr id="shippingDiscountRow">
+						<td id="shippingDiscountTitle" colspan="4" style="text-align:right">
+						</td>
+						<td id="shippingDiscountRowTotal" class="shippingDiscountRowTotal" style="text-align:right"></td>
+						<td>
 
-					</td>
-					<td></td>
+						</td>
+						<td></td>
 					
-				</tr>			
-				<tr id="couponRow">
-					<td colspan="4" style="text-align:right">
-						Coupon Code / Gift Certificate:
-						<input type="text" value="" id="couponCodeInput">
-						<a href="#" id="applyCouponButton" class="button-secondary">Apply Coupon</a>
-						<a href="#" id="removeCouponButton" class="button-secondary" style="display:none;">Remove Coupoon</a>
-						<div id="validatingCoupon">
-						  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Validating copon...</p>
-						</div>
-						<div id="couponTitle"><div>
-					</td>
-					<td id="couponRowTotal" class="couponRowTotal" style="text-align:right"></td>
-					<td></td>
-					<td></td>
+					</tr>			
+					<tr id="couponRow">
+						<td colspan="4" style="text-align:right">
+							Coupon Code / Gift Certificate:
+							<input type="text" value="" id="couponCodeInput">
+							<a href="#" id="applyCouponButton" class="button-secondary">Apply Coupon</a>
+							<a href="#" id="removeCouponButton" class="button-secondary" style="display:none;">Remove Coupoon</a>
+							<div id="validatingCoupon">
+							  <p style="font-size:10px"><img src="<?php echo $loaderGif?>" />Validating copon...</p>
+							</div>
+							<div id="couponTitle"><div>
+						</td>
+						<td id="couponRowTotal" class="couponRowTotal" style="text-align:right"></td>
+						<td></td>
+						<td></td>
 					
-				</tr>
+					</tr>
 
-				<tr id="taxRow">
-					<td id="taxRowTitle" colspan="4" style="text-align:right">
-						<input type="checkbox" id="_tc_tax_enabled">
-						Tax<br/>
-						<span class="description">Add 8.75% Tax to this order</span>
-					</td>
-					<td id="taxRowTotal" class="taxRowTotal" style="text-align:right"></td>
-					<td>
+					<tr id="taxRow">
+						<td id="taxRowTitle" colspan="4" style="text-align:right">
+							<input type="checkbox" id="_tc_tax_enabled">
+							Tax<br/>
+							<span class="description">Add 8.75% Tax to this order</span>
+						</td>
+						<td id="taxRowTotal" class="taxRowTotal" style="text-align:right"></td>
+						<td>
 
-					</td>
-					<td></td>
+						</td>
+						<td></td>
 					
-				</tr>			
-				<tr id="totalRow">
-					<td colspan="4" style="text-align:right">Order Total</td>
-					<td style="text-align:right" id="totalField">$0.00<td>
-					<td></td>
-				</tr>
-				<?php echo $paymentRows ?>
-				<tr id="balanceDueRow">
-					<td colspan="4" class="balanceDue">Balance Due</td>
-					<td id="balanceDueField"  class="balanceDue">$0.00<td>
-					<td></td>
-					<td></td>
+					</tr>			
+					<tr id="totalRow">
+						<td colspan="4" style="text-align:right">Order Total</td>
+						<td style="text-align:right" id="totalField">$0.00<td>
+						<td></td>
+					</tr>
+					<?php echo $paymentRows ?>
+					<tr id="balanceDueRow">
+						<td colspan="4" class="balanceDue">Balance Due</td>
+						<td id="balanceDueField"  class="balanceDue">$0.00<td>
+						<td></td>
+						<td></td>
 					
-				</tr>	
+					</tr>	
 
-			</table>
+				</table>
+			</div>
 		</div>
 		
 				
@@ -468,15 +534,15 @@ $paymentRows = tc_get_order_payment_rows();
 						<tbody>
 							<tr>
 								<td class="address-form-label-column">First Name:</td>
-								<td style="text-align:left"> <input type="text" name="customer_address_first_name"  id="customer_address_first_name"  /></td>
+								<td style="text-align:left"> <input class="customerInfoTextInput" type="text" name="customer_address_first_name"  id="customer_address_first_name"  /></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Last Name:</td>
-								<td style="text-align:left"> <input type="text" name="customer_address_last_name"  id="customer_address_last_name"  /></td>
+								<td style="text-align:left"> <input class="customerInfoTextInput"  type="text" name="customer_address_last_name"  id="customer_address_last_name"  /></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Email:</td>
-								<td style="text-align:left"> <input type="text" name="customer_email"  id="customer_email"  /></td>
+								<td style="text-align:left"> <input class="customerInfoTextInput"  type="text" name="customer_email"  id="customer_email"  /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -486,11 +552,11 @@ $paymentRows = tc_get_order_payment_rows();
 						<tbody>
 							<tr>
 								<td class="address-form-label-column">Phone:</td>
-								<td style="text-align:left"> <input type="text" name="customer_phone"  id="customer_phone"  /></td>
+								<td style="text-align:left"> <input class="customerInfoTextInput"  type="text" name="customer_phone"  id="customer_phone"  /></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">Company:</td>
-								<td style="text-align:left"> <input type="text" name="customer_company"  id="customer_company"  /></td>
+								<td style="text-align:left"> <input class="customerInfoTextInput"  type="text" name="customer_company"  id="customer_company"  /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -508,7 +574,7 @@ $paymentRows = tc_get_order_payment_rows();
 						<tbody>
 							<tr>
 								<td class="address-form-label-column">Address Book:</td>
-								<td style="text-align:left"><select id="addressBookSelect"></select></td>
+								<td style="text-align:left"><select class="addressBookDropdown" id="billingAddressSelect"></select></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">First Name:</td>
@@ -557,7 +623,7 @@ $paymentRows = tc_get_order_payment_rows();
 						<tbody>
 							<tr>
 								<td class="address-form-label-column">Address Book:</td>
-								<td style="text-align:left"><select id="addressBookSelect"></select></td>
+								<td style="text-align:left"><select class="addressBookDropdown" id="shippingAddressSelect"></select></td>
 							</tr>
 							<tr>
 								<td class="address-form-label-column">First Name:</td>
@@ -598,8 +664,8 @@ $paymentRows = tc_get_order_payment_rows();
 						</tbody>
 					</table>
 					
-					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="radioShipping_0" checked="checked" />Use Billing Address</label><br />
-					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="radioShipping_1" />Specify Different Shipping Address</label>
+					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" checked="checked" />Use Billing Address</label><br />
+					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="no" />Specify Different Shipping Address</label>
 					
 				</div>
 				<div style="clear: both"></div>
@@ -828,12 +894,37 @@ jQuery(document).ready(function($){
 
 	$("#billing_address_state").html(states);
 	$("#shipping_address_state").html(states);
-
+	$('#billingAddressSelect').on('change', function(){
+		var selectedAddressID = jQuery('#billingAddressSelect option:selected').val();
+		debug.log("selected billing address id : ", selectedAddressID);
+		$('#tc_selected_billing_addr').val(selectedAddressID);
+		customerInfoViewMediator.populateBillingAddress();
+	});
 	
+	$('#shippingAddressSelect').on('change', function(){
+		var selectedAddressID = jQuery('#shippingAddressSelect option:selected').val();
+		debug.log("selected shipping address id : ", selectedAddressID);
+		$('#tc_selected_shipping_addr').val(selectedAddressID);
+		customerInfoViewMediator.populateShippingAddress();
+		
+	});
+
+
 	// $("#billing_address_state").val("CA");
 	// $("#shipping_address_state").val("CA");
 
-	$("#post").attr("autocomplete", "off");
+	//$("#post").attr("autocomplete", "off");
+	
+	if (adminpage == "post-php"){
+		$('#orderForm').hide();
+	}else if(adminpage == "post-new-php"){
+		$('#orderSummary').hide();
+	}
+	
+	
+	$('.customerInfoTextInput').each(function(index) {
+	  $(this).attr("autocomplete", "off");
+	});
 	/*
 		From the jquery validation docs re: errorContainer : http://docs.jquery.com/Plugins/Validation/validate#toptions
 		

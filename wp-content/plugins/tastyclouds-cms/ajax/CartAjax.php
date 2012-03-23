@@ -52,6 +52,8 @@ class CartAjax
 	
 	public static function addItem(){
 		$cartID = $_POST['cartID'];
+		error_log("add item, cartID: $cartID");
+		
 		$cart =& self::getCartById($cartID);
 		$model = AjaxUtils::jsonDecodePostKey('model');
 		
@@ -273,6 +275,7 @@ class CartAjax
 	
 	public static function overwriteCartInSession($cart){
 		$cartID = $cart['id'];
+		error_log("overwriteCartInSession, cartID = $cartID");
 		$_SESSION['cart_'.$cartID ] = $cart;
 	}
 	

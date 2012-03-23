@@ -203,14 +203,16 @@ class ContactProxy
 		//$type should be either 'billing' or 'shipping'
 		$address = array();
 		
-		$address['firstName'] = $_POST[$type.'_address_first_name'];
-		$address['lastName'] = $_POST[$type.'_address_last_name'];
-		$address['addressLine1'] = $_POST[$type.'_address_line_1'];
-		$address['addressLine2'] = $_POST[$type.'_address_line_2'];
-		$address['city'] = $_POST[$type.'_address_city'];
-		$address['state'] = $_POST[$type.'_address_state'];
-		$address['zip'] = $_POST[$type.'_address_zip'];
-		$address['company'] = $_POST[$type.'_address_company'];
+		// if the address was not edited by the user, 
+		// there will be no post vars submitted
+		$address['firstName'] = @$_POST[$type.'_address_first_name'];
+		$address['lastName'] = @$_POST[$type.'_address_last_name'];
+		$address['addressLine1'] = @$_POST[$type.'_address_line_1'];
+		$address['addressLine2'] = @$_POST[$type.'_address_line_2'];
+		$address['city'] = @$_POST[$type.'_address_city'];
+		$address['state'] = @$_POST[$type.'_address_state'];
+		$address['zip'] = @$_POST[$type.'_address_zip'];
+		$address['company'] = @$_POST[$type.'_address_company'];
 		
 		return $address;
 	}

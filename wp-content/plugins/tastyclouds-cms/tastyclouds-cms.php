@@ -69,6 +69,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/CartProxy.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/SaveOrderCommand.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ContactProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/OrderProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/PaymentProxy.php');
