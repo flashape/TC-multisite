@@ -1,0 +1,119 @@
+/* -- Mods for Custom Google Fonts -- */
+
+@import url(http://fonts.googleapis.com/css?family=Lora);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300);
+
+body {
+	font-family:'Lora',georgia,serif;
+	font-weight:normal;
+	font-size:14px;
+	}
+
+#contentright,
+#sidebar-narrow,
+#footer-widgets {
+	font-size:13px;
+	}
+
+h1,h2,h3,h4,h5,h6,h7,
+#sitetitle .title,
+.widget.sidetabs ul.tabs li a,
+#topnav,
+#footnav,
+#footer,
+#commentform input#submit,
+.archive-tabs a,
+.archive-tabs a:link,
+.archive-tabs a:visited,
+p.email-form .subbutton,
+#searchform #submitbutton,
+p.email-form .sub,
+#searchform #searchfield,
+#breadcrumbs,
+.wp-pagenavi,
+.meta {
+	font-family: 'Open Sans Condensed',arial,helvetica,sans-serif;
+	}
+
+#breadcrumbs {
+	font-weight:bold;
+	}
+
+
+#footnav,
+#footer {
+	font-size:9pt;
+	font-weight:bold;
+	}
+
+h1 { font-size:20pt; }
+h2 { font-size: 18pt; }
+h3 { font-size:16pt; }
+h4,h5,h6,h7 { font-size:14pt; }
+
+#sitetitle .title {
+	font-size:24pt;
+	line-height:24pt;
+	}
+
+#sitetitle .description {
+	font-size:10pt;
+	}
+
+#commentform input#submit,
+.archive-tabs a,
+.archive-tabs a:link,
+.archive-tabs a:visited,
+p.email-form .subbutton,
+#searchform #submitbutton,
+p.email-form .sub,
+#searchform #searchfield {
+	font-weight:bold;
+	font-size:10pt;
+	}
+
+.widget.sidetabs ul.tabs li a, 
+.widget.sidetabs ul.tabs li a:link, 
+.widget.sidetabs ul.tabs li a:visited  {
+	font-size:10pt;
+	}
+
+h2.feature-title,
+h2.feat-title, 
+h3.widgettitle,
+h1.archive-title {
+	font-size:10pt;
+	letter-spacing:0;
+	text-transform:uppercase;
+	}
+
+#topnav {
+	font-size:10pt;
+	}
+
+.meta {
+
+	font-weight:bold;
+	font-size:8pt;
+	}
+
+.wp-pagenavi {
+	font-size:10pt;
+	}
+
+#catnav {
+	font-size:10px;
+	text-transform:uppercase;
+	text-shadow:1px 1px #fff;
+	}
+
+#catnav a {
+	text-shadow:1px 1px #fff;
+	}
+
+.auth-bio,
+#related,
+.commentlist li,
+.pings {
+	font-size:10pt;
+	}
