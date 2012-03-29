@@ -1,8 +1,10 @@
 var OrderItemsViewMediatorClass = JS.Class({
-		construct : function (orderItemsView) {
+		 construct : function (orderItemsView) {
 	        this.view = orderItemsView;
 			this.enableSubtotalUpdates = true;
-			this.enableAjax = true;
+			this.ajaxEnabled = true;
+			this.cartReloaded = false;
+			this.calculateTotalEnabled = true;
 
 			ordersAjaxService.couponValidationResult.add(this.onCouponValidationResult, this);
 			ordersAjaxService.couponRemovedResult.add(this.onCouponRemovedResult, this);
@@ -10,7 +12,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			ordersAjaxService.removeFromCartResult.add(this.onRemoveFromCartResult, this);
 			ordersAjaxService.updateCartItemResult.add(this.onUpdateCartItemResult, this);
 			ordersAjaxService.shippingRateResultReceived.add(this.onShippingRateResult, this);
-			// ordersAjaxService.getCartResultReceived.add(this.onGetCartResultReceived, this);
+			ordersAjaxService.getCartResultReceived.add(this.onGetCartResultReceived, this);
 			// ordersAjaxService.enableTaxResult.add(this.onEnableTaxResult, this);
 			
 	    },
@@ -25,6 +27,12 @@ var OrderItemsViewMediatorClass = JS.Class({
 			row.find('.defaultState').hide();
 		},
 		
+		reloadCart : function(){
+			if (!this.cartReloaded){
+				ordersAjaxService.getCart();
+			}
+		},
+		
 		
 		onAddToCartResult : function(serviceResult){
 			debug.log('onAddToCartResult, serviceResult success : '+serviceResult.success);
@@ -32,9 +40,63 @@ var OrderItemsViewMediatorClass = JS.Class({
 			serviceResult.postData.rawModel.cartItemID = serviceResult.cartItemID;
 			
 			if(serviceResult.success){
-				//this.addNewCustomItemRow(serviceResult.cartItemID, serviceResult.customItemType);
+				debug.log('serviceResult : ', serviceResult);
+				this.cartReloaded = true;
 			}else{
 				alert('There was an error adding the item to the cart.');
+			}
+		},
+		
+						
+		onGetCartResultReceived : function(serviceResult){
+			debug.log('onGetCartResultReceived, serviceResult success : '+serviceResult.success);
+			debug.log('serviceResult: ', serviceResult);
+			var t = this;
+			
+			if(serviceResult.success){
+				
+				var cart = serviceResult.cart;
+				
+				this.calculateTotalEnabled = false;
+				this.ajaxEnabled = false;
+				
+				jQuery.each(cart.items, function(key, model) {
+					t.addItemRow(model);
+				});
+				
+				if (cart.discount){
+					jQuery('#discountAmountInput').val(cart.discount.amount);
+					jQuery('#discountTypeDropdown').val(cart.discount.type);
+					jQuery('#discountRow').data('discountModel', cart.discount);
+				}
+				
+				if (cart.couponModel){
+					jQuery("#couponRow").data('couponModel', cart.couponModel);    
+					this.populateCouponRow();
+				}
+								
+				if (cart.taxEnabled && cart.taxEnabled != "false"){
+					jQuery('#_tc_tax_enabled').attr("checked", "checked");
+				}
+												
+				if (cart.shipping){
+					
+					var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
+					var amount = parseFloat(cart.shipping.amount);
+					amount +=  markup;
+					
+					var shippingModel = {amount:amount, serviceType:cart.shipping.serviceType, markup:markup}
+					jQuery('#shippingRow').data('shippingModel', shippingModel);
+					jQuery('#_tc_shipping_enabled_checkbox').attr("checked", "checked");
+					jQuery('#shippingRow').show();
+				}
+				
+				this.calculateTotalEnabled = true;
+				this.ajaxEnabled = true;
+				
+				this.calculateTotal();
+			}else{
+				alert('There was an error retrieving the cart.');
 			}
 		},
 		
@@ -179,13 +241,36 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 		},
 		
+		setDropdownForVariation : function(row, variation){
+			variantDropDowns = row.find('.variationDropdown');
+			//id="variation_'+variation+'__p2pid_'+variation.p2p_id+
+			var variationID = variation.variationID;
+			var p2pid = variation.p2pid;
+			var selected = variation.selected[0];
+			
+			var idString = 'variation_'+variationID+'__p2pid_'+p2pid;
+			
+			
+			jQuery.each(variantDropDowns, function(key, selectElem) {
+
+				var dropdown = jQuery(selectElem);
+				var dropdownID = dropdown.attr('id');
+				
+				if (dropdownID.indexOf(idString) != -1){
+					dropdown.val(selected);
+					return false;
+				}
+
+			});
+		},
+		
 		
 		
 		populateProductRow : function (row){
 			var model = row.data("model");
 			
 			
-			
+
 			
 			switch(model.type){
 				case 'tc_products':
@@ -194,6 +279,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 					row.find('.itemName').text( productModel.label );
 					row.find('.itemPriceColumn').text( this.priceToFixed(model.price) );
 					row.find('.itemDescTextInput').val( model.description );
+					row.find('.quantity').val( model.quantity );
+					var t = this;
+					
+					if (model.variations.length > 0){
+						jQuery.each(model.variations, function(key, variation) {
+							t.setDropdownForVariation(row, variation);
+						});
+					}
 				
 					// if (model.id != 0 ){
 					// 	row.find('.callDateTime').text(model.date)
@@ -310,6 +403,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			if( !Object.equals(oldDiscountModel, newDiscountModel) ){
 				row.data("discountModel", newDiscountModel);
 				this.calculateTotal();
+				
 				ordersAjaxService.updateDiscount(newDiscountModel);
 			}
 			
@@ -350,8 +444,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 				this.calculateTotal();
 				
 				// don't u pdate if we havent added the item to the cart on the server yet
-				if(newModel.cartItemID != ""){
+				if(newModel.cartItemID != "" && this.ajaxEnabled){
 					ordersAjaxService.updateCartItem(newModel);
+					this.getShippingCharge();
 				}
 				
 			}
@@ -622,41 +717,44 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		
 		calculateTotal : function (){
-			var cartTotal = 0;
+			if(this.calculateTotalEnabled){
+				
+				var cartTotal = 0;
 			
 			
-			var subTotal = this.calculateChargeItemsTotal();
-			cartTotal += subTotal;
+				var subTotal = this.calculateChargeItemsTotal();
+				cartTotal += subTotal;
 			
-			var discountTotal = this.calculateDiscountTotal();
-			cartTotal -= discountTotal;
+				var discountTotal = this.calculateDiscountTotal();
+				cartTotal -= discountTotal;
 			
-			var taxTotal = this.calculateTaxTotal();
-			cartTotal += taxTotal;
+				var taxTotal = this.calculateTaxTotal();
+				cartTotal += taxTotal;
 			
-			var paymentTotal = 0;
+				var paymentTotal = 0;
 			
-			var couponDiscountTotal = this.calculateCouponDiscountTotal();
-			cartTotal -= couponDiscountTotal;
+				var couponDiscountTotal = this.calculateCouponDiscountTotal();
+				cartTotal -= couponDiscountTotal;
 			
-			var shippingTotal = this.calculateShippingTotal();
-			cartTotal += shippingTotal;
+				var shippingTotal = this.calculateShippingTotal();
+				cartTotal += shippingTotal;
 			
-			var balanceDue = cartTotal - paymentTotal;
-			
-			
+				var balanceDue = cartTotal - paymentTotal;
 			
 			
-			jQuery('#subtotalField').text('$'+ subTotal.toFixed(2));
-			jQuery('#discountRowTotal').text('$'+ discountTotal.toFixed(2));
-			jQuery('#taxRowTotal').text('$'+ taxTotal.toFixed(2));
-			jQuery('#couponRowTotal').text('$'+ couponDiscountTotal.toFixed(2));
-			//jQuery('#shippingRowTotal').text(this.priceToFixed(amount));
-			jQuery('#shippingRowTotal').text('$'+ shippingTotal.toFixed(2));
-			jQuery('#totalField').text('$'+ cartTotal.toFixed(2));
-			jQuery('#balanceDueField').text('$'+ balanceDue.toFixed(2));
 			
-			return cartTotal;
+			
+				jQuery('#subtotalField').text('$'+ subTotal.toFixed(2));
+				jQuery('#discountRowTotal').text('$'+ discountTotal.toFixed(2));
+				jQuery('#taxRowTotal').text('$'+ taxTotal.toFixed(2));
+				jQuery('#couponRowTotal').text('$'+ couponDiscountTotal.toFixed(2));
+				//jQuery('#shippingRowTotal').text(this.priceToFixed(amount));
+				jQuery('#shippingRowTotal').text('$'+ shippingTotal.toFixed(2));
+				jQuery('#totalField').text('$'+ cartTotal.toFixed(2));
+				jQuery('#balanceDueField').text('$'+ balanceDue.toFixed(2));
+			
+				return cartTotal;
+			}
 		},
 		
 		
@@ -831,6 +929,21 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 		},
 		
+		populateCouponRow : function(){
+			var couponModel = jQuery('#couponRow').data('couponModel');
+			
+			jQuery("#couponTitle").text(couponModel.title);  
+			debug.log(jQuery("#couponRow").data('couponModel'));
+			//this.updateShippingDiscount();
+			
+			//this.updateCoupon( jQuery("#couponRow") );
+			jQuery('#couponCodeInput').val(couponModel.code);
+			jQuery('#couponCodeInput').attr("readonly", "readonly");
+			jQuery("#applyCouponButton").hide();
+			jQuery("#removeCouponButton").show();
+		},
+		
+		
 		onCouponValidationResult : function (serviceResult){  
 			jQuery("#validatingCoupon").hide();
 			debug.log('onCouponValidationResult success , serviceResult : ', serviceResult);
@@ -838,16 +951,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 			if(serviceResult.success){
 				
 				var couponModel = serviceResult.couponModel;
-				
-				jQuery("#couponTitle").text(couponModel.title);  
 				jQuery("#couponRow").data('couponModel', couponModel);    
-				debug.log(jQuery("#couponRow").data('couponModel'));
-				//this.updateShippingDiscount();
-				
-				//this.updateCoupon( jQuery("#couponRow") );
-				jQuery('#couponCodeInput').attr("readonly", "readonly");
-				jQuery("#applyCouponButton").hide();
-				jQuery("#removeCouponButton").show();
+				this.populateCouponRow();
+
 
 			}else{
 				alert('There was an error validating the coupon : '+serviceResult.message);
@@ -944,7 +1050,22 @@ var OrderItemsViewMediatorClass = JS.Class({
 				return;
 			}
 			
-			var zipValue = jQuery('#quickZip').val();
+			var zipValue = '';
+			
+			var shippingAddressZip = jQuery('#shipping_address_zip').val();
+			var billingAddressZip = jQuery('#billing_address_zip').val();
+			var quickZip = jQuery('#quickZip').val();
+			
+			if ( shippingAddressZip != ""){
+				zipValue = shippingAddressZip;
+			}else if(billingAddressZip != "" && jQuery('#shippingRadioInput1').is(':checked') ){
+				zipValue = billingAddressZip;
+			}else{
+				zipValue = quickZip;
+			}
+
+			
+			debug.log('zipValue : ', zipValue);
 			
 			if (!this.isValidZip(zipValue)){
 				return;
