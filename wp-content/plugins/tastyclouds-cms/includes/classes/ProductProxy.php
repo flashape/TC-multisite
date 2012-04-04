@@ -28,6 +28,26 @@ class ProductProxy
 			
 		return $productModel;
 	}
+		
+	public function getServiceByID($productID)
+	{
+		$servicePost = get_post($productID);
+		$serviceModel = array();
+		$serviceModel['type'] = 'tc_service';
+		$serviceModel['productName'] = $servicePost->post_title;
+		$serviceModel['productID'] = $productID;
+		$serviceDetails = get_post_meta( $productID, 'service_details', true );
+		// error_log("service details:");
+		// error_log(var_export($serviceDetails, 1));
+		
+		$serviceModel['default_hours'] = $serviceDetails['default_hours'];
+		$serviceModel['default_servings'] = $serviceDetails['default_servings'];
+
+		
+		// error_log(var_export($serviceModel, 1));
+			
+		return $serviceModel;
+	}
 	
 	public static function getVariationItemByID($variationItemID){
 		return get_post_meta($variationItemID, '_variation_item_model', true);

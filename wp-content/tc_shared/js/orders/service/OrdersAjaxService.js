@@ -15,6 +15,7 @@ var OrdersAjaxServiceClass = JS.Class({
 		this.enableTaxResult = new signals.Signal();
 		
 		this.getCartResultReceived = new signals.Signal();
+		this.reloadOrderResultReceived = new signals.Signal();
     },
 
 
@@ -84,6 +85,14 @@ var OrdersAjaxServiceClass = JS.Class({
 	getCart : function (){
 		var data = this.createCartActionData('tc_get_cart');
 		this.doCartPost(data, 'getCartResultReceived', 'getCart');
+	},
+	
+		
+	
+	reloadOrder : function (orderID){
+		var data = this.createCartActionData('tc_reload_order');
+		data.orderID = orderID;
+		this.doCartPost(data, 'reloadOrderResultReceived', 'getCart');
 	},
 	
 	

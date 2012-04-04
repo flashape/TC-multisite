@@ -48,6 +48,41 @@ class CartAjax
 		
 		AjaxUtils::returnJson($result);
 		
+	}	
+	
+	// Returns the cart plus payment info
+	public static function reloadOrder(){
+		error_log("CartAjax::reloadOrder()");
+		$cart = self::getCartById();
+		$orderID = $_POST['orderID'];
+		$payments = OrderProxy::getPaymentsForOrder($orderID);
+		
+		$contactID = OrderProxy::getContactIDForOrder($orderID);
+		
+		$contact = ContactProxy::getContactByID($contactID);
+		
+		$billingAddressID = OrderProxy::getBillingAddressIDForOrder($orderID);
+		$shippingAddressID = OrderProxy::getShippingAddressIDForOrder($orderID);
+		
+		$billingAddress = null;
+		$shippingAddress = null;
+		
+		if (!empty($billingAddressID)){
+			$billingAddress = ContactProxy::getAddressByID($billingAddressID);
+		}
+		
+		if (!empty($shippingAddressID)){
+			$shippingAddress = ContactProxy::getAddressByID($shippingAddressID);
+		}
+		
+		if ($cart){
+			$result = AjaxUtils::createResult('Cart found successfully',true, array('cart'=>$cart, 'payments'=>$payments, 'contact'=>$contact,'billingAddress'=>$billingAddress, 'shippingAddress'=>$shippingAddress));
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+		
+		AjaxUtils::returnJson($result);
+		
 	}
 	
 	public static function addItem(){

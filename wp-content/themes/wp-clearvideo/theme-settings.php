@@ -782,7 +782,7 @@ $options = array();
 //			"type" => "select",
 //			"options" => array("No","Yes"),
 //			"help" => __("Select Yes to activate the box-shadow effect around your page. Note: This will only display on CSS3-compliant browsers.", "solostream"));
-
+	$std_font = '';
 	$options[] = array(
 			"name" => __("Page Font Color", "solostream"),
 			"id" => $shortname."_body_font_color",
@@ -1015,9 +1015,9 @@ function mytheme_add_admin() {
 	global $themename, $shortname, $options;
 	$options = get_option('solostream_template');
 
-	if ( $_GET['page'] == basename(__FILE__) ) {
+	if ( @$_GET['page'] == basename(__FILE__) ) {
 
-		if ( 'save' == $_REQUEST['action'] ) {
+		if ( 'save' == @$_REQUEST['action'] ) {
 
 			foreach ($options as $value) {
 				update_option( $value['id'], $_REQUEST[ $value['id'] ] ); }
@@ -1033,7 +1033,7 @@ function mytheme_add_admin() {
 			header("Location: themes.php?page=theme-settings.php&saved=true");
 			die;
 
-		} else if( 'reset' == $_REQUEST['action'] ) {
+		} else if( 'reset' == @$_REQUEST['action'] ) {
 
 			foreach ($options as $value) {
 				if( $value['std'] ) {
@@ -1119,8 +1119,8 @@ function mytheme_admin() {
 	<div id="welcome" class="content">
 
 		<?php
-			if ( $_REQUEST['saved'] ) echo '<div id="message"><strong>Your Settings Have Been Saved.</strong></div>';
-			if ( $_REQUEST['reset'] ) echo '<div id="message"><strong>Your Settings Have Been Reset.</strong></div>';
+			if ( @$_REQUEST['saved'] ) echo '<div id="message"><strong>Your Settings Have Been Saved.</strong></div>';
+			if ( @$_REQUEST['reset'] ) echo '<div id="message"><strong>Your Settings Have Been Reset.</strong></div>';
 		?>
 
 		<h2 class="heading2"><?php echo get_option('solostream_themename'); ?> <?php _e("Theme Settings Page","solostream"); ?></h2>
@@ -1168,7 +1168,7 @@ if ($value['type'] == "header") { ?>
 		</div>
 
 		<div class="field">
-			<strong><?php echo $value['pre']; ?></strong><input name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" value="<?php if ( get_option( $value['id'] ) != "") { echo stripslashes(get_option( $value['id'] ) ); } else { echo stripslashes($value['std']); } ?>" />
+			<strong><?php echo @$value['pre']; ?></strong><input name="<?php echo @$value['id']; ?>" id="<?php echo @$value['id']; ?>" type="<?php echo @$value['type']; ?>" value="<?php if ( get_option( @$value['id'] ) != "") { echo stripslashes(get_option( @$value['id'] ) ); } else { echo stripslashes(@$value['std']); } ?>" />
 		</div>
 
 <?php } elseif ($value['type'] == "text-color") { ?>

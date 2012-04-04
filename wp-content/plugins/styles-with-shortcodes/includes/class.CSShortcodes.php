@@ -76,7 +76,7 @@ class CSShortcodes {
 	}
 
 	function meta_filter_posts($query){
-		if(is_admin()&&$query->query['post_type']=='csshortcode'){
+		if(is_admin() && @$query->query['post_type']=='csshortcode'){
 			if(isset($_REQUEST['f_sws_shortcode'])&&trim($_REQUEST['f_sws_shortcode'])!=''){
 				$query->set( 'meta_key', 	'sc_shortcode' );
 				$query->set( 'meta_value', 	$_REQUEST['f_sws_shortcode']);			

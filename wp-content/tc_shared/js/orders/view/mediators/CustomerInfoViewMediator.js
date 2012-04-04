@@ -49,6 +49,88 @@ var CustomerInfoViewMediatorClass = JS.Class({
 		
 	},
 	
+	
+			
+		
+	onEditBillingAddressCheckboxChange : function (){
+		debug.log("onEditBillingAddressCheckboxChange()");
+		
+		if (jQuery('#editBillingAddressCheckbox').is(':checked') ){
+			jQuery("#billing_address_first_name").removeAttr('disabled');
+			jQuery("#billing_address_last_name").removeAttr('disabled');
+			jQuery("#billing_address_line_1").removeAttr('disabled');
+			jQuery("#billing_address_line_2").removeAttr('disabled');
+			jQuery("#billing_address_company").removeAttr('disabled');
+			jQuery("#billing_address_city").removeAttr('disabled');
+			jQuery("#billing_address_state").removeAttr('disabled');
+			jQuery("#billing_address_zip").removeAttr('disabled');
+			jQuery('#billingAddressSelect').removeAttr('disabled');
+		}else{
+			//debug.log("this.billingAddressHasChanged() : ", this.billingAddressHasChanged());
+			if (this.billingAddressHasChanged()){
+				 jQuery("#billing-address-changed-dialog" ).dialog('open');
+			}else{
+				if (adminpage == 'post-php'){
+					var oldSelectedID = jQuery('#tc_saved_billing_addr').val();
+					var newSelectedID = jQuery('#billingAddressSelect option:selected').val();
+					if (oldSelectedID == newSelectedID){
+						jQuery('#billingAddressSelect').attr('disabled', 'disabled');
+					}
+					this.populateBillingAddress();
+				}else{
+					this.populateBillingAddress();
+				}			
+			}
+		}
+
+		
+	},
+	
+	
+				
+		
+	onEditShippingAddressCheckboxChange : function (){
+		debug.log("onEditShippingAddressCheckboxChange()");
+		
+		if (jQuery('#editShippingAddressCheckbox').is(':checked') ){
+			jQuery("#shipping_address_first_name").removeAttr('disabled');
+			jQuery("#shipping_address_last_name").removeAttr('disabled');
+			jQuery("#shipping_address_line_1").removeAttr('disabled');
+			jQuery("#shipping_address_line_2").removeAttr('disabled');
+			jQuery("#shipping_address_company").removeAttr('disabled');
+			jQuery("#shipping_address_city").removeAttr('disabled');
+			jQuery("#shipping_address_state").removeAttr('disabled');
+			jQuery("#shipping_address_zip").removeAttr('disabled');
+			jQuery('#shippingAddressSelect').removeAttr('disabled');
+			
+		}else{
+			debug.log("this.shippingAddressHasChanged() : ", this.shippingAddressHasChanged());
+			if (this.shippingAddressHasChanged()){
+				 jQuery("#shipping-address-changed-dialog" ).dialog('open');
+			}else{
+				
+				if (adminpage == 'post-php'){
+					var oldSelectedID = jQuery('#tc_saved_shipping_addr').val();
+					var newSelectedID = jQuery('#shippingAddressSelect option:selected').val();
+					if (oldSelectedID == newSelectedID){
+						jQuery('#shippingAddressSelect').attr('disabled', 'disabled');
+					}
+					this.populateShippingAddress();
+				}else{
+					this.populateShippingAddress();
+				}
+			}
+		}
+
+		
+	},
+	
+	
+	
+	
+	
+	
+	
 	populateAddressBookDropdowns : function(){
 		debug.log("populateAddressBookDropdowns, addresses : ", this.selectedContactModel.addresses);
 		var option = jQuery('<option>', { value : "" }).text("Select Billing Address...");
@@ -73,16 +155,20 @@ var CustomerInfoViewMediatorClass = JS.Class({
 	},
 	
 	populateBillingAddress : function(){
+		
 		var addressModel = jQuery('#billingAddressSelect option:selected').data('address');
 		
 		jQuery("#billing_address_first_name").attr('disabled', 'disabled').val(addressModel.firstName);
 		jQuery("#billing_address_last_name").attr('disabled', 'disabled').val(addressModel.lastName);
-		jQuery("#billing_address_line_1").attr('disabled', 'disabled').val(addressModel.company);
-		jQuery("#billing_address_line_2").attr('disabled', 'disabled').val(addressModel.addressLine1);
-		jQuery("#billing_address_company").attr('disabled', 'disabled').val(addressModel.addressLine2);
+		jQuery("#billing_address_line_1").attr('disabled', 'disabled').val(addressModel.addressLine1);
+		jQuery("#billing_address_line_2").attr('disabled', 'disabled').val(addressModel.addressLine2);
+		jQuery("#billing_address_company").attr('disabled', 'disabled').val(addressModel.company);
 		jQuery("#billing_address_city").attr('disabled', 'disabled').val(addressModel.city);
 		jQuery("#billing_address_state").attr('disabled', 'disabled').val(addressModel.state);
 		jQuery("#billing_address_zip").attr('disabled', 'disabled').val(addressModel.zip);
+		jQuery('#editBillingAddressCheckbox').removeAttr('checked');
+		
+		
 
 	},
 	
@@ -92,12 +178,13 @@ var CustomerInfoViewMediatorClass = JS.Class({
 		
 		jQuery("#shipping_address_first_name").attr('disabled', 'disabled').val(addressModel.firstName);
 		jQuery("#shipping_address_last_name").attr('disabled', 'disabled').val(addressModel.lastName);
-		jQuery("#shipping_address_line_1").attr('disabled', 'disabled').val(addressModel.company);
-		jQuery("#shipping_address_line_2").attr('disabled', 'disabled').val(addressModel.addressLine1);
-		jQuery("#shipping_address_company").attr('disabled', 'disabled').val(addressModel.addressLine2);
+		jQuery("#shipping_address_line_1").attr('disabled', 'disabled').val(addressModel.addressLine1);
+		jQuery("#shipping_address_line_2").attr('disabled', 'disabled').val(addressModel.addressLine2);
+		jQuery("#shipping_address_company").attr('disabled', 'disabled').val(addressModel.company);
 		jQuery("#shipping_address_city").attr('disabled', 'disabled').val(addressModel.city);
 		jQuery("#shipping_address_state").attr('disabled', 'disabled').val(addressModel.state);
 		jQuery("#shipping_address_zip").attr('disabled', 'disabled').val(addressModel.zip);
+		jQuery('#editShippingAddressCheckbox').removeAttr('checked');
 
 	},
 	
@@ -123,6 +210,105 @@ var CustomerInfoViewMediatorClass = JS.Class({
 			}
 
 	}, 
+		
+	billingAddressHasChanged : function(){
+		//TODO:  check if the address dropdown has changed, or the user has entered new info
+		
+		var oldSelectedID = jQuery('#tc_saved_billing_addr').val();
+		var newSelectedID = jQuery('#billingAddressSelect option:selected').val();
+		
+		
+		var addressModel = jQuery('#billingAddressSelect option:selected').data('address');
+		
+		var newBillingAddressFirstName = jQuery("#billing_address_first_name").val();
+		var newBillingAddressLastName = jQuery("#billing_address_last_name").val();
+		var newBillingAddressLine1 = jQuery("#billing_address_line_1").val();
+		var newBillingAddressLine2 = jQuery("#billing_address_line_2").val();
+		var newBillingAddressCompany = jQuery("#billing_address_company").val();
+		var newBillingAddressCity = jQuery("#billing_address_city").val();
+		var newBillingAddressState = jQuery("#billing_address_state").val();
+		var newBillingAddressZip = jQuery("#billing_address_zip").val();
+		
+		debug.log('addressModel : ', addressModel);
+		debug.log('newBillingAddressFirstName : ', newBillingAddressFirstName);
+		debug.log('newBillingAddressLastName : ', newBillingAddressLastName);
+		debug.log('newBillingAddressLine1 : ', newBillingAddressLine1);
+		debug.log('newBillingAddressLine2 : ', newBillingAddressLine2);
+		debug.log('newBillingAddressCompany : ', newBillingAddressCompany);
+		debug.log('newBillingAddressCity : ', newBillingAddressCity);
+		debug.log('newBillingAddressState : ', newBillingAddressState);
+		debug.log('newBillingAddressZip : ', newBillingAddressZip);
+		var changed;
+		
+		if (
+			addressModel.firstName != newBillingAddressFirstName || 
+			addressModel.lastName != newBillingAddressLastName || 
+			addressModel.company != newBillingAddressCompany || 
+			addressModel.addressLine1 != newBillingAddressLine1 || 
+			addressModel.addressLine2 != newBillingAddressLine2 ||
+			addressModel.city != newBillingAddressCity ||
+			addressModel.state != newBillingAddressState ||
+			addressModel.zip != newBillingAddressZip)
+			{
+				changed = true;
+			}else{
+				changed = false;
+			}
+		
+		debug.log('billingAddressHasChanged : ', changed);
+		return changed;
+	},
+	
+	shippingAddressHasChanged : function(){
+		//TODO:  check if the address dropdown has changed, or the user has entered new info
+		
+		var oldSelectedID = jQuery('#tc_saved_shipping_addr').val();
+		var newSelectedID = jQuery('#shippingAddressSelect option:selected').val();
+		
+		
+		var addressModel = jQuery('#shippingAddressSelect option:selected').data('address');
+		
+		var newShippingAddressFirstName = jQuery("#shipping_address_first_name").val();
+		var newShippingAddressLastName = jQuery("#shipping_address_last_name").val();
+		var newShippingAddressLine1 = jQuery("#shipping_address_line_1").val();
+		var newShippingAddressLine2 = jQuery("#shipping_address_line_2").val();
+		var newShippingAddressCompany = jQuery("#shipping_address_company").val();
+		var newShippingAddressCity = jQuery("#shipping_address_city").val();
+		var newShippingAddressState = jQuery("#shipping_address_state").val();
+		var newShippingAddressZip = jQuery("#shipping_address_zip").val();
+		
+		debug.log('addressModel : ', addressModel);
+		debug.log('newShippingAddressFirstName : ', newShippingAddressFirstName);
+		debug.log('newShippingAddressLastName : ', newShippingAddressLastName);
+		debug.log('newShippingAddressLine1 : ', newShippingAddressLine1);
+		debug.log('newShippingAddressLine2 : ', newShippingAddressLine2);
+		debug.log('newShippingAddressCompany : ', newShippingAddressCompany);
+		debug.log('newShippingAddressCity : ', newShippingAddressCity);
+		debug.log('newShippingAddressState : ', newShippingAddressState);
+		debug.log('newShippingAddressZip : ', newShippingAddressZip);
+		var changed;
+		
+
+		if (
+			addressModel.firstName != newShippingAddressFirstName || 
+			addressModel.lastName != newShippingAddressLastName || 
+			addressModel.company != newShippingAddressCompany || 
+			addressModel.addressLine1 != newShippingAddressLine1 || 
+			addressModel.addressLine2 != newShippingAddressLine2 || 
+			addressModel.city != newShippingAddressCity ||
+			addressModel.state != newShippingAddressState ||
+			addressModel.zip != newShippingAddressZip)
+			{
+				changed = true;
+			}else{
+				changed = false;
+			}
+			
+			
+			debug.log('shippingAddressHasChanged : ', changed);
+			return changed;
+
+	},
 	
 	getUpdatedCustomerInfo : function(){
 		
@@ -230,7 +416,25 @@ var CustomerInfoViewMediatorClass = JS.Class({
 	// 
 	// },
 	// 		
-
+	checkPreSelectedAddresses : function (){
+		var billingAddressID = jQuery('#tc_saved_billing_addr').val();
+		if ( billingAddressID != ''){
+			jQuery('#billingAddressSelect').val(billingAddressID).attr('disabled', 'disabled');
+			this.populateBillingAddress();
+		}
+		
+		var shippingAddressID = jQuery('#tc_saved_shipping_addr').val();
+		if ( shippingAddressID != ''){
+			jQuery('#shippingAddressSelect').val(shippingAddressID).attr('disabled', 'disabled');
+			this.populateShippingAddress();
+		}
+		
+		if ( (billingAddressID != '' && shippingAddressID != '') && (billingAddressID != shippingAddressID) ){
+			jQuery('#shippingRadioInput2').attr('checked', 'checked').trigger('change');
+		}
+		
+		
+	},
 	
 	onGetContactDetailsResult : function (result){
 		debug.log('onGetContactDetailsResult : ', result)
@@ -239,6 +443,8 @@ var CustomerInfoViewMediatorClass = JS.Class({
 			this.populateContactForm();
 			
 			this.populateAddressBookDropdowns();
+			
+			this.checkPreSelectedAddresses()
 	
 			//adminAjaxService.getShippingCharge();
 		}else{

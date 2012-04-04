@@ -63,7 +63,7 @@ require_once(TASTY_CMS_PLUGIN_DIR .'includes/init_constants.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_taxonomies.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
-require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
+//require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');

@@ -39,7 +39,7 @@ function solostream_layout_body_class($classes) {
 			$solostream_options['solostream_layout'] = $layout;
 		}
 	}
-
+	$mybodyclass = '';
 	if ( $layout == "Content | Sidebar-Wide" ) {
 		$mybodyclass = "c-sw";
 	} elseif ( $layout == "Sidebar-Wide | Content" ) {
@@ -81,7 +81,7 @@ function solostream_custom_styling() {
 	$body_font_color = get_option('solostream_body_font_color');
 	$body_link_color = get_option('solostream_body_link_color');
 	$body_link_hover_color = get_option('solostream_body_link_hover_color');
-
+$body = '';
 	if ( $body_bg )
 		$body .= 'background-color:'.$body_bg.';';
 	if ( $body_bg_image )
@@ -101,11 +101,11 @@ function solostream_custom_styling() {
 
 // Wrap (Page) Styles
 
-//	$page_border_width = get_option('solostream_page_border_width');
-//	$page_border_color = get_option('solostream_page_border_color');
-//	$page_round_corners = get_option('solostream_page_round_corners');
-//	$page_box_shadow = get_option('solostream_page_box_shadow');
-
+	$page_border_width = get_option('solostream_page_border_width');
+	$page_border_color = get_option('solostream_page_border_color');
+	$page_round_corners = get_option('solostream_page_round_corners');
+	$page_box_shadow = get_option('solostream_page_box_shadow');
+	$wrapper ='';
 	if ( $page_border_width )
 		$wrapper .= 'border-width:'.$page_border_width.';';
 	if ( $page_border_color )
@@ -150,7 +150,7 @@ function solostream_custom_styling() {
 	if ( $head_banner == "yes" )
 		$output .= '#sitetitle,#logo {float:left;width:49%;}' . "\n";
 
-
+	$sitetitle = '';
 	if ( $site_title_size )
 		$sitetitle .= 'font-size:'.$site_title_size .';';
 	if ( $site_title_weight )
@@ -186,7 +186,7 @@ function solostream_custom_styling() {
 	$topnav_link_color = get_option('solostream_topnav_link_color');
 	$topnav_link_hover_color = get_option('solostream_topnav_link_hover_color');
 	$topnav_link_hover_bg_color = get_option('solostream_topnav_link_hover_bg_color');
-
+	$topnav	= '';
 	if ( $topnav_size )
 		$topnav .= 'font-size:'.$topnav_size.';';
 	if ( $topnav_weight )
@@ -208,14 +208,14 @@ function solostream_custom_styling() {
 
 // Cat Navigation Adjustments
 
-//	$catnav_size = get_option('solostream_catnav_size');
-//	$catnav_weight = get_option('solostream_catnav_weight');
-//	$catnav_font = get_option('solostream_catnav_font_family');
-//	$catnav_bg_color = get_option('solostream_catnav_bg_color');
-//	$catnav_link_color = get_option('solostream_catnav_link_color');
-//	$catnav_link_hover_color = get_option('solostream_catnav_link_hover_color');
-//	$catnav_link_hover_bg_color = get_option('solostream_catnav_link_hover_bg_color');
-
+	$catnav_size = get_option('solostream_catnav_size');
+	$catnav_weight = get_option('solostream_catnav_weight');
+	$catnav_font = get_option('solostream_catnav_font_family');
+	$catnav_bg_color = get_option('solostream_catnav_bg_color');
+	$catnav_link_color = get_option('solostream_catnav_link_color');
+	$catnav_link_hover_color = get_option('solostream_catnav_link_hover_color');
+	$catnav_link_hover_bg_color = get_option('solostream_catnav_link_hover_bg_color');
+	$catnav = '';
 	if ( $catnav_size )
 		$catnav .= 'font-size:'.$catnav_size.';';
 	if ( $catnav_weight )
@@ -263,10 +263,10 @@ function solostream_custom_styling() {
 
 // Button Colors
 
-//	$button_bg = get_option('solostream_button_bg');
-//	$button_font = get_option('solostream_button_font');
-//	$button_hover_bg = get_option('solostream_button_hover_bg');
-//	$button_hover_font = get_option('solostream_button_hover_font');
+	$button_bg = get_option('solostream_button_bg');
+	$button_font = get_option('solostream_button_font');
+	$button_hover_bg = get_option('solostream_button_hover_bg');
+	$button_hover_font = get_option('solostream_button_hover_font');
 
 	if ( $button_bg )
 		$output .= 'a.comment-reply-link,a.comment-reply-link:link,a.comment-reply-link:visited,#commentform input#submit,.archive-tabs a,.archive-tabs a:link,.archive-tabs a:visited,a.more-link,a.more-link:link,a.more-link:visited {text-shadow:0 0 0;border:0;background-color:'.$button_bg.';}' . "\n";
@@ -280,12 +280,12 @@ function solostream_custom_styling() {
 
 // Footer Adjustments
 
-//	$footer_bg_color = get_option('solostream_footer_bg_color');
+	$footer_bg_color = get_option('solostream_footer_bg_color');
 	$footer_font_color = get_option('solostream_footer_font_color');
 	$footer_font_size = get_option('solostream_footer_font_size');
 	$footer_link_color = get_option('solostream_footer_link_color');
 	$footer_link_hover_color = get_option('solostream_footer_hover_link_color');
-
+	$footer = '';
 	if ( $footer_bg_color )
 		$footer .= 'background:'.$footer_bg_color.';';
 	if ( $footer_font_color )

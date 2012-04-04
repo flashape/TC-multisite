@@ -352,14 +352,14 @@ function get_meta_textarea( $args = array(), $value = false ) {
 function solostream_save_meta_data( $post_id ) {
 	global $post;
 
-	if ( 'page' == $_POST['post_type'] )
+	if ( 'page' == @$_POST['post_type'] )
 		$meta_boxes = array_merge( solostream_page_meta_boxes() );
 	else
 		$meta_boxes = array_merge( solostream_post_meta_boxes() );
 
 	foreach ( $meta_boxes as $meta_box ) :
 
-		if ( !wp_verify_nonce( $_POST[$meta_box['name'] . '_noncename'], plugin_basename( __FILE__ ) ) )
+		if ( !wp_verify_nonce( @$_POST[$meta_box['name'] . '_noncename'], plugin_basename( __FILE__ ) ) )
 			return $post_id;
 
 		if ( 'page' == $_POST['post_type'] && !current_user_can( 'edit_page', $post_id ) )

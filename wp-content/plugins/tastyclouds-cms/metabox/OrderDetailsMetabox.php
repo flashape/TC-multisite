@@ -3,12 +3,14 @@
 global $post, $post_id ,$pagenow;
 
 global $cartID;
+$summaryRows = '';
 error_log("pagenow : $pagenow");
 if ($pagenow == 'post-new.php'){
 	$cartID = CartAjax::create();
 	error_log("cartID : $cartID");
-	
+	$contactID = '';
 }else{
+	$orderID = $post->ID;
 	$cartID = get_post_meta( $post->ID, '_cartID', true);
 	$serializedCart = get_post_meta( $post->ID, '_tc_cart', true);
 	
@@ -28,7 +30,7 @@ if ($pagenow == 'post-new.php'){
 		global $cartID;
 		global $post;
 		$orderSummary = OrderProxy::getOrderSummary(CartAjax::getCartByID($cartID));
-		$summaryRows = '';
+		
 		
 		foreach ($orderSummary['lines']['line'] as $lineItem){
 			$row = '<tr>';
@@ -51,9 +53,8 @@ if ($pagenow == 'post-new.php'){
 			$row  .= '</tr>';
 		}
 		
-		$payments = OrderProxy::getPaymentsForOrder($post->ID);
+		$payments = OrderProxy::getPaymentsForOrder($orderID);
 		foreach ($payments as $paymentModel){
-			error_log(var_export($paymentModel, 1));
 			$row = '<tr>';
 				$row  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
 				$row  .= '<td style="background-color:#CCCCCC;text-align:left">Payment ('.$paymentModel['paymentType'].')</td>';
@@ -64,24 +65,110 @@ if ($pagenow == 'post-new.php'){
 			$summaryRows .= $row;
 		}
 		
+		$contactID = OrderProxy::getContactIDForOrder($orderID);
+
+		//$contact = ContactProxy::getContactByID($contactID);
+		
+		$savedBillingAddressID = OrderProxy::getBillingAddressIDForOrder($orderID);
+		$savedShippingAddressID = OrderProxy::getShippingAddressIDForOrder($orderID);
+		
+		$billingAddress = null;
+		$shippingAddress = null;
+		
+		if (!empty($savedBillingAddressID)){
+			$billingAddress = ContactProxy::getAddressByID($savedBillingAddressID);
+			
+			$billingSummary = '';
+			$billingFirstName = $billingAddress['firstName'];
+			$billingLastName = $billingAddress['lastName'];
+			$billingCompany = $billingAddress['company'];
+			$billingAddressLine1 = $billingAddress['addressLine1'];
+			$billingAddressLine2 = $billingAddress['addressLine2'];
+			$billingCity = $billingAddress['city'];
+			$billingState = $billingAddress['state'];
+			$billingZip = $billingAddress['zip'];
+			
+			$billingSummary .= "<b>Billing Address:</b><br />\n";
+			$billingSummary .= "$billingFirstName<br />\n";
+			$billingSummary .= "$billingLastName<br />\n";
+			$billingSummary .= "$billingCompany<br />\n";
+			$billingSummary .= "$billingAddressLine1<br />\n";
+			$billingSummary .= "$billingAddressLine2<br />\n";
+			$billingSummary .= "$billingCity<br />\n";
+			$billingSummary .= "$billingState<br />\n";
+			$billingSummary .= "$billingZip<br />\n";
+			
+			
+			$billingSummaryRow = '<tr>';
+				$billingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left">'.$billingSummary.'</td>';
+				$billingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+				$billingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+				$billingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+			$billingSummaryRow  .= '</tr>';
+			$summaryRows .= $billingSummaryRow;
+		}
+		
+		if (!empty($savedShippingAddressID)){
+			$shippingAddress = ContactProxy::getAddressByID($savedShippingAddressID);
+
+			$shippingFirstName = $shippingAddress['firstName'];
+			$shippingLastName = $shippingAddress['lastName'];
+			$shippingCompany = $shippingAddress['company'];
+			$shippingAddressLine1 = $shippingAddress['addressLine1'];
+			$shippingAddressLine2 = $shippingAddress['addressLine2'];
+			$shippingCity = $shippingAddress['city'];
+			$shippingState = $shippingAddress['state'];
+			$shippingZip = $shippingAddress['zip'];
+			
+			$shippingSummary = '';
+			$shippingSummary .= "<b>Shipping Address:</b><br />\n";
+			$shippingSummary .= "$shippingFirstName<br />\n";
+			$shippingSummary .= "$shippingLastName<br />\n";
+			$shippingSummary .= "$shippingCompany<br />\n";
+			$shippingSummary .= "$shippingAddressLine1<br />\n";
+			$shippingSummary .= "$shippingAddressLine2<br />\n";
+			$shippingSummary .= "$shippingCity<br />\n";
+			$shippingSummary .= "$shippingState<br />\n";
+			$shippingSummary .= "$shippingZip<br />\n";
+			
+			$shippingSummaryRow = '<tr>';
+				$shippingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left">'.$shippingSummary.'</td>';
+				$shippingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+				$shippingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+				$shippingSummaryRow  .= '<td style="background-color:#CCCCCC;text-align:left"></td>';
+			$shippingSummaryRow  .= '</tr>';
+			$summaryRows .= $shippingSummaryRow;
+			
+		}
+		
+		$shippingSummary = '';
+		
+		
+		
+
+		
+		
+		
 		
 		
 }
 
 $enabledCheckboxID = '_tc_shipping_enabled_checkbox';
-//$meta = get_post_meta( $post_id, $enabledCheckboxID, true );
-//$meta = get_post_meta( $post->ID, $enabledCheckboxID, true );
+
 $meta = get_metadata('post', $post->ID);
 //error_log(var_export($meta, 1));
+
 $enabledValue = @$meta[$enabledCheckboxID] ? $meta[$enabledCheckboxID] : 'off';
 $checkBoxField = "<input type='checkbox' id='{$enabledCheckboxID}' name='{$enabledCheckboxID}' " . checked( esc_attr( $enabledValue  ), 'on', false ) . " />";
 $checkBoxLabel = "<label for='{$enabledCheckboxID}'>Calculate Shipping : </label> ";
 //$desc = '<p class="howto">Quick zip is a shortcut to the Contact Info\'s zip field.</p>';
 $quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value="11730"  class="small-text" maxlength="5" />';
 
-$meta_contact_id = @$meta['_tc_contact_id'][0];
+//$meta_contact_id = @$meta['_tc_contact_id'][0];
 
-$contactSelectDiv = '<div class="alignright" style="margin-right:100px;" id="quick_contact_select">Quick Contact Select : <input type="text" id="tc_contact_input"  /><input type="hidden" name="tc_selected_contact" id="tc_selected_contact" value="'.$meta_contact_id.'" /> </div>';
+
+
+$contactSelectDiv = '<div class="alignright" style="margin-right:100px;" id="quick_contact_select">Quick Contact Select : <input type="text" id="tc_contact_input"  /><input type="hidden" name="tc_selected_contact" id="tc_selected_contact" value="'.$contactID.'" /> </div>';
 
 
 $shipCheckboxDiv = "<div id='shipCheckboxDiv' style='margin-right:0px;clear:both;'>$checkBoxLabel $checkBoxField $quickZip </div>";
@@ -135,50 +222,6 @@ $dateDiv  .= '</div>';
 
 $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 
-function tc_get_order_payment_rows(){
-	$paymentRows = '';
-	
-// 	if (isset($_GET['action']) && $_GET['action'] == 'edit'){
-// 		global $post;
-// 		//do_dump($_POST);
-// 		$paymentIDs = get_post_meta( $post->ID, '_tc_crm_payment_id');
-// 		if ($paymentIDs){
-// 			$argument = array(
-// 					'post_type' => 'tc_payment',
-// 					'include'=>implode(",", $paymentIDs)
-// 					);
-// 			//do_dump($argument);
-// 			
-// 			$paymentPosts = get_posts($argument);
-// 			
-//  			//do_dump($paymentPosts);
-// 			
-// 			foreach($paymentPosts as $paymentPost){
-// 				$paymentMeta = get_metadata('post', $paymentPost->ID);
-// 				//do_dump($paymentMeta);
-// 				
-// 				$amount = number_format($paymentMeta['_tc_crm_payment_amount'][0], 2);
-// 				$paymentType = $paymentMeta['_tc_crm_payment_method'][0];
-// 				$row = <<<HTML
-// 				
-// 					<tr class="paymentRow">
-// 						<td colspan="4" style="text-align:right">Payment:</td>
-// 						<td style="text-align:right" class="paymentTotal">$amount<td>
-// 						<td></td>
-// 					</tr>
-// HTML;
-// 	
-// 				$paymentRows .= $row;
-// 			}
-// 		}	
-// 	}
-
-
-	return $paymentRows;
-	
-}
-
-$paymentRows = tc_get_order_payment_rows();
 
 	
 
@@ -360,6 +403,10 @@ $paymentRows = tc_get_order_payment_rows();
 		width:825px;
 		clear:both;
 	}
+	
+	#totalRow td{
+		font-weight:bold;
+	}
 					
 
 	
@@ -394,7 +441,9 @@ $paymentRows = tc_get_order_payment_rows();
 	<div id="orderDetailsTabs" >
 		<?php echo $contactSelectDiv ?>
 		<input type="hidden" name="tc_selected_billing_addr" id="tc_selected_billing_addr" value="" />
-		<input type="hidden" name="tc_selected_shipping_addr" id="tc_selected_shipping_addr" value="" />
+		<input type="hidden" name="tc_selected_shipping_addr" id="tc_selected_shipping_addr" value="" />	
+		<input type="hidden" name="tc_saved_billing_addr" id="tc_saved_billing_addr" value="<?php echo $savedBillingAddressID?>" />
+		<input type="hidden" name="tc_saved_shipping_addr" id="tc_saved_shipping_addr" value="<?php echo $savedShippingAddressID?>" />
 		<ul id="orderDetailsTabsList">
 			<li><a href="#orderItemsTab">Order Items</a></li>
 			<li><a href="#contactInfoTab">Contact Information</a></li>
@@ -435,7 +484,7 @@ $paymentRows = tc_get_order_payment_rows();
 					</tr>
 					<tr id="subtotalRow" class="alternate">
 						<td colspan="4" style="text-align:right">Subtotal</td>
-						<td style="text-align:right" id="subtotalField">$0.00<td>
+						<td style="text-align:right" id="subtotalField">$0.00</td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -501,21 +550,19 @@ $paymentRows = tc_get_order_payment_rows();
 							<span class="description">Add 8.75% Tax to this order</span>
 						</td>
 						<td id="taxRowTotal" class="taxRowTotal" style="text-align:right"></td>
-						<td>
-
-						</td>
+						<td></td>
 						<td></td>
 					
 					</tr>			
 					<tr id="totalRow">
 						<td colspan="4" style="text-align:right">Order Total</td>
-						<td style="text-align:right" id="totalField">$0.00<td>
+						<td style="text-align:right" id="totalField">$0.00</td>
+						<td></td>
 						<td></td>
 					</tr>
-					<?php echo $paymentRows ?>
 					<tr id="balanceDueRow">
 						<td colspan="4" class="balanceDue">Balance Due</td>
-						<td id="balanceDueField"  class="balanceDue">$0.00<td>
+						<td id="balanceDueField"  class="balanceDue">$0.00</td>
 						<td></td>
 						<td></td>
 					
@@ -614,6 +661,7 @@ $paymentRows = tc_get_order_payment_rows();
 							</tr>
 						</tbody>
 					</table>
+					<label><input type="checkbox" id="editBillingAddressCheckbox" />Edit Billing Address</label>
 				</div>
 				
 				<div id="shippingAddressDiv" class="one-half">
@@ -663,6 +711,9 @@ $paymentRows = tc_get_order_payment_rows();
 							</tr>
 						</tbody>
 					</table>
+					
+					<label><input type="checkbox" id="editShippingAddressCheckbox" />Edit Shipping Address</label><br /><br />
+					
 					
 					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" checked="checked" />Use Billing Address</label><br />
 					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="no" />Specify Different Shipping Address</label>
@@ -790,7 +841,6 @@ jQuery(document).ready(function($){
 					$('#tc_product_input').val('');
 					debug.log('selectedObj : ', selectedObj);
 					orderItemsViewMediator.addSelectedItemRow(selectedObj);
-					//orderItemsViewMediator.addProductRow(selectedObj);
 					return false;
 				},		
 		// focus: function(event, ui) {
@@ -874,6 +924,15 @@ jQuery(document).ready(function($){
 	$('#editCustomerCheckbox').on('change', function(){
 		customerInfoViewMediator.onEditCustomerCheckboxChange();
 	});
+				
+	$('#editBillingAddressCheckbox').on('change', function(){
+		customerInfoViewMediator.onEditBillingAddressCheckboxChange();
+	});
+	
+					
+	$('#editShippingAddressCheckbox').on('change', function(){
+		customerInfoViewMediator.onEditShippingAddressCheckboxChange();
+	});
 	
 	
 	$('#discountRow').data('discountModel', {amount:0, type:'percent'});
@@ -931,10 +990,18 @@ jQuery(document).ready(function($){
 			setOrderFormState('form');
 			return false;
 		});
+		
+		//if we have a selected contact when the page loads, load the contact info...
+		if( $('#tc_selected_contact').val() != '') {
+			customerInfoViewMediator.onContactSelected();
+		}
+		
+		
 	}else if(adminpage == "post-new-php"){
 		setOrderFormState('form');
 		
 	}
+	
 	
 	
 	$('.customerInfoTextInput').each(function(index) {
@@ -1009,6 +1076,47 @@ jQuery(document).ready(function($){
 			},
 			"Revert to previously saved data": function() {
 				customerInfoViewMediator.populateContactForm();
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+		
+	$( "#billing-address-changed-dialog" ).dialog({
+		width:550,
+		height:200,
+		modal: true,
+		autoOpen: false,
+		resizable: false,
+		zIndex: 3999,
+		closeOnEscape:false,
+		buttons: {
+			"Continue with new data": function() {
+				$( this ).dialog( "close" );
+				//$('#editCustomerCheckbox').attr('checked', 'checked');
+			},
+			"Revert to previously saved data": function() {
+				customerInfoViewMediator.populateBillingAddress();
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	
+			
+	$( "#shipping-address-changed-dialog" ).dialog({
+		width:550,
+		height:200,
+		modal: true,
+		autoOpen: false,
+		resizable: false,
+		zIndex: 3999,
+		closeOnEscape:false,
+		buttons: {
+			"Continue with new data": function() {
+				$( this ).dialog( "close" );
+				//$('#editCustomerCheckbox').attr('checked', 'checked');
+			},
+			"Revert to previously saved data": function() {
+				customerInfoViewMediator.populateShippingAddress();
 				$( this ).dialog( "close" );
 			}
 		}
@@ -1100,12 +1208,41 @@ jQuery(document).ready(function($){
 		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
 		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 	<tr>
+				
+
+	<tr id="paymentRowTemplate" class="paymentRow">
+		<td colspan="4" style="text-align:right">
+			<span class="paymentTitle">Hello</span><br />
+			<span class="paymentNote description"></span>
+		</td>
+		<td style="text-align:right" class="paymentTotal"><td>
+		<td></td>
+		<td></td>
+	</tr>
 		
 </table>
 
 <div id="customer-info-changed-dialog" title="Customer Info Changed">
 	<p>
 		You have made changes to the contact info.  Unchecking this checkbox will revert to the previously saved data, and no changes will be made to this contact's info.
+	</p>
+	<p>
+		Select an option below to continue.
+	</p>
+</div>
+
+<div id="billing-address-changed-dialog" title="Billing Address Changed">
+	<p>
+		You have made changes to the billing address.  Unchecking this checkbox will revert to the previously saved data, and no changes will be made to this billing address.
+	</p>
+	<p>
+		Select an option below to continue.
+	</p>
+</div>
+
+<div id="shipping-address-changed-dialog" title="Shipping Address Changed">
+	<p>
+		You have made changes to the shipping address.  Unchecking this checkbox will revert to the previously saved data, and no changes will be made to this shipping address.
 	</p>
 	<p>
 		Select an option below to continue.

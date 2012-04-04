@@ -45,7 +45,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinality'=>'one-to-one',
+		'cardinality'=>'many-to-many',
 		'admin_box' => false
 		) 
 	);
@@ -74,7 +74,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact_address',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinality'=>'one-to-one',
+		'cardinality'=>'one-to-many',
 		'admin_box' => false
 		) 
 	);
@@ -84,7 +84,7 @@ function register_p2p_connections() {
 		'from' => 'tc_contact_address',
 		'to' => 'tc_order',
 		'reciprocal' => true,
-		'cardinality'=>'many-to-one',
+		'cardinality'=>'one-to-many',
 		'admin_box' => false
 		) 
 	);

@@ -1,4 +1,5 @@
 <?php 
+	$ad728bot = '';
 	if ( is_singular() ) {
 		global $wp_query;
 		$postid = $wp_query->post->ID;

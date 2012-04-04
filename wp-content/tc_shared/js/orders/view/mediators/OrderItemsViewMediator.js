@@ -12,7 +12,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			ordersAjaxService.removeFromCartResult.add(this.onRemoveFromCartResult, this);
 			ordersAjaxService.updateCartItemResult.add(this.onUpdateCartItemResult, this);
 			ordersAjaxService.shippingRateResultReceived.add(this.onShippingRateResult, this);
-			ordersAjaxService.getCartResultReceived.add(this.onGetCartResultReceived, this);
+			ordersAjaxService.reloadOrderResultReceived.add(this.onReloadOrderResultReceived, this);
 			// ordersAjaxService.enableTaxResult.add(this.onEnableTaxResult, this);
 			
 	    },
@@ -28,8 +28,12 @@ var OrderItemsViewMediatorClass = JS.Class({
 		},
 		
 		reloadCart : function(){
-			if (!this.cartReloaded){
-				ordersAjaxService.getCart();
+			debug.log("adminpage : ",adminpage);
+			if (adminpage != "post-new-php"){
+				if (!this.cartReloaded ){
+					var orderID = jQuery('#post_ID').val();
+					ordersAjaxService.reloadOrder(orderID);
+				}
 			}
 		},
 		
@@ -48,8 +52,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 		},
 		
 						
-		onGetCartResultReceived : function(serviceResult){
-			debug.log('onGetCartResultReceived, serviceResult success : '+serviceResult.success);
+		onReloadOrderResultReceived : function(serviceResult){
+			debug.log('onReloadOrderResultReceived, serviceResult success : '+serviceResult.success);
 			debug.log('serviceResult: ', serviceResult);
 			var t = this;
 			
@@ -78,9 +82,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 				if (cart.taxEnabled && cart.taxEnabled != "false"){
 					jQuery('#_tc_tax_enabled').attr("checked", "checked");
 				}
+						
 												
 				if (cart.shipping){
-					
 					var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
 					var amount = parseFloat(cart.shipping.amount);
 					amount +=  markup;
@@ -90,6 +94,17 @@ var OrderItemsViewMediatorClass = JS.Class({
 					jQuery('#_tc_shipping_enabled_checkbox').attr("checked", "checked");
 					jQuery('#shippingRow').show();
 				}
+				
+				//add payments
+				var payments = serviceResult.payments;
+				var paymentRow;
+				
+				jQuery.each(payments, function(key, paymentModel) {
+					paymentRow = t.addPaymentRow(paymentModel);
+				});
+				
+				
+				
 				
 				this.calculateTotalEnabled = true;
 				this.ajaxEnabled = true;
@@ -144,8 +159,24 @@ var OrderItemsViewMediatorClass = JS.Class({
 			ordersAjaxService.removeCartItem(row.data("model"));
 			row.remove();
 			this.calculateTotal();
-		}, 
+		},
 		
+		addPaymentRow : function (paymentModel){
+			var paymentRow = jQuery('#paymentRowTemplate').clone();
+			paymentRow.removeAttr("id");
+
+			paymentRow.find('.paymentTitle').text('Payment ('+paymentModel.paymentType+')');
+			paymentRow.find('.paymentNote').text(paymentModel.paymentNote);
+			paymentRow.find('.paymentTotal').text(this.priceToFixed(paymentModel.paymentAmount));
+			
+			paymentRow.data("paymentModel", paymentModel);
+			debug.log('inserting payment row : ', paymentRow);
+			debug.log('paymentModel : ', paymentModel);
+			paymentRow.insertBefore(jQuery('#balanceDueRow'));
+			
+			return paymentRow;
+		},
+
 		
 		addSelectedItemRow : function(selectedObj){
 			debug.log('addSelectedItemRow, selectedObj: ', selectedObj);
@@ -711,6 +742,21 @@ var OrderItemsViewMediatorClass = JS.Class({
 		},
 		
 		
+				
+		calculatePaymentTotal : function(){
+			var paymentTotal = 0;
+			
+			var payementRows = jQuery('#orderItemsTable').find('tr.paymentRow');
+			
+			payementRows.each(function(index, el){
+				paymentTotal += parseFloat(jQuery(el).data('paymentModel').paymentAmount);
+			});
+			debug.log("paymentTotal : ", paymentTotal);
+
+			return paymentTotal;
+		},
+		
+		
 		
 		
 		
@@ -731,13 +777,15 @@ var OrderItemsViewMediatorClass = JS.Class({
 				var taxTotal = this.calculateTaxTotal();
 				cartTotal += taxTotal;
 			
-				var paymentTotal = 0;
 			
 				var couponDiscountTotal = this.calculateCouponDiscountTotal();
 				cartTotal -= couponDiscountTotal;
 			
 				var shippingTotal = this.calculateShippingTotal();
 				cartTotal += shippingTotal;
+				
+				var paymentTotal = this.calculatePaymentTotal();
+				
 			
 				var balanceDue = cartTotal - paymentTotal;
 			
@@ -1029,16 +1077,36 @@ var OrderItemsViewMediatorClass = JS.Class({
 
 
 			var productRows = jQuery('.productRow');
-			var shippingItem;
+			var newShippingItem;
+			
 			productRows.each(function(key, value) {
 				var row = jQuery(value);
 				var product = row.data('productModel');
 				var rowModel = row.data('model');
+				var productFound = false;
 				if (product){
-					shippingItem = {};
-					shippingItem.productModel = product;
-					shippingItem.quantity = rowModel.quantity;
-					shippingItems.push(shippingItem);
+					var numShippingItems = shippingItems.length;
+					var shippingItem;
+					for (i=0; i<numShippingItems; i++){
+						shippingItem = shippingItems[i];
+						if (rowModel.productID == shippingItem.productModel.value){
+							shippingItem.quantity += rowModel.quantity;
+							productFound = true;
+							debug.log("Product found , setting existing quantity to : ", shippingItem.quantity);
+							break;
+						}
+					}
+					
+					if (!productFound){
+						debug.log("Product not found , adding new...");
+						
+						newShippingItem = {};
+						newShippingItem.productModel = product;
+						newShippingItem.quantity = rowModel.quantity;
+
+						shippingItems.push(newShippingItem);
+					}
+
 				}
 			});
 			

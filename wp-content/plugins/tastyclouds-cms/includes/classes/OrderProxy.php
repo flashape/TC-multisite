@@ -62,6 +62,24 @@ class OrderProxy
 		
 	}
 	
+	public static function getBillingAddressIDForOrder($orderID){
+		$connectedIDs = p2p_get_connections( 'billing_address_to_order', array('to'=>$orderID, 'fields'=>'p2p_from') );
+		return $connectedIDs[0];
+	}
+	
+	
+	public static function getShippingAddressIDForOrder($orderID){
+		$connectedIDs = p2p_get_connections( 'shipping_address_to_order', array('to'=>$orderID, 'fields'=>'p2p_from') );
+		return $connectedIDs[0];
+	}
+	
+	
+	public static function getContactIDForOrder($orderID){
+		$connectedIDs = p2p_get_connections( 'contact_to_order', array('to'=>$orderID, 'fields'=>'p2p_from') );
+		return $connectedIDs[0];
+		
+	}
+	
 	public static function getOrderSummary($cart){
 		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksUtils.php');
 			$invoice = array();
@@ -79,10 +97,10 @@ class OrderProxy
 			$chargeItemsTotal = 0;
 
 			foreach ($cartItems as $cartItem) {
-				// error_log("cartItem: ");
-				// error_log(var_export($cartItem, 1));
-				// error_log("");
-				// error_log("");
+				error_log("cartItem: ");
+				error_log(var_export($cartItem, 1));
+				error_log("");
+				error_log("");
 				$lineItem = array();
 				$lineItem['description'] = $cartItem->description;
 
@@ -95,13 +113,36 @@ class OrderProxy
 				// 			   'variations' =>
 
 				// custom items don't have a product id
-				if( $cartItem->type != 'tc_products' ){
+				if( $cartItem->type != 'tc_products'  && $cartItem->type != 'tc_service' ){
 					$lineItem['name'] = $cartItem->itemName;
 					$lineItem['description'] = $cartItem->description;
 					$lineItem['unit_cost'] = $cartItem->price;
 					$lineItem['quantity'] = 1;
 
-				}else{
+				}elseif($cartItem->type == 'tc_service'){
+					// [03-Apr-2012 23:41:35] stdClass::__set_state(array(
+					//    'id' => 0,
+					//    'productID' => 1406,
+					//    'cartItemID' => '4f7b8a215f8b9',
+					//    'type' => 'tc_service',
+					//    'quantity' => 1,
+					//    'description' => '',
+					//    'hours' => '3',
+					//    'servings' => '50',
+					//    'price' => 0,
+					// ))
+					
+					$serviceModel = ProductProxy::getServiceByID($cartItem->productID);
+					error_log("serviceModel: ");
+					error_log(var_export($serviceModel, 1));
+					$productID = $serviceModel['productID'];
+					//error_log("productID: $productID");
+					$lineItem['name'] = $serviceModel['productName'];
+					$lineItem['unit_cost'] = $cartItem->price;
+					$lineItem['quantity'] = $cartItem->quantity;
+					
+					
+				}elseif($cartItem->type == 'tc_products'){
 
 					// $productModel['type'] = 'tc_products';
 					// $productModel['productName'] = $productPost->post_title;
@@ -121,7 +162,7 @@ class OrderProxy
 
 
 					$lineItem['name'] = $productModel['productName'];
-
+ 
 					$basePrice = $productModel['price'];
 
 					$itemPrice = $basePrice;

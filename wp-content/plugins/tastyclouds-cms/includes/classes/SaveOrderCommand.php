@@ -40,7 +40,7 @@ class SaveOrderCommand
 
 
 
-		if ( defined( 'IS_NEW_ORDER_POST' ) ){
+		if ( defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST ){
 			//if this is a new order, check to see if we need to create an invoice on Freshbooks.
 
 			$cartID = $_POST['cartID'];
@@ -182,9 +182,12 @@ class SaveOrderCommand
 		$contactID = $_POST['tc_selected_contact'];
 
 		$contactModelString = implode('', $contactModel);
+		
+		$linkContactToOrder = false;
 
 		if ( !empty($contactModelString) ){
 			error_log("contactModelString not empty!");
+			
 			if( empty($contactID) ){
 				$contactID = ContactProxy::createNew(array('use_post'=>true));
 			}
@@ -192,11 +195,23 @@ class SaveOrderCommand
 			//store the contact meta info with the post
 			$contactModel['contactID'] = $contactID;
 			ContactProxy::updateMeta($contactModel);
+			
+			$linkContactToOrder = true;
 
-			// link the order with the contact
-			p2p_type( 'contact_to_order' )->connect( $contactID, $orderID, array(
+		}elseif( empty($contactModelString) && $contactID ){
+			error_log("contactModelString is empty and contactID is $contactID, linking to order....");
+			$linkContactToOrder = true;
+
+		}
+		
+		if ($linkContactToOrder){
+			error_log("Connected contactID : $contactID to orderID : ".$this->orderID);
+			$c = p2p_type( 'contact_to_order' )->connect( $contactID, $this->orderID, array(
 				'date' => current_time('mysql'),			
 			) );
+			
+			error_log('linked contact to order, p2pid: ');
+			error_log(var_export($c, 1));
 		}
 		
 		$this->contactID = $contactID;
@@ -252,7 +267,12 @@ class SaveOrderCommand
 		// if we have an address and an order id, link the billing address with the order.
 		if (!empty($billingAddressString) && !empty($billingAddressID)){
 			error_log("we have an address and an order id, link the billing address with the order.");
-			p2p_type('billing_address_to_order' )->connect( $billingAddressID, $this->orderID );
+		
+			error_log("Connecting billingAddressID : $billingAddressID to orderID : ".$this->orderID);	
+			
+			$ba = p2p_type('billing_address_to_order' )->connect( $billingAddressID, $this->orderID );
+			error_log('linked billing address to order, p2pid : ');
+			error_log(var_export($ba, 1));
 		}
 		
 		return $billingAddress;
@@ -317,7 +337,13 @@ class SaveOrderCommand
 		// if we have an address and an order id, link the shipping address with the order.
 		if (!empty($shippingAddressString) && !empty($shippingAddressID)){
 			error_log("we have an address and an order id, link the shipping address with the order.");
-			p2p_type('shipping_address_to_order' )->connect( $shippingAddressID, $this->orderID );
+			
+			error_log("Connecting shippingAddressID : $shippingAddressID to orderID : ".$this->orderID);	
+			
+			$sa = p2p_type('shipping_address_to_order' )->connect( $shippingAddressID, $this->orderID );
+			
+			error_log('linked shipping address to order : ');
+			error_log(var_export($sa, 1));
 		}
 		
 		
