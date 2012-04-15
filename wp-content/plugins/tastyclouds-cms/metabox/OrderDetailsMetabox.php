@@ -440,6 +440,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 	
 	<div id="orderDetailsTabs" >
 		<?php echo $contactSelectDiv ?>
+		<input type="hidden" name="tc_cart_was_reloaded" id="tc_cart_was_reloaded" value="" />
 		<input type="hidden" name="tc_selected_billing_addr" id="tc_selected_billing_addr" value="" />
 		<input type="hidden" name="tc_selected_shipping_addr" id="tc_selected_shipping_addr" value="" />	
 		<input type="hidden" name="tc_saved_billing_addr" id="tc_saved_billing_addr" value="<?php echo $savedBillingAddressID?>" />
@@ -661,7 +662,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 							</tr>
 						</tbody>
 					</table>
-					<label><input type="checkbox" id="editBillingAddressCheckbox" />Edit Billing Address</label>
+					<label id="editBillingAddressLabel" style="display:none"><input type="checkbox" id="editBillingAddressCheckbox" />Edit Billing Address</label>
 				</div>
 				
 				<div id="shippingAddressDiv" class="one-half">
@@ -712,10 +713,10 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 						</tbody>
 					</table>
 					
-					<label><input type="checkbox" id="editShippingAddressCheckbox" />Edit Shipping Address</label><br /><br />
+					<label id="editShippingAddressLabel" style="display:none"><input type="checkbox" id="editShippingAddressCheckbox"  />Edit Shipping Address</label><br /><br />
 					
 					
-					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" checked="checked" />Use Billing Address</label><br />
+					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" />Use Billing Address</label><br />
 					<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="no" />Specify Different Shipping Address</label>
 					
 				</div>
@@ -957,6 +958,8 @@ jQuery(document).ready(function($){
 		var selectedAddressID = jQuery('#billingAddressSelect option:selected').val();
 		debug.log("selected billing address id : ", selectedAddressID);
 		$('#tc_selected_billing_addr').val(selectedAddressID);
+		$('#editBillingAddressLabel').show();
+		
 		customerInfoViewMediator.populateBillingAddress();
 	});
 	
@@ -965,6 +968,7 @@ jQuery(document).ready(function($){
 		debug.log("selected shipping address id : ", selectedAddressID);
 		$('#tc_selected_shipping_addr').val(selectedAddressID);
 		customerInfoViewMediator.populateShippingAddress();
+		$('#editShippingAddressLabel').show();
 		
 	});
 	

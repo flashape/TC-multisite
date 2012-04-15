@@ -55,6 +55,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 		onReloadOrderResultReceived : function(serviceResult){
 			debug.log('onReloadOrderResultReceived, serviceResult success : '+serviceResult.success);
 			debug.log('serviceResult: ', serviceResult);
+			
+			jQuery('#tc_cart_was_reloaded').val("1");
+			
+			
 			var t = this;
 			
 			if(serviceResult.success){
@@ -994,14 +998,14 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		onCouponValidationResult : function (serviceResult){  
 			jQuery("#validatingCoupon").hide();
-			debug.log('onCouponValidationResult success , serviceResult : ', serviceResult);
+			debug.log('onCouponValidationResult , serviceResult : ', serviceResult);
 			
 			if(serviceResult.success){
 				
 				var couponModel = serviceResult.couponModel;
 				jQuery("#couponRow").data('couponModel', couponModel);    
 				this.populateCouponRow();
-
+				this.calculateTotal();
 
 			}else{
 				alert('There was an error validating the coupon : '+serviceResult.message);
