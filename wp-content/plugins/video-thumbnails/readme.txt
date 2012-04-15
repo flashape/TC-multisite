@@ -4,7 +4,7 @@ Donate link: http://wie.ly/u/donate
 Tags: Video, Thumbnails, YouTube, Vimeo, Blip.tv, Justin.tv, Dailymotion, Metacafe, Image, Featured Image, Post Thumbnail
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.8
+Stable tag: 1.8.1
 
 Video Thumbnails simplifies the process of automatically displaying video thumbnails in your WordPress template.
 
@@ -87,6 +87,9 @@ The Vimeo API has a rate limit, so in rare cases you may exceed this limit. Try 
 1. The Video Thumbnail meta box on the Edit Post page
 
 == Changelog ==
+
+= 1.8.1 =
+* Plugin now scans posts added using XML-RPC which makes posting videos from iOS or other apps work smoothly
 
 = 1.8 =
 * Added support for custom fields via a new setting

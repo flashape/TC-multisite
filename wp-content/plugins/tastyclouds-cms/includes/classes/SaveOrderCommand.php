@@ -19,9 +19,12 @@ class SaveOrderCommand
 		$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
 
 		$contactModel = $this->processContact();
-		$contactID = $this->contactID;
-		$billingAddress = $this->processBillingAddress();
+		$this->contactID = $contactModel['contactID'];
 		
+		$contactID = $this->contactID;
+		
+		
+		$billingAddress = $this->processBillingAddress();
 		$shippingAddress = $this->processShippingAddress($billingAddress);
 		
 
@@ -38,7 +41,12 @@ class SaveOrderCommand
 			update_post_meta( $orderID, '_tc_event_date', $_POST['_tc_event_date'] );					
 		}
 
-
+		if ( defined( 'IS_NEW_ORDER_POST' ) ){
+			error_log("IS_NEW_ORDER_POST : ".IS_NEW_ORDER_POST);
+		}else{
+			error_log("IS_NEW_ORDER_POST is not defined");
+			
+		}
 
 		if ( defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST ){
 			//if this is a new order, check to see if we need to create an invoice on Freshbooks.
@@ -164,7 +172,9 @@ class SaveOrderCommand
 	}
 	
 	private function processContact(){
-		// if the tc_selected_contact var is empty, and user info was submitted, save a new contact
+		
+		
+		
 		$customerFirstName = @$_POST['customer_address_first_name'];
 		$customerLastName = @$_POST['customer_address_last_name'];
 		$customerEmail = @$_POST['customer_email'];
@@ -178,35 +188,101 @@ class SaveOrderCommand
 			'customerPhone'=>$customerPhone,
 			'customerCompany'=>$customerCompany
 		);
-
-		$contactID = $_POST['tc_selected_contact'];
-
+		
 		$contactModelString = implode('', $contactModel);
+		$contactInfoWasSubmitted = !empty($contactModelString);
+		
+		
+		$isNewOrder = (defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST );
 		
 		$linkContactToOrder = false;
-
-		if ( !empty($contactModelString) ){
-			error_log("contactModelString not empty!");
+		$contactIDToLink = '';
+		
+		$selectedContactID = $_POST['tc_selected_contact'];
+		
+		if ( !$isNewOrder){
+			error_log("this is a previously saved order...");
 			
-			if( empty($contactID) ){
-				$contactID = ContactProxy::createNew(array('use_post'=>true));
+			//this is a previously saved order.
+			$savedContactID = OrderProxy::getContactIDForOrder($this->orderID);
+			
+			if ($savedContactID == $selectedContactID && !$contactInfoWasSubmitted){
+				error_log("no contact info was changed, return the existing contact model...");
+				
+				// no contact info was changed, return the existing contact model.
+				$contactModel = ContactProxy::getContactByID($savedContactID);
+				return $contactModel;
 			}
-
-			//store the contact meta info with the post
-			$contactModel['contactID'] = $contactID;
-			ContactProxy::updateMeta($contactModel);
 			
-			$linkContactToOrder = true;
-
-		}elseif( empty($contactModelString) && $contactID ){
-			error_log("contactModelString is empty and contactID is $contactID, linking to order....");
-			$linkContactToOrder = true;
-
+			
+			if ($savedContactID == $selectedContactID && $contactInfoWasSubmitted){
+				error_log("it's the same contact, but the info was updated...");
+				// it's the same contact, but the info was updated.
+				$contactModel['contactID'] = $savedContactID;
+				ContactProxy::updateMeta($contactModel);
+				return $contactModel;
+			}
+			
+			
+			if ($savedContactID != $selectedContactID){
+				error_log("a different contact was selected for this order...");
+				
+				if (!$contactInfoWasSubmitted){
+					error_log("no contact info was submitted...");
+					
+					// A different customer was selected with no changes
+					// switch the contact id linked to this order.
+					$this->deleteExistingContactConnectionToOrder();
+					
+					$contactModel = ContactProxy::getContactByID($selectedContactID);
+				}else{
+					error_log("a new contact was selected, but changes were made...");
+					
+					// a new contact was selected, but changes were made.
+					$this->deleteExistingContactConnectionToOrder();
+					
+					$contactModel['contactID'] = $selectedContactID;
+					ContactProxy::updateMeta($contactModel);
+				}
+				
+				$linkContactToOrder = true;
+				$contactIDToLink = $selectedContactID;
+			}
 		}
 		
+		
+		
+		if($isNewOrder){
+			if ( $contactInfoWasSubmitted ){
+				error_log("contact info was submitted!");
+
+				if( empty($selectedContactID) ){
+					$newContactID = ContactProxy::createNew(array('use_post'=>true));
+				}
+
+				//store the contact meta info with the post
+				$contactModel['contactID'] = $newContactID;
+				ContactProxy::updateMeta($contactModel);
+
+				$linkContactToOrder = true;
+				$contactIDToLink = $newContactID;
+				
+
+			}elseif( !$contactInfoWasSubmitted && $selectedContactID ){
+				error_log("no contact info was submitted and contactID is $contactID, linking to order....");
+				$linkContactToOrder = true;
+				$contactIDToLink = $selectedContactID;
+				$contactModel = ContactProxy::getContactByID($selectedContactID);
+				
+			}
+			
+		}
+		
+		
+		
 		if ($linkContactToOrder){
-			error_log("Connected contactID : $contactID to orderID : ".$this->orderID);
-			$c = p2p_type( 'contact_to_order' )->connect( $contactID, $this->orderID, array(
+			error_log("Connected contactID : $contactIDToLink to orderID : ".$this->orderID);
+			$c = p2p_type( 'contact_to_order' )->connect( $contactIDToLink, $this->orderID, array(
 				'date' => current_time('mysql'),			
 			) );
 			
@@ -214,9 +290,13 @@ class SaveOrderCommand
 			error_log(var_export($c, 1));
 		}
 		
-		$this->contactID = $contactID;
 		return $contactModel;
-		
+	}
+	
+	private function deleteExistingContactConnectionToOrder(){
+		$p2pConnections = p2p_get_connections( 'contact_to_order', array('to'=>$this->orderID, 'fields'=>'p2p_id') );
+		$p2pConnectionID = $p2pConnections[0];
+		p2p_delete_connection($p2pConnectionID);
 		
 	}
 	

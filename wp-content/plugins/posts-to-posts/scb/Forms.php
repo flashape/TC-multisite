@@ -43,6 +43,7 @@ class scbForms {
 			'desc' => '',
 			'desc_pos' => 'after',
 			'wrap' => self::TOKEN,
+			'wrap_each' => self::TOKEN,
 		) );
 
 		if ( isset( $args['value'] ) && is_array( $args['value'] ) ) {
@@ -184,16 +185,15 @@ class scbForms {
 
 		$opts = '';
 		foreach ( $values as $value => $title ) {
-			if ( empty( $value ) || empty( $title ) )
-				continue;
-
-			$opts .= self::_checkbox( array(
+			$single_input = self::_checkbox( array(
 				'type' => 'checkbox',
 				'value' => $value,
 				'checked' => in_array( $value, $checked ),
 				'desc' => $title,
 				'desc_pos' => 'after'
 			) );
+
+			$opts .= str_replace( self::TOKEN, $single_input, $args['wrap_each'] );
 		}
 
 		return self::add_desc( $opts, $desc, $desc_pos );
@@ -222,16 +222,15 @@ class scbForms {
 
 		$opts = '';
 		foreach ( $values as $value => $title ) {
-			if ( empty( $value ) || empty( $title ) )
-				continue;
-
-			$opts .= self::_checkbox( array(
+			$single_input = self::_checkbox( array(
 				'type' => 'radio',
 				'value' => $value,
 				'checked' => ( (string) $value == (string) $selected ),
 				'desc' => $title,
 				'desc_pos' => 'after'
 			) );
+
+			$opts .= str_replace( self::TOKEN, $single_input, $args['wrap_each'] );
 		}
 
 		return self::add_desc( $opts, $desc, $desc_pos );
@@ -239,7 +238,7 @@ class scbForms {
 
 	private static function _select( $args ) {
 		extract( wp_parse_args( $args, array(
-			'text' => '',
+			'text' => false,
 			'extra' => array()
 		) ) );
 
@@ -254,9 +253,6 @@ class scbForms {
 		}
 
 		foreach ( $values as $value => $title ) {
-			if ( empty( $value ) || empty( $title ) )
-				continue;
-
 			$options[] = array(
 				'value' => $value,
 				'selected' => ( (string) $value == (string) $selected ),

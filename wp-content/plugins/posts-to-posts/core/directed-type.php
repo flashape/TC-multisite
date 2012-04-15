@@ -48,10 +48,6 @@ class P2P_Directed_Connection_Type {
 		return $arg[$direction];
 	}
 
-	public function accepts_single_connection() {
-		return 'one' == $this->get_opposite( 'cardinality' );
-	}
-
 	/**
 	 * Get a list of posts that are connected to a given post.
 	 *
@@ -109,48 +105,41 @@ class P2P_Directed_Connection_Type {
 		return false;
 	}
 
-	/** @internal */
-	public function get_connections( $post_id ) {
-		$side = $this->get_opposite( 'side' );
-
-		$query = $this->get_connected( $post_id, $side->get_connections_qv() );
-
-		return scb_list_fold( $side->abstract_query( $query )->items, 'p2p_id', 'ID' );
-	}
-
 	/**
 	 * Get a list of posts that could be connected to a given post.
 	 *
 	 * @param int $post_id A post id.
 	 */
 	public function get_connectable( $item_id, $page, $search ) {
+		$side = $this->get_opposite( 'side' );
+
+		$qv = $side->get_connectable_qv( $item_id, $page, $search, $this->get_non_connectable( $item_id ) );
+
+		$qv = apply_filters( 'p2p_connectable_args', $qv, $this, $item_id );
+
+		return $side->abstract_query( $side->do_query( $qv ) );
+	}
+
+	private function get_non_connectable( $item_id ) {
 		$to_exclude = array();
 
 		if ( $this->indeterminate && !$this->self_connections )
 			$to_exclude[] = $item_id;
 
 		if ( 'one' == $this->get_current( 'cardinality' ) ) {
-			_p2p_append( $to_exclude, p2p_get_connections( $this->name, array(
-				'direction' => $this->direction,
+			_p2p_append( $to_exclude, $this->get_connections( array(
 				'fields' => 'object_id'
 			) ) );
 		}
 
 		if ( $this->prevent_duplicates ) {
-			_p2p_append( $to_exclude, p2p_get_connections( $this->name, array(
-				'direction' => $this->direction,
+			_p2p_append( $to_exclude, $this->get_connections( array(
 				'from' => $item_id,
 				'fields' => 'object_id'
 			) ) );
 		}
 
-		$side = $this->get_opposite( 'side' );
-
-		$qv = $side->get_connectable_qv( $item_id, $page, $search, $to_exclude );
-
-		$qv = apply_filters( 'p2p_connectable_args', $qv, $this, $item_id );
-
-		return $side->abstract_query( $side->do_query( $qv ) );
+		return $to_exclude;
 	}
 
 	/**
@@ -160,31 +149,28 @@ class P2P_Directed_Connection_Type {
 	 * @param int The second end of the connection.
 	 * @param array Additional information about the connection.
 	 *
-	 * @return int p2p_id
+	 * @return int|object p2p_id or WP_Error on failure
 	 */
 	public function connect( $from, $to, $meta = array() ) {
 		if ( !$this->get_current( 'side' )->item_exists( $from ) )
-			return false;
+			return new WP_Error( 'first_parameter', 'Invalid first parameter.' );
 
 		if ( !$this->get_opposite( 'side' )->item_exists( $to ) )
-			return false;
+			return new WP_Error( 'second_parameter', 'Invalid second parameter.' );
 
-		if ( $this->accepts_single_connection() )
-			$to_check = 'any';
-		elseif ( $this->prevent_duplicates )
-			$to_check = $to;
-		else
-			$to_check = false;
+		if ( !$this->self_connections && $from == $to )
+			return new WP_Error( 'self_connection', 'Connection between an element and itself is not allowed.' );
 
-		if ( $to_check && p2p_connection_exists( $this->name, array(
-			'direction' => $this->direction,
-			'from' => $from,
-			'to' => $to_check
-		) ) )
-			return false;
+		if ( $this->prevent_duplicates && $this->get_p2p_id( $from, $to ) )
+			return new WP_Error( 'duplicate_connection', 'Duplicate connections are not allowed.' );
 
-		return p2p_create_connection( $this->name, array(
-			'direction' => $this->direction,
+		if ( 'one' == $this->get_opposite( 'cardinality' ) && $this->connection_exists( compact( 'from' ) ) )
+			return new WP_Error( 'cardinality_opposite', 'Cardinality problem.' );
+
+		if ( 'one' == $this->get_current( 'cardinality' ) && $this->connection_exists( compact( 'to' ) ) )
+			return new WP_Error( 'cardinality_current', 'Cardinality problem.' );
+
+		return $this->create_connection( array(
 			'from' => $from,
 			'to' => $to,
 			'meta' => array_merge( $meta, $this->data )
@@ -198,11 +184,7 @@ class P2P_Directed_Connection_Type {
 	 * @param int The second end of the connection.
 	 */
 	public function disconnect( $from, $to ) {
-		return p2p_delete_connections( $this->name, array(
-			'direction' => $this->direction,
-			'from' => $from,
-			'to' => $to,
-		) );
+		return $this->delete_connections( compact( 'from', 'to' ) );
 	}
 
 	/**
@@ -211,47 +193,24 @@ class P2P_Directed_Connection_Type {
 	 * @param int The post id.
 	 */
 	public function disconnect_all( $from ) {
-		return p2p_delete_connections( $this->name, array(
-			'direction' => $this->direction,
-			'from' => $from,
-		) );
-	}
-
-	/**
-	 * For one-to-many connections: replaces existing item with a new one.
-	 *
-	 * @param int The first end of the connection.
-	 * @param int The second end of the connection.
-	 * @param array Additional information about the connection.
-	 *
-	 * @return int p2p_id
-	 */
-	public function replace( $from, $to, $meta = array() ) {
-		if ( !$this->get_current( 'side' )->item_exists( $from ) )
-			return false;
-
-		if ( ! $this->accepts_single_connection() )
-			return false;
-
-		$existing = _p2p_first( $this->get_connections( $from ) );
-
-		if ( $existing ) {
-			if ( $existing == $to )
-				return;
-
-			$this->disconnect_all( $from );
-		}
-
-		return $this->connect( $from, $to, $meta );
+		return $this->delete_connections( compact( 'from' ) );
 	}
 
 	public function get_p2p_id( $from, $to ) {
-		return _p2p_first( p2p_get_connections( $this->name, array(
-			'direction' => $this->direction,
+		return _p2p_first( $this->get_connections( array(
 			'from' => $from,
 			'to' => $to,
 			'fields' => 'p2p_id'
 		) ) );
+	}
+
+	/**
+	 * Transforms $this->get_connections( ... ) into p2p_get_connections( $this->name, ... ) etc.
+	 */
+	public function __call( $method, $args ) {
+		$args[0]['direction'] = $this->direction;
+
+		return call_user_func( 'p2p_' . $method, $this->name, $args[0] );
 	}
 }
 

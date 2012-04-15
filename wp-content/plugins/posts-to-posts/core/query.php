@@ -2,7 +2,7 @@
 
 class P2P_Query {
 
-	function expand_shortcut_qv( &$q ) {
+	static function expand_shortcut_qv( &$q ) {
 		$qv_map = array(
 			'connected' => 'any',
 			'connected_to' => 'to',
@@ -17,7 +17,16 @@ class P2P_Query {
 		}
 	}
 
-	function get_qv( $q ) {
+	static function get_qv( $q ) {
+		if ( !isset( $q['p2p_type'] ) ) {
+			if ( isset( $q['connected_items'] ) ) {
+				trigger_error( "P2P queries without 'connected_type' are no longer supported." );
+			}
+			return false;
+		}
+
+		$qv['p2p_type'] = $q['p2p_type'];
+
 		$qv_list = array(
 			'items', 'direction', 'meta',
 			'orderby', 'order_num', 'order'
@@ -27,15 +36,18 @@ class P2P_Query {
 			$qv[$key] = isset( $q["connected_$key"] ) ?  $q["connected_$key"] : false;
 		}
 
-		$qv['p2p_type'] = isset( $q['p2p_type'] ) ? $q['p2p_type'] : false;
-
 		return $qv;
 	}
 
-	// null means do nothing
-	// false means trigger 404
-	// true means found valid p2p query vars
-	function expand_connected_type( &$q, $item, $object_type ) {
+	/**
+	 * Sets 'p2p_type' => array( connection_type => direction )
+	 *
+	 * @return:
+	 * null means ignore current query
+	 * false means trigger 404
+	 * true means proceed
+	 */
+	static function expand_connected_type( &$q, $item, $object_type ) {
 		if ( !isset( $q['connected_type'] ) )
 			return;
 
@@ -60,13 +72,14 @@ class P2P_Query {
 				$directed = self::find_direction( $ctype, $item, $object_type );
 			}
 
-			if ( !$directed ) {
-				trigger_error( "Can't determine direction", E_USER_WARNING );
+			if ( !$directed )
 				continue;
-			}
 
 			$p2p_types[ $p2p_type ] = $directed->get_direction();
 		}
+
+		if ( empty( $p2p_types ) )
+			return false;
 
 		if ( 1 == count( $p2p_types ) )
 			$q = $directed->get_connected_args( $q );
@@ -76,7 +89,7 @@ class P2P_Query {
 		return true;
 	}
 
-	function alter_clauses( $clauses, $q, $main_id_column ) {
+	static function alter_clauses( $clauses, $q, $main_id_column ) {
 		global $wpdb;
 
 		$clauses['fields'] .= ", $wpdb->p2p.*";
@@ -93,7 +106,7 @@ class P2P_Query {
 		$where_parts = array();
 
 		foreach ( $q['p2p_type'] as $p2p_type => $direction ) {
-			if ( false === $p2p_type ) // used by migration script
+			if ( 0 === $p2p_type ) // used by migration script
 				$part = "1 = 1";
 			else
 				$part = $wpdb->prepare( "$wpdb->p2p.p2p_type = %s", $p2p_type );

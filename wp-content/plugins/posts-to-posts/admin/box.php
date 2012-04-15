@@ -1,16 +1,10 @@
 <?php
 
-/**
- * @package Administration
- */
 interface P2P_Field {
 	function get_title();
 	function render( $p2p_id, $post_id );
 }
 
-/**
- * @package Administration
- */
 class P2P_Box {
 	private $ctype;
 
@@ -31,10 +25,10 @@ class P2P_Box {
 	}
 
 	public function init_scripts() {
-		wp_enqueue_style( 'p2p-admin', plugins_url( 'box.css', __FILE__ ), array(), P2P_PLUGIN_VERSION );
+		wp_enqueue_style( 'p2p-box', plugins_url( 'box.css', __FILE__ ), array(), P2P_PLUGIN_VERSION );
 
-		wp_enqueue_script( 'p2p-admin', plugins_url( 'box.js', __FILE__ ), array( 'jquery' ), P2P_PLUGIN_VERSION, true );
-		wp_localize_script( 'p2p-admin', 'P2PAdmin', array(
+		wp_enqueue_script( 'p2p-box', plugins_url( 'box.js', __FILE__ ), array( 'jquery' ), P2P_PLUGIN_VERSION, true );
+		wp_localize_script( 'p2p-box', 'P2PAdmin', array(
 			'nonce' => wp_create_nonce( P2P_BOX_NONCE ),
 			'spinner' => admin_url( 'images/wpspin_light.gif' ),
 			'deleteConfirmMessage' => __( 'Are you sure you want to delete all connections?', P2P_TEXTDOMAIN ),
@@ -65,10 +59,9 @@ class P2P_Box {
 	}
 
 	function render( $post ) {
-		$this->connected_items = $this->ctype->get_connections( $post->ID );
+		$this->connected_items = $this->get_folded_connections( $post->ID );
 
 		$data = array(
-			'p2p-type' => $this->ctype->name,
 			'attributes' => $this->render_data_attributes(),
 			'connections' => $this->render_connections_table( $post ),
 			'create-connections' => $this->render_create_connections( $post ),
@@ -77,10 +70,19 @@ class P2P_Box {
 		echo P2P_Mustache::render( 'box', $data );
 	}
 
+	protected function get_folded_connections( $post_id ) {
+		$side = $this->ctype->get_opposite( 'side' );
+
+		$query = $this->ctype->get_connected( $post_id, $side->get_connections_qv() );
+
+		return scb_list_fold( $side->abstract_query( $query )->items, 'p2p_id', 'ID' );
+	}
+
 	protected function render_data_attributes() {
 		$data_attr = array(
+			'p2p_type' => $this->ctype->name,
 			'prevent_duplicates' => $this->ctype->prevent_duplicates,
-			'cardinality' => $this->ctype->accepts_single_connection() ? 'one' : 'many',
+			'cardinality' => $this->ctype->get_opposite( 'cardinality' ),
 			'direction' => $this->ctype->get_direction()
 		);
 
@@ -118,7 +120,7 @@ class P2P_Box {
 			'label' => __( 'Create connections:', P2P_TEXTDOMAIN )
 		);
 
-		if ( $this->ctype->accepts_single_connection() && !empty( $this->connected_items ) )
+		if ( 'one' == $this->ctype->get_opposite( 'cardinality' ) && !empty( $this->connected_items ) )
 			$data['hide'] = 'style="display:none"';
 
 		// Search tab

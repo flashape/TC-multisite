@@ -85,7 +85,7 @@ class Generic_Connection_Type {
 	public function __call( $method, $args ) {
 		$directed = $this->find_direction( $args[0] );
 		if ( !$directed ) {
-			trigger_error( "Can't determine direction", E_USER_WARNING );
+			trigger_error( sprintf( "Can't determine direction for '%s' type.", $this->name ), E_USER_WARNING );
 			return false;
 		}
 
@@ -182,6 +182,26 @@ class Generic_Connection_Type {
 			array_push( $posts[ $outer_item_id ]->$prop_name, $inner_item );
 		}
 	}
+
+	public function get_desc() {
+		foreach ( array( 'from', 'to' ) as $key ) {
+			$$key = $this->side[ $key ]->get_desc();
+		}
+
+		if ( $this->indeterminate )
+			$arrow = '&harr;';
+		else
+			$arrow = '&rarr;';
+
+		$label = "$from $arrow $to";
+
+		$title = $this->title[ 'from' ];
+
+		if ( $title )
+			$label .= " ($title)";
+
+		return $label;
+	}
 }
 
 
@@ -226,6 +246,11 @@ class P2P_Connection_Type extends Generic_Connection_Type {
 		) );
 	}
 
+	/** Alias for get_prev() */
+	public function get_previous( $from, $to ) {
+		return $this->get_prev( $from, $to );
+	}
+
 	/**
 	 * Get the previous post in an ordered connection.
 	 *
@@ -234,7 +259,7 @@ class P2P_Connection_Type extends Generic_Connection_Type {
 	 *
 	 * @return bool|object False on failure, post object on success
 	 */
-	public function get_previous( $from, $to ) {
+	public function get_prev( $from, $to ) {
 		return $this->get_adjacent( $from, $to, -1 );
 	}
 

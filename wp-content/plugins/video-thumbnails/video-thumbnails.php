@@ -5,7 +5,7 @@ Plugin URI: http://sutherlandboswell.com/projects/wordpress-video-thumbnails/
 Description: Automatically retrieve video thumbnails for your posts and display them in your theme. Currently supports YouTube, Vimeo, Blip.tv, Justin.tv, Dailymotion and Metacafe.
 Author: Sutherland Boswell
 Author URI: http://sutherlandboswell.com
-Version: 1.8
+Version: 1.8.1
 License: GPL2
 */
 /*  Copyright 2010 Sutherland Boswell  (email : sutherland.boswell@gmail.com)
@@ -459,6 +459,11 @@ add_action( 'new_to_publish', 'save_video_thumbnail', 10, 1 );
 add_action( 'draft_to_publish', 'save_video_thumbnail', 10, 1 );
 add_action( 'pending_to_publish', 'save_video_thumbnail', 10, 1 );
 add_action( 'future_to_publish', 'save_video_thumbnail', 10, 1 );
+
+// Finds thumbnail when posting from XML-RPC
+// (this action passes the post ID as an argument so 'get_video_thumbnail' is used instead)
+
+add_action( 'xmlrpc_publish_post', 'get_video_thumbnail', 10, 1 );
 
 function save_video_thumbnail( $post ) {
 	$post_type = get_post_type( $post->ID );

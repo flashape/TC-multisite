@@ -2,21 +2,24 @@
 
 class P2P_User_Query {
 
-	function init() {
-		add_action( 'pre_user_query', array( __CLASS__, 'pre_user_query' ) );
+	static function init() {
+		add_action( 'pre_user_query', array( __CLASS__, 'pre_user_query' ), 20 );
 	}
 
-	function pre_user_query( $query ) {
+	static function pre_user_query( $query ) {
 		global $wpdb;
 
 		$q =& $query->query_vars;
 
 		P2P_Query::expand_shortcut_qv( $q );
 
-		if ( !isset( $q['connected_items'] ) )
-			return;
+		if ( isset( $q['connected_items'] ) ) {
+			$item = $q['connected_items'];
+		} else {
+			$item = 'any';
+		}
 
-		$r = P2P_Query::expand_connected_type( $q, $q['connected_items'], 'user' );
+		$r = P2P_Query::expand_connected_type( $q, $item, 'user' );
 
 		if ( false === $r ) {
 			$query->query_where = " AND 1=0";
@@ -27,7 +30,7 @@ class P2P_User_Query {
 
 		$qv = P2P_Query::get_qv( $q );
 
-		if ( empty( $qv['items'] ) )
+		if ( !$qv )
 			return;
 
 		$map = array(

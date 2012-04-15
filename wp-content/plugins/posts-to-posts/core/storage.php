@@ -7,43 +7,15 @@ class P2P_Storage {
 
 	static $version = 4;
 
-	function init() {
+	static function init() {
 		scb_register_table( 'p2p' );
 		scb_register_table( 'p2pmeta' );
 
-		add_action( 'admin_notices', array( __CLASS__, 'maybe_install' ) );
-
-		add_action( 'deleted_post', array( __CLASS__, 'deleted_post' ) );
+		add_action( 'deleted_post', array( __CLASS__, 'deleted_object' ) );
+		add_action( 'deleted_user', array( __CLASS__, 'deleted_object' ) );
 	}
 
-	function maybe_install() {
-		if ( !current_user_can( 'manage_options' ) )
-			return;
-
-		$current_ver = get_option( 'p2p_storage' );
-
-		if ( $current_ver == self::$version )
-			return;
-
-		self::install();
-
-		if ( isset( $_GET['p2p-upgrade'] ) ) {
-			$n = self::upgrade();
-
-			update_option( 'p2p_storage', P2P_Storage::$version );
-
-			echo scb_admin_notice( sprintf( __( 'Upgraded %d connections.', P2P_TEXTDOMAIN ), $n ) );
-		} elseif ( $current_ver ) {
-			echo scb_admin_notice( sprintf(
-				__( 'The Posts 2 Posts connections need to be upgraded. <a href="%s">Proceed.</a>', P2P_TEXTDOMAIN ),
-				admin_url( 'tools.php?p2p-upgrade' )
-			) );
-		} else {
-			update_option( 'p2p_storage', P2P_Storage::$version );
-		}
-	}
-
-	function install() {
+	static function install() {
 		scb_install_table( 'p2p', "
 			p2p_id bigint(20) unsigned NOT NULL auto_increment,
 			p2p_from bigint(20) unsigned NOT NULL,
@@ -66,7 +38,7 @@ class P2P_Storage {
 		" );
 	}
 
-	function upgrade() {
+	static function upgrade() {
 		global $wpdb;
 
 		$n = 0;
@@ -82,7 +54,7 @@ class P2P_Storage {
 				'nopaging' => true
 			) );
 
-			$args['p2p_type'] = array( false => $args['direction'] );
+			$args['p2p_type'] = array( 0 => 'any' );
 
 			foreach ( get_posts( $args ) as $post ) {
 				// some connections might be ambiguous, spanning multiple connection types; first one wins
@@ -96,19 +68,21 @@ class P2P_Storage {
 		return $n;
 	}
 
-	function uninstall() {
+	static function uninstall() {
 		scb_uninstall_table( 'p2p' );
 		scb_uninstall_table( 'p2pmeta' );
 
 		delete_option( 'p2p_storage' );
 	}
 
-	function deleted_post( $post_id ) {
+	static function deleted_object( $object_id ) {
+		$object_type = str_replace( 'deleted_', '', current_filter() );
+
 		foreach ( P2P_Connection_Type_Factory::get_all_instances() as $p2p_type => $ctype ) {
 			foreach ( array( 'from', 'to' ) as $direction ) {
-				if ( 'post' == $ctype->object[ $direction ] ) {
+				if ( $object_type == $ctype->object[ $direction ] ) {
 					p2p_delete_connections( $p2p_type, array(
-						$direction => $post_id,
+						$direction => $object_id,
 					) );
 				}
 			}
