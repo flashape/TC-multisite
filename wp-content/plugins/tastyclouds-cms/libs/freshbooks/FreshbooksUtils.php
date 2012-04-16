@@ -136,10 +136,18 @@ class FreshbooksUtils
 				$lineItem['unit_cost'] = number_format($itemPrice, 2, '.', '');
 				
 				
+				
+				
+				
 			}
 			
 			
 			$lineItem['quantity'] = $cartItem->quantity;
+			
+			if(isset($cartItem->taxable) && $cartItem->taxable ){
+				$lineItem['tax1_name'] = 'tax1';
+				$lineItem['tax1_percent'] = 8.75;
+			}
 
 			$chargeItemsTotal += ($lineItem['unit_cost'] * $lineItem['quantity']);
 

@@ -483,19 +483,20 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 						<th style="text-align:left">Description</th>
 						<th style="text-align:left">Price</th>
 						<th style="text-align:left">Quantity</th>				
+						<th style="text-align:left">Tax</th>				
 						<th style="text-align:right">Total</th>
 						<th style="text-align:right">Add Item</th>
 						<th style="text-align:right">Remove Item</th>
 					</tr>
 					<tr id="subtotalRow" class="alternate">
-						<td colspan="4" style="text-align:right">Subtotal</td>
+						<td colspan="5" style="text-align:right">Subtotal</td>
 						<td style="text-align:right" id="subtotalField">$0.00</td>
 						<td></td>
 						<td></td>
 					</tr>
 
 					<tr id="discountRow">
-						<td colspan="4" style="text-align:right">
+						<td colspan="5" style="text-align:right">
 							Discount:
 							<input type="text" value="0" id="discountAmountInput">
 							<select id="discountTypeDropdown"  size="1">
@@ -508,7 +509,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 						<td></td>
 					</tr>			
 					<tr id="shippingRow" style="display:none">
-						<td colspan="4" style="text-align:right">
+						<td colspan="5" style="text-align:right">
 							Shipping:
 							<select name="shipmentType" id="shipmentType" size="1">
 							</select>
@@ -522,7 +523,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 						<td></td>
 					</tr>			
 					<tr id="shippingDiscountRow">
-						<td id="shippingDiscountTitle" colspan="4" style="text-align:right">
+						<td id="shippingDiscountTitle" colspan="5" style="text-align:right">
 						</td>
 						<td id="shippingDiscountRowTotal" class="shippingDiscountRowTotal" style="text-align:right"></td>
 						<td>
@@ -532,7 +533,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 					
 					</tr>			
 					<tr id="couponRow">
-						<td colspan="4" style="text-align:right">
+						<td colspan="5" style="text-align:right">
 							Coupon Code / Gift Certificate:
 							<input type="text" value="" id="couponCodeInput">
 							<a href="#" id="applyCouponButton" class="button-secondary">Apply Coupon</a>
@@ -549,10 +550,8 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 					</tr>
 
 					<tr id="taxRow">
-						<td id="taxRowTitle" colspan="4" style="text-align:right">
-							<input type="checkbox" id="_tc_tax_enabled">
-							Tax<br/>
-							<span class="description">Add 8.75% Tax to this order</span>
+						<td id="taxRowTitle" colspan="5" style="text-align:right">
+							Tax
 						</td>
 						<td id="taxRowTotal" class="taxRowTotal" style="text-align:right"></td>
 						<td></td>
@@ -560,13 +559,13 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 					
 					</tr>			
 					<tr id="totalRow">
-						<td colspan="4" style="text-align:right">Order Total</td>
+						<td colspan="5" style="text-align:right">Order Total</td>
 						<td style="text-align:right" id="totalField">$0.00</td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr id="balanceDueRow">
-						<td colspan="4" class="balanceDue">Balance Due</td>
+						<td colspan="5" class="balanceDue">Balance Due</td>
 						<td id="balanceDueField"  class="balanceDue">$0.00</td>
 						<td></td>
 						<td></td>
@@ -878,6 +877,7 @@ jQuery(document).ready(function($){
 	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.customItemTitleInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
+	$('#orderItemsTable').on('change', 'input.addTaxCheckbox', checkRowForUpdates)
 
 	$('#discountAmountInput').on('focusout', function(event){
 		orderItemsViewMediator.checkDiscountUpdated();
@@ -918,9 +918,6 @@ jQuery(document).ready(function($){
 	});
 	
 	
-	$('#_tc_tax_enabled').on('change', function(){
-		orderItemsViewMediator.onTaxEnabledChange();
-	});
 	
 		
 	$('#_tc_shipping_enabled_checkbox').on('change', function(){
@@ -1167,12 +1164,11 @@ jQuery(document).ready(function($){
 		<td class="itemPriceColumn"></td>
 		
 		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		<td class="taxColumn"><input type="checkbox" class="addTaxCheckbox"></td>
 		
 		<td class="rowTotalColumn"></td>
 			
-		<!-- <td class="removeItemColumn"><a class="removeProductbutton button-secondary" href="#" title="Remove" tabIndex="-1">X</a></td>
-		<td class="addNextItemColumn"><a class="addNextItembutton button-secondary " href="#" title="Add Next Item" tabIndex="-1">Add Next Item</a></td>
-		 -->
+
 		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
 		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 		
@@ -1193,6 +1189,7 @@ jQuery(document).ready(function($){
 		<td class="itemPriceColumn"><input type="text" class="priceInput small-text" maxlength="3"  /></td>
 		
 		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		<td class="taxColumn"><input type="checkbox" class="addTaxCheckbox"></td>
 		
 		<td class="rowTotalColumn"></td>
 			
@@ -1212,6 +1209,7 @@ jQuery(document).ready(function($){
 		<td class="itemPriceColumn"><input type="text" class="priceInput small-text" maxlength="3"  /></td>
 		
 		<td class="quantityColumn"><input type="text" class="quantity small-text" value="1" maxlength="3"  /></td>
+		<td class="taxColumn"><input type="checkbox" class="addTaxCheckbox"></td>
 		
 		<td class="rowTotalColumn"></td>
 			
@@ -1225,6 +1223,8 @@ jQuery(document).ready(function($){
 			<span class="paymentTitle">Hello</span><br />
 			<span class="paymentNote description"></span>
 		</td>
+		<td></td>
+		
 		<td style="text-align:right" class="paymentTotal"><td>
 		<td></td>
 		<td></td>

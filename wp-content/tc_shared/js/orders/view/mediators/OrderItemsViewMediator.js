@@ -254,6 +254,27 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 		},
 		
+		populateProductRow : function (row){
+			var model = row.data("model");
+			var productModel = row.data("productModel");
+
+			row.find('.itemName').text( productModel.label );
+			row.find('.itemPriceColumn').text( this.priceToFixed(model.price) );
+			row.find('.itemDescTextInput').val( model.description );
+			row.find('.quantity').val( model.quantity );
+			var t = this;
+			
+			if (model.variations.length > 0){
+				jQuery.each(model.variations, function(key, variation) {
+					t.setDropdownForVariation(row, variation);
+				});
+			}
+			
+			if (model.taxable){
+				row.find('.addTaxCheckbox').attr("checked", "checked");
+			}
+		},
+		
 		populateServiceRow : function (row){
 			var model = row.data("model");
 			var productModel = row.data("productModel");
@@ -262,6 +283,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 			row.find('.serviceServingsInput').val( model.servings );
 			row.find('.priceInput').val( model.price );
 			row.find('.itemDescTextInput').val( model.description );
+			if (model.taxable){
+				row.find('.addTaxCheckbox').attr("checked", "checked");
+			}
 			
 		},
 		
@@ -273,6 +297,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 
 			row.find('.priceInput').val( model.price );
 			row.find('.quantity').val( model.quantity );
+			
+			if (model.taxable){
+				row.find('.addTaxCheckbox').attr("checked", "checked");
+			}
 			
 		},
 		
@@ -301,39 +329,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		
 		
-		populateProductRow : function (row){
-			var model = row.data("model");
-			
-			
 
-			
-			switch(model.type){
-				case 'tc_products':
-					var productModel = row.data("productModel");
-
-					row.find('.itemName').text( productModel.label );
-					row.find('.itemPriceColumn').text( this.priceToFixed(model.price) );
-					row.find('.itemDescTextInput').val( model.description );
-					row.find('.quantity').val( model.quantity );
-					var t = this;
-					
-					if (model.variations.length > 0){
-						jQuery.each(model.variations, function(key, variation) {
-							t.setDropdownForVariation(row, variation);
-						});
-					}
-				
-					// if (model.id != 0 ){
-					// 	row.find('.callDateTime').text(model.date)
-					// 	row.find('.callNotes').text(model.notes);
-					// 	row.find('.callNotesInput').text(model.notes);
-					// 	row.find('.activityCreatedTimeColumn').text(model.creationDate);
-					// }
-			
-				break;
-			}
-
-		},
 		
 		insertRowIntoTable : function(row){
 			//product rows
@@ -366,7 +362,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 					
 				break;
 			}
-
+			
+			
+			
+			
+			
 
 		},
 		
@@ -643,6 +643,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			rowTotal *= model.quantity;
 			
+			// if (model.taxable){
+			// 	rowTotal * .0875;
+			// }
+			
 			return rowTotal;
 		},
 		
@@ -704,17 +708,20 @@ var OrderItemsViewMediatorClass = JS.Class({
 		},
 		
 		calculateTaxableTotal : function (){
-			var taxableTotal = this.calculateChargeItemsTotal();
+			var taxableTotal = 0;
+			
+			$taxableRows = jQuery('#orderItemsTable').find('tr.chargeRow').has('.addTaxCheckbox:checked');
+			debug.log('total taxable rows : ', $taxableRows.length);
+			
+			$taxableRows.each(function(index, el){
+				taxableTotal += jQuery(el).data('rowTotal');
+			});
+			
+			
+			//var taxableTotal = this.calculateChargeItemsTotal();
+			
 			debug.log("taxableTotal : "+taxableTotal);
-			taxableTotal -= this.calculateDiscountTotal();
-			
-			// TODO:  not sure if we need this anymore
-			
-			// if (this.hasCoupon()){
-			// 	var couponDiscount = this.calculateDiscountTotal();
-			// 	taxableTotal += this.couponDiscount
-			// }
-			
+			//taxableTotal -= this.calculateDiscountTotal();
 			
 			return taxableTotal;
 		},
@@ -724,12 +731,10 @@ var OrderItemsViewMediatorClass = JS.Class({
 		
 		calculateTaxTotal : function (){
 			var taxTotal =  0;
-			
-			if ( this.isTaxEnabled() ){
-				var taxableTotal = this.calculateTaxableTotal();
-				taxTotal = taxableTotal * .0875;
-			}
-			
+		
+			var taxableTotal = this.calculateTaxableTotal();
+			taxTotal = taxableTotal * .0875;
+		
 			return taxTotal;
 		},
 		
@@ -850,6 +855,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			model.quantity = 1;
 			model.description = '';
 			model.cartItemID = "";
+			model.taxable = false;
 			
 			
 			if(selectedObj.type == 'custom'){
@@ -894,6 +900,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			newModel.quantity = parseInt(row.find('.quantity').val());
 			newModel.description = row.find('.itemDescTextInput').val();
+			newModel.taxable = row.find('.addTaxCheckbox').is(':checked');
 			
 			switch(oldModel.type){
 				
@@ -1045,19 +1052,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			}
 		},
 		
-		onTaxEnabledChange : function(){
-			if ( this.isTaxEnabled() ){
-				ordersAjaxService.enableTax(true);
-			}else{
-				ordersAjaxService.enableTax(false);
-			}
-			
-			this.calculateTotal();
-		},
-		
-		isTaxEnabled : function(){
-			return jQuery('#_tc_tax_enabled').is(':checked');
-		},
+
 				
 		isShippingEnabled : function(){
 			return jQuery('#_tc_shipping_enabled_checkbox').is(':checked');
@@ -1066,7 +1061,6 @@ var OrderItemsViewMediatorClass = JS.Class({
 		onShippingEnabledChange : function(){
 			if ( this.isShippingEnabled() ){
 				jQuery('#shippingRow').show();
-				//ordersAjaxService.getShippingCharge();
 				this.getShippingCharge();
 			}else{
 				jQuery('#shippingRow').hide();
