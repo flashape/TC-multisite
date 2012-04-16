@@ -26,7 +26,7 @@ class SaveOrderCommand
 			error_log("IS_NEW_ORDER_POST is not defined");
 		}
 		
-		
+		//error_log(var_export($_POST, 1));
 		global $order_details_metabox;
 		
 		$this->isNewOrder = (defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST );
@@ -118,72 +118,126 @@ class SaveOrderCommand
 				return;
 			}	
 		}
+		
+		error_log("fbClientID : $fbClientID");
 
 		/**********************************************
 		 * Now that we have a client id for Freshbooks,
 		 * create a new invoice for the order.
 		//  **********************************************/
-		$invoice = FreshbooksUtils::getInvoiceFromCart($fbClientID, $this->cart);
-		error_log(var_export($invoice,1));
+		
+		
+		
+		$invoiceItems = FreshbooksUtils::getInvoiceFromCart($fbClientID, $this->cart);
+		error_log(var_export($invoiceItems,1));
+		
+		$isEstimate = isset($_POST['order_status']['is_estimate'])  &&  $_POST['order_status']['is_estimate'] == "on";
+		
+		if($isEstimate){
+			$createEstimateResult = $freshbooksService->createEstimate($invoiceItems);
+			$estimateResponse = $createEstimateResult['response'];
 
-		$createInvoiceResult = $freshbooksService->createInvoice($invoice);
-		$invoiceResponse = $createInvoiceResult['response'];
-
-		if ($createInvoiceResult['success']){
-			error_log("\n\nSuccessfully created new invoice on freshbooks!");								
-			$invoiceID = $invoiceResponse['invoice_id'];
-		}else{
-			error_log("\n\nError adding invoice to fresbooks");
-			error_log(print_r($invoiceResponse, 1));
-			error_log(print_r($createInvoiceResult['error'], 1));
-			return;
-		}
-
-
-		/**********************************************
-		 * If there was a payment submitted with this order,
-		 * save the payment as a post, save it to Freshbooks, 
-		 * and add the payment to the invoice
-		//  **********************************************/
-		if ( isset($this->paymentID) ){
-			// save payment to Freshbooks
-			$payment = FreshbooksUtils::createNewInvoicePaymentFromPost($invoiceID);
-			$createPaymentResult = $freshbooksService->createPaymentForInvoice($payment);
-			$paymentResponse = $createPaymentResult['response'];
-
-			if ($createPaymentResult['success']){
-				error_log("\n\nSuccessfully created new payment on freshbooks!");
-				$invoicePaymentID = $paymentResponse['payment_id'];
-				update_post_meta($this->paymentID, '_tc_fb_payment_id', $invoicePaymentID);
+			if ($createEstimateResult['success']){
+				error_log("\n\nSuccessfully created new estimate on freshbooks!");								
+				$estimateID = $estimateResponse['estimate_id'];
 			}else{
-				error_log("\n\nError adding payment to freshbooks");
-				error_log(print_r($paymentResponse, 1));
-				error_log(print_r($createPaymentResult['error'], 1));
+				error_log("\n\nError adding estimate to fresbooks");
+				error_log(print_r($estimateResponse, 1));
+				error_log(print_r($createEstimateResult['error'], 1));
 				return;
 			}
-		}
+			
+			
+			
+			/**********************************************
+			 * Now that the estimate is ready, email to the client
+			//  **********************************************/
+			$emailInfo = array();
+			$emailInfo['estimate_id'] = $estimateID;
+			$emailInfo['message'] = 'You have a new estimate. Get it here: ::estimate link::';
+			$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Estimate';
 
+			$sendEstimateResult = $freshbooksService->sendEstimateByEmail($emailInfo);
+			$sendEstimateResponse = $sendEstimateResult['response'];
 
-		/**********************************************
-		 * Now that the invoice is ready, email to the client
-		//  **********************************************/
-		$emailInfo = array();
-		$emailInfo['invoice_id'] = $invoiceID;
-		$emailInfo['message'] = 'You have a new invoice. Get it here: ::invoice link::';
-		$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Invoice';
+			if ($sendEstimateResult['success']){
+				error_log("\n\nSuccessfully send email!");
 
-		$sendInvoiceResult = $freshbooksService->sendInvoiceByEmail($emailInfo);
-		$sendInvoiceResponse = $sendInvoiceResult['response'];
-
-		if ($sendInvoiceResult['success']){
-			error_log("\n\nSuccessfully send email!");
-
+			}else{
+				error_log("\n\nError sending email");
+				error_log(print_r($sendEstimateResponse, 1));
+				error_log(print_r($sendEstimateResult['error'], 1));
+				return;
+			}
+			
+			
+			
+			
 		}else{
-			error_log("\n\nError sending email");
-			error_log(print_r($sendInvoiceResponse, 1));
-			error_log(print_r($sendInvoiceResult['error'], 1));
-			return;
+			
+			$createInvoiceResult = $freshbooksService->createInvoice($invoiceItems);
+			$invoiceResponse = $createInvoiceResult['response'];
+
+			if ($createInvoiceResult['success']){
+				error_log("\n\nSuccessfully created new invoice on freshbooks!");								
+				$invoiceID = $invoiceResponse['invoice_id'];
+			}else{
+				error_log("\n\nError adding invoice to fresbooks");
+				error_log(print_r($invoiceResponse, 1));
+				error_log(print_r($createInvoiceResult['error'], 1));
+				return;
+			}
+
+
+			/**********************************************
+			 * If there was a payment submitted with this order,
+			 * save the payment as a post, save it to Freshbooks, 
+			 * and add the payment to the invoice
+			//  **********************************************/
+			if ( isset($this->paymentID) ){
+				// save payment to Freshbooks
+				$payment = FreshbooksUtils::createNewInvoicePaymentFromPost($invoiceID);
+				$createPaymentResult = $freshbooksService->createPaymentForInvoice($payment);
+				$paymentResponse = $createPaymentResult['response'];
+
+				if ($createPaymentResult['success']){
+					error_log("\n\nSuccessfully created new payment on freshbooks!");
+					$invoicePaymentID = $paymentResponse['payment_id'];
+					update_post_meta($this->paymentID, '_tc_fb_payment_id', $invoicePaymentID);
+				}else{
+					error_log("\n\nError adding payment to freshbooks");
+					error_log(print_r($paymentResponse, 1));
+					error_log(print_r($createPaymentResult['error'], 1));
+					return;
+				}
+			}
+
+
+			/**********************************************
+			 * Now that the invoice is ready, email to the client
+			//  **********************************************/
+			$emailInfo = array();
+			$emailInfo['invoice_id'] = $invoiceID;
+			$emailInfo['message'] = 'You have a new invoice. Get it here: ::invoice link::';
+			$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Invoice';
+
+			$sendInvoiceResult = $freshbooksService->sendInvoiceByEmail($emailInfo);
+			$sendInvoiceResponse = $sendInvoiceResult['response'];
+
+			if ($sendInvoiceResult['success']){
+				error_log("\n\nSuccessfully send email!");
+
+			}else{
+				error_log("\n\nError sending email");
+				error_log(print_r($sendInvoiceResponse, 1));
+				error_log(print_r($sendInvoiceResult['error'], 1));
+				return;
+			}
+			
+			
 		}
+		
+
 		
 		
 	}

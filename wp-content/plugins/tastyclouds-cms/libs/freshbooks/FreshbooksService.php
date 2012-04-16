@@ -50,6 +50,25 @@ class FreshbooksService
 		return $result;
 	}
 	
+			
+	
+	public function createEstimate($estimate){
+		$request = new FreshBooksRequest('estimate.create');
+		$request->post(array('estimate' => $estimate));
+		$request->request();
+		
+		if($request->success())
+		{
+			$result = self::createResult('New estimate created successfully',true, array('response'=>$request->getResponse()));
+		}
+		else
+		{
+			$result = self::createResult('Error creating new estimate',false, array('response'=>$request->getResponse(), 'error'=>$request->getError()));			
+		}
+		
+		return $result;
+	}
+	
 	
 	public function createPaymentForInvoice($payment){
 		$request = new FreshBooksRequest('payment.create');
@@ -82,6 +101,25 @@ class FreshbooksService
 		else
 		{
 			$result = self::createResult('Error emailing invoice',false, array('response'=>$request->getResponse(), 'error'=>$request->getError()));			
+		}
+		
+		return $result;
+	}
+		
+	
+	public function sendEstimateByEmail($emailInfo){
+		$request = new FreshBooksRequest('estimate.sendByEmail');
+		//$request->post(array('emailInfo' => $emailInfo));
+		$request->post($emailInfo);
+		$request->request();
+		
+		if($request->success())
+		{
+			$result = self::createResult('Estimate emailed successfully',true, array('response'=>$request->getResponse()));
+		}
+		else
+		{
+			$result = self::createResult('Error emailing estimate',false, array('response'=>$request->getResponse(), 'error'=>$request->getError()));			
 		}
 		
 		return $result;

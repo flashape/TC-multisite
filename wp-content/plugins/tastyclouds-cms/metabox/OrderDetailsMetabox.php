@@ -315,11 +315,15 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 		width: 20%;	
 	}
 	
-	#tc-order-types-div {
+	.yellow-callout{
 		background-color:#FFFFE0;
 		border:1px solid #E6DB55;
 		padding:5px;
 		margin-bottom:5px;
+	}
+	
+	#tc-order-types-div {
+
 	}	
 	#submitErrorBox {
 		padding: 10px;
@@ -422,7 +426,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 	  <ul></ul> 
 	</div>
 	
-	<div id="tc-order-types-div">
+	<div id="tc-order-types-div" class="yellow-callout">
 
 		<?php echo $dateDiv ?>
 		<p>
@@ -609,7 +613,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 						</tbody>
 					</table>
 				</div>
-				<div style="clear:both;margin-bottom:20px;"><label><input type="checkbox" id="editCustomerCheckbox" />Edit Customer Info</label><br /></div>
+				<div style="clear:both;margin-bottom:20px;"><label id="editCustomerInfoLabel" style="display:none"><input type="checkbox" id="editCustomerCheckbox" />Edit Customer Info</label><br /></div>
 				
 
 			</div>
@@ -825,6 +829,8 @@ jQuery(document).ready(function($){
 					$('#tc_contact_input').val(selectedObj.label);
 					$('#tc_selected_contact').val(selectedObj.value);
 					customerInfoViewMediator.onContactSelected();
+					$('#editCustomerInfoLabel').show();
+					
 					return false;
 				},		
 		focus: function(event, ui) {

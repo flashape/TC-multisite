@@ -633,7 +633,7 @@ function register_tc_activity_posttype() {
 	//$supports = array('title','editor','custom-fields', 'revisions', 'thumbnail','excerpt','post-formats','page-attributes');
 	//$supports = array('custom-fields', 'excerpt', 'comments', 'post-formats', 'page-attributes');
 	
-	$supports = array('custom-fields');
+	$supports = array('custom-fields', 'comments');
 	
 
 	$post_type_args = array(

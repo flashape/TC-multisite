@@ -46,13 +46,22 @@ class FreshbooksUtils
 			// 			   'variations' =>
 
 			// custom items don't have a product id
-			if( $cartItem->type != 'tc_products' ){
+			if( $cartItem->type != 'tc_products'  && $cartItem->type != 'tc_service' ){
 				$lineItem['name'] = $cartItem->itemName;
 				$lineItem['description'] = $cartItem->description;
 				$lineItem['unit_cost'] = $cartItem->price;
 				$lineItem['quantity'] = 1;
 			
-			}else{
+			}elseif($cartItem->type == 'tc_service'){
+				$serviceModel = ProductProxy::getServiceByID($cartItem->productID);
+				error_log("serviceModel: ");
+				error_log(var_export($serviceModel, 1));
+				$productID = $serviceModel['productID'];
+				//error_log("productID: $productID");
+				$lineItem['name'] = $serviceModel['productName'];
+				$lineItem['unit_cost'] = $cartItem->price;
+				$lineItem['quantity'] = $cartItem->quantity;
+			}elseif($cartItem->type == 'tc_products'){
 				
 				// $productModel['type'] = 'tc_products';
 				// $productModel['productName'] = $productPost->post_title;
@@ -361,7 +370,7 @@ class FreshbooksUtils
 		if (!empty($company)){
 			$companyName = $company;
 		}else{
-			$companyName = $client['first_name'] . ' ' . $client['last_name'];
+			$companyName = $firstName . ' ' . $lastName;
 		}
 		
 		
@@ -380,7 +389,9 @@ class FreshbooksUtils
 		$client['p_state'] = $state_list[$address_state]; 
 		$client['p_country'] = "United States";
 		$client['p_code'] = $address_zip;
-
+		error_log("FB CLIENT OBJECT:");
+		error_log(var_export($client, 1));
+		error_log(var_export($address, 1));
 		return $client;		
 		
 	}
