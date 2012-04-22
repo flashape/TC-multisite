@@ -41,6 +41,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 		onAddToCartResult : function(serviceResult){
 			debug.log('onAddToCartResult, serviceResult success : '+serviceResult.success);
 			debug.log('serviceResult: ', serviceResult);
+			debug.log('cartItemID: ', serviceResult.cartItemID);
 			serviceResult.postData.rawModel.cartItemID = serviceResult.cartItemID;
 			
 			if(serviceResult.success){
@@ -189,6 +190,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			// adding a new row may have changed the model,
 			// wait until that's done before adding to cart.
+			//debugger;
 			ordersAjaxService.addCartItem(newRow.data('model'));
 			
 		},
@@ -347,10 +349,6 @@ var OrderItemsViewMediatorClass = JS.Class({
 					if (productModel.variations.length > 0){
 						this.generateVariationUIContent(newRow);
 					}
-					
-					newRow.find('.removeProductButton').button();
-					newRow.find('.addNextItemButton').button();
-		
 		
 				break;
 				
@@ -362,6 +360,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 					
 				break;
 			}
+			
+			newRow.find('.removeProductButton').button();
+			newRow.find('.addNextItemButton').button();
 			
 			
 			
@@ -479,6 +480,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 				this.calculateTotal();
 				
 				// don't u pdate if we havent added the item to the cart on the server yet
+				debug.log("newModel.cartItemID : ",newModel.cartItemID);
+				debug.log("this.ajaxEnabled : ",this.ajaxEnabled);
 				if(newModel.cartItemID != "" && this.ajaxEnabled){
 					ordersAjaxService.updateCartItem(newModel);
 					this.getShippingCharge();
@@ -800,7 +803,6 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			
 			
-			
 				jQuery('#subtotalField').text('$'+ subTotal.toFixed(2));
 				jQuery('#discountRowTotal').text('$'+ discountTotal.toFixed(2));
 				jQuery('#taxRowTotal').text('$'+ taxTotal.toFixed(2));
@@ -809,6 +811,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 				jQuery('#shippingRowTotal').text('$'+ shippingTotal.toFixed(2));
 				jQuery('#totalField').text('$'+ cartTotal.toFixed(2));
 				jQuery('#balanceDueField').text('$'+ balanceDue.toFixed(2));
+			
+			
+				jQuery('#tc_order_total').val(cartTotal.toFixed(2));
+				jQuery('#tc_balance_due').val(balanceDue.toFixed(2));
+				jQuery('#tc_payments_total').val(paymentTotal.toFixed(2));
 			
 				return cartTotal;
 			}

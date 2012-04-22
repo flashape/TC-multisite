@@ -99,7 +99,7 @@ var OrdersAjaxServiceClass = JS.Class({
 	
 	doCartPost : function (data, resultSignal, methodName ){
 		var service = this;
-		debug.log('doCartPost : action : ', data.action, ' data : ', data);
+		debug.log('DO CART POST : action : ', data.action, ' data : ', data);
 		jQuery.post(ajaxurl, data, 
 			function (result){
 				debug.log(methodName+' result:');

@@ -33,7 +33,7 @@ class ActivityAjax
 			) );
 			
 			self::updateActivityMetaByType($activityID, $model);
-			
+			updatePostModifiedTime($_POST['postID']);
 		}
 		
 		//hardcoded map of model.type values to term ids.

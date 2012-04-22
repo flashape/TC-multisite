@@ -12,8 +12,21 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
     define('TASTY_CMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 }
 
+
+function updatePostModifiedTime($postID){
+	wp_update_post(array('ID'=>$postID));
+}
+
 add_action('plugins_loaded','tc_cms_init_session');
 add_action('plugins_loaded','tc_cms_dequeue_autosave');
+add_action('manage_tc_order_posts_columns','tc_cms_manage_order_posts_columns');
+
+function tc_cms_manage_order_posts_columns($columns){
+	
+	unset($columns['title']);
+    return $columns;
+	
+}
 
 function tc_cms_dequeue_autosave(){
 	wp_dequeue_script('autosave');
@@ -67,6 +80,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_recent_items_toolbar.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/CartProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/SaveOrderCommand.php');

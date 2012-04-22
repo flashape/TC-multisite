@@ -41,7 +41,7 @@ class SaveOrderCommand
 		$this->billingAddress = $this->processBillingAddress();
 		$this->shippingAddress = $this->processShippingAddress($this->billingAddress);
 		
-
+		
 		// save payment info if submitted with order
 		if (!empty($_POST['payment_amount'] ) ){
 			$this->paymentID = $this->processPayment();
@@ -54,6 +54,10 @@ class SaveOrderCommand
 		if(isset($_POST['_tc_event_date'])){
 			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );					
 		}
+		
+		update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
+		update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
+		update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
 
 
 		if ($this->isNewOrder || $this->orderWasReloaded){

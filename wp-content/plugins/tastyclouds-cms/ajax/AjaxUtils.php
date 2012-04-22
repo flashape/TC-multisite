@@ -8,6 +8,10 @@ class AjaxUtils
 	}
 	
 	
+
+
+		
+	
 	public static function jsonDecodePostKey($key){
 		return json_decode(stripslashes($_POST[$key]));
 	}

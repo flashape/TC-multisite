@@ -15,6 +15,17 @@ require_once(TEMPLATEPATH . "/theme-metaboxes.php");
 // Load Theme Javascript
 require_once(TEMPLATEPATH . "/theme-js.php");
 
+
+
+// gets recently new or updated posts
+function get_recently_modified_post_ids($posttype = 'post'){
+	global $wpdb;
+	$today = current_time('mysql', 1);
+	$howMany = 5;
+	//$recentposts = $wpdb->get_results("SELECT ID, post_title FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = '$posttype' AND post_modified_gmt < '$today' ORDER BY post_modified_gmt DESC LIMIT $howMany");
+	return $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = '$posttype' AND post_modified_gmt < '$today' ORDER BY post_modified_gmt DESC LIMIT $howMany");
+}
+
 // Register widgetized areas
 function theme_widgets_init() {
 	register_sidebar(array (

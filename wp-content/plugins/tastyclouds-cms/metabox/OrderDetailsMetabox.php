@@ -9,6 +9,8 @@ if ($pagenow == 'post-new.php'){
 	$cartID = CartAjax::create();
 	error_log("cartID : $cartID");
 	$contactID = '';
+	$savedBillingAddressID = '';
+	$savedShippingAddressID = '';
 }else{
 	$orderID = $post->ID;
 	$cartID = get_post_meta( $post->ID, '_cartID', true);
@@ -20,7 +22,6 @@ if ($pagenow == 'post-new.php'){
 	
 	error_log("saved cartID : $cartID");
 	error_log(var_export($cart, 1));
-	
 	
 	// $lineItem['name'] = $cartItem->itemName;
 	// $lineItem['description'] = $cartItem->description;
@@ -449,6 +450,9 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 		<input type="hidden" name="tc_selected_shipping_addr" id="tc_selected_shipping_addr" value="" />	
 		<input type="hidden" name="tc_saved_billing_addr" id="tc_saved_billing_addr" value="<?php echo $savedBillingAddressID?>" />
 		<input type="hidden" name="tc_saved_shipping_addr" id="tc_saved_shipping_addr" value="<?php echo $savedShippingAddressID?>" />
+		<input type="hidden" name="tc_order_total" id="tc_order_total" value="" />
+		<input type="hidden" name="tc_payments_total" id="tc_payments_total" value="" />
+		<input type="hidden" name="tc_balance_due" id="tc_balance_due" value="" />
 		<ul id="orderDetailsTabsList">
 			<li><a href="#orderItemsTab">Order Items</a></li>
 			<li><a href="#contactInfoTab">Contact Information</a></li>
@@ -473,8 +477,9 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 				
 
 				<div style="margin:10px;">
-					Select Product/Service : <input type="text" id="tc_product_input"  />
-					<a class="button-secondary" href="#" id="customItemButton" title="Add Custom Item">Add Custom Item</a>
+					Select Product/Service : <input type="text" id="tc_product_input"  /> - OR -
+					<button id="customItemButton">Add Custom Item</button>
+					<!-- <a class="button-secondary" href="#" id="customItemButton" title="Add Custom Item"></a> -->
 				</div>
 			
 				<table id="orderItemsTable" class="widefat">
@@ -867,6 +872,7 @@ jQuery(document).ready(function($){
 		orderItemsViewMediator.removeCoupon();
 	    return false;
 	});	
+	$('#customItemButton').button();
 	$('#customItemButton').on('click', function() {
 		orderItemsViewMediator.addSelectedItemRow({type:'custom'});
 	    return false;
