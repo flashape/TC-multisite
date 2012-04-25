@@ -7,9 +7,19 @@ Version: 0.1
 Author: Rich Rodecker
 Author URI: http://tastyclouds.com/
 */
+date_default_timezone_set('America/Los_Angeles');
 
 if (!defined('TASTY_CMS_PLUGIN_DIR')) {
     define('TASTY_CMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
+}
+
+// gets recently new or updated posts
+function get_recently_modified_post_ids($posttype = 'post'){
+	global $wpdb;
+	$today = current_time('mysql', 1);
+	$howMany = 5;
+	//$recentposts = $wpdb->get_results("SELECT ID, post_title FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = '$posttype' AND post_modified_gmt < '$today' ORDER BY post_modified_gmt DESC LIMIT $howMany");
+	return $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = '$posttype' AND post_modified_gmt < '$today' ORDER BY post_modified_gmt DESC LIMIT $howMany");
 }
 
 
@@ -20,6 +30,29 @@ function updatePostModifiedTime($postID){
 add_action('plugins_loaded','tc_cms_init_session');
 add_action('plugins_loaded','tc_cms_dequeue_autosave');
 add_action('manage_tc_order_posts_columns','tc_cms_manage_order_posts_columns');
+
+
+
+function get_activities_for_user($userID){
+	// Find connected posts
+	// $connectedActivities = get_posts( array(
+	//   'connected_type' => 'activity_to_user',
+	//   'connected_items' => $userID,
+	//   'nopaging' => true,
+	//   'suppress_filters' => false
+	// ) );
+	
+	$connectedActivities = new WP_Query( array(
+	  'connected_type' => 'activity_to_user',
+	  'connected_items' => $userID,
+	  'nopaging' => true
+	) );
+	
+	return $connectedActivities;
+	
+}
+
+
 
 function tc_cms_manage_order_posts_columns($columns){
 	
@@ -81,9 +114,11 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_shipping_options.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_recent_items_toolbar.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_dashboard_widgets.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/CartProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/SaveOrderCommand.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ActivityProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ContactProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/OrderProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/PaymentProxy.php');

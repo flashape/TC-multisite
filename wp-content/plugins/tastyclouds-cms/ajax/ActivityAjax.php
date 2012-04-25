@@ -21,6 +21,8 @@ class ActivityAjax
 			$postType = $_POST['post_type'] == 'tc_project' ? 'project' : 'contact';
 			$p2pConnectionType = "activity_to_{$postType}";
 			
+			//update_post_meta($activityID, '_tc_p2p_connection_type', $p2pConnectionType);
+			update_post_meta($activityID, '_tc_parent_post_id', $_POST['postID']);
 			
 			
 			
@@ -49,6 +51,8 @@ class ActivityAjax
 		
 		
 		wp_set_object_terms( $activityID, $activityTypeIds[$model->type], 'tc_activity_type' );
+		
+		self::linkActivityToUser($activityID, $model);
 		
 		self::checkNotifications($model);
 		
@@ -126,6 +130,50 @@ class ActivityAjax
 			break;
 			
 		}
+	}
+	
+	private function linkActivityToUser($activityID, $model){
+		
+		$doLink = false;
+		
+		switch ($model->type){
+			case "call":
+				//
+			break;
+			
+			case "revenue":
+				$doLink = true;
+			break;
+			
+			case "followup":
+				$doLink = true;
+			break;
+			
+			case "tasklist":
+				//
+			break;
+			
+			case "task":
+				$doLink = true;
+			break;
+			
+			case "scheduledemail":
+				//
+			break;
+			
+			case "note":
+				//
+			break;
+		}
+		
+		if ($doLink){
+			$userID = $model->assignee;
+			
+			p2p_type( 'activity_to_user' )->connect( $activityID, $userID, array(
+				'activity_type' => $model->type,
+			) );
+		}
+		
 	}
 	
 	private function checkNotifications($model){

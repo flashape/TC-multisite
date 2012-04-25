@@ -453,6 +453,7 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 		<input type="hidden" name="tc_order_total" id="tc_order_total" value="" />
 		<input type="hidden" name="tc_payments_total" id="tc_payments_total" value="" />
 		<input type="hidden" name="tc_balance_due" id="tc_balance_due" value="" />
+		
 		<ul id="orderDetailsTabsList">
 			<li><a href="#orderItemsTab">Order Items</a></li>
 			<li><a href="#contactInfoTab">Contact Information</a></li>
@@ -1070,8 +1071,16 @@ jQuery(document).ready(function($){
 		}
 
 	});
+	var nowDate = new Date();
+	$datepicker = jQuery('#_tc_event_date');
+	$datepicker.attr("autocomplete", "off");
 	
-	jQuery('.tc_datepicker').datepicker();
+	if($datepicker.val() == ""){
+		$datepicker.datepicker({ defaultDate:nowDate });
+		$datepicker.datepicker('setDate', nowDate);
+	}else{
+		$datepicker.datepicker();
+	}
 	
 	
 	$( "#customer-info-changed-dialog" ).dialog({

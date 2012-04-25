@@ -111,5 +111,19 @@ function register_p2p_connections() {
 		) 
 	);
 	
+	p2p_register_connection_type( array(
+	    'name' => 'activity_to_user',
+	    'from' => 'tc_activity',
+	    'to' => 'user',
+		'admin_box' => false
+	) );
+		
+	p2p_register_connection_type( array(
+	    'name' => 'order_to_user',
+	    'from' => 'tc_order',
+	    'to' => 'user',
+		'admin_box' => false
+	) );
+	
 	
 }

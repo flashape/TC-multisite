@@ -32,6 +32,10 @@
 	Weight:
 	<?php $mb->the_field('weight'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> pounds<br />
+		
+	Count:
+	<?php $mb->the_field('count'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> items per package<br />
 	
 	
 	<p>

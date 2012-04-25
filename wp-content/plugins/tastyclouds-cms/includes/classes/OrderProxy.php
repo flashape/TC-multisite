@@ -80,6 +80,57 @@ class OrderProxy
 		
 	}
 	
+	
+	public static function getCartForOrder($orderID){
+		
+		$serializedCart = get_post_meta( $orderID, '_tc_cart', true);
+		$cart = unserialize(base64_decode($serializedCart));
+		return $cart;
+		
+		
+	}
+	
+	
+	public static function getOrdersForToday(){
+		$todayDate = date('Y-m-d', strtotime('now'));
+		error_log("todays date : $todayDate ");
+		// $args = array(
+		// 	'post_type' => 'product',
+		// 	'meta_query' => array(
+		// 		array(
+		// 			'key' => '_tc_event_date_formated',
+		// 			'value' => $todayDate,
+		// 			'type' => 'DATE',
+		// 			
+		// 			'compare' => '='
+		// 		)
+		// 	)
+		//  );
+		// $query = new WP_Query( $args );
+		$orderPosts = get_posts(array('post_type' => 'tc_order', 'numberposts'=>-1, 'meta_key'=>'_tc_event_date_formatted', 'meta_value'=>$todayDate));
+		//error_log(var_export($orderPosts, 1));
+		return $orderPosts;
+		
+		
+	}
+	
+	
+	
+	public static function getOrdersForUser($userID){
+		// Find connected posts
+		// $connectedActivities = get_posts( array(
+		//   'connected_type' => 'activity_to_user',
+		//   'connected_items' => $userID,
+		//   'nopaging' => true,
+		//   'suppress_filters' => false
+		// ) );
+		$orderPosts = get_posts(array('post_type' => 'tc_order', 'numberposts'=>-1, 'meta_key'=>'_tc_order_status_assignee', 'meta_value'=>$userID));
+
+		//error_log(var_export($orderPosts, 1));
+		return $orderPosts;
+
+	}
+	
 	public static function getOrderSummary($cart){
 		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksUtils.php');
 			$invoice = array();

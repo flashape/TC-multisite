@@ -52,9 +52,12 @@ class SaveOrderCommand
 		OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
 
 		if(isset($_POST['_tc_event_date'])){
-			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );					
+			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
+			// store the formatted date to make it easier to search for today's orders later
+			$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
+			error_log("_tc_event_date_formated : $formattedDate"  );	
+			update_post_meta( $this->orderID, '_tc_event_date_formatted', $formattedDate );					
 		}
-		
 		update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
 		update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
 		update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
@@ -370,6 +373,13 @@ class SaveOrderCommand
 	
 	private function deleteExistingContactConnectionToOrder(){
 		$p2pConnections = p2p_get_connections( 'contact_to_order', array('to'=>$this->orderID, 'fields'=>'p2p_id') );
+		$p2pConnectionID = $p2pConnections[0];
+		p2p_delete_connection($p2pConnectionID);
+		
+	}
+		
+	private function deleteExistingUserConnectionToOrder($userID){
+		$p2pConnections = p2p_get_connections( 'order_to_user', array('to'=>$userID, 'fields'=>'p2p_id') );
 		$p2pConnectionID = $p2pConnections[0];
 		p2p_delete_connection($p2pConnectionID);
 		
