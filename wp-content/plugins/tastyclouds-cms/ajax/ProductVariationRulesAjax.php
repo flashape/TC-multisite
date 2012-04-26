@@ -21,7 +21,8 @@ class ProductVariationRulesAjax
 			'variationLabel' => $variationLabel
 		));
 		
-		$model = array('title'=>$variationLabel, 'label'=>$variationLabel, 'id'=>$variationID, 'p2p_id'=>$p2p_id);
+		
+		$model = array('title'=>$variationLabel, 'label'=>$variationLabel, 'id'=>$variationID, 'p2p_id'=>$p2p_id, 'itemCount'=>'');
 		
 		
 		p2p_update_meta($p2p_id, 'variationToProduct_p2p_id', $p2p_id);
@@ -49,6 +50,23 @@ class ProductVariationRulesAjax
 		//self::checkNotifications($model);
 		
 		$result = self::createResult('Variation label updated successfully', true, array('variationLabel'=>$variationLabel, 'model'=>$model) );
+		self::returnJson($result);
+	}
+			
+	function updateVariationItemCount(){
+		$model = self::jsonDecodePostKey('model');
+		// $productID = $_POST['productID'];
+		// $variationID = $_POST['variationID'];
+		$itemCount = $_POST['variationItemCount'];				
+		
+		$p2p_id = $model->p2p_id;
+		
+		p2p_update_meta($p2p_id, 'itemCount', $itemCount);
+		
+		$model->itemCount = $itemCount;
+		
+		
+		$result = self::createResult('Variation item count updated successfully', true, array('variationItemCount'=>$itemCount, 'model'=>$model) );
 		self::returnJson($result);
 	}
 		
@@ -183,7 +201,8 @@ class ProductVariationRulesAjax
 			$variationPostID = $variationPost->ID;
 			$p2p_id = $p2pConn->p2p_id;
 			$variationLabel = p2p_get_meta($p2pConn->p2p_id, 'variationLabel', true);
-			$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id);
+			$variationItemCount = p2p_get_meta($p2pConn->p2p_id, 'itemCount', true);
+			$variationPosts[] = array('title'=>$title, 'label'=>$variationLabel, 'id'=>$variationPostID, 'p2p_id'=>$p2p_id, 'itemCount'=>$variationItemCount);
 				
 		}
 		

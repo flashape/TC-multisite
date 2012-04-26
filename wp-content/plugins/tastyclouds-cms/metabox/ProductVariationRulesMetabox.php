@@ -167,6 +167,20 @@ function onProductVariationRulesMetaboxFooterAction() {
 		});
 		
 		
+		$('#variantRulesContainer').on('focusout', 'input.variationCountInput', function(event){
+			checkVariationItemCountUpdated($(this));
+			return false;
+		});
+		
+		function checkVariationItemCountUpdated($itemCountInput){
+			var $container = $itemCountInput.data('container');
+			var model = $container.data('model');
+			var newValue = $itemCountInput.val();
+			if ( model.itemCount != newValue){
+				saveVariationRuleItemCount($container, newValue)
+			}
+		}
+		
 		
 		function addVariation(){
 
@@ -318,11 +332,17 @@ function onProductVariationRulesMetaboxFooterAction() {
 				icons: {
                 	primary: "ui-icon-minusthick"
 				}
-            });			
+            });	
+
+		
 			$removeVariationButton.on('click', function(){
 				removeVariation($(this).data('container'));
 				return false;
 			});
+			
+			
+			$itemCountInput = container.find('.variationCountInput').data('container', container);
+			
 			
 			jQuery('#variantRulesContainer').append(container);
 			container.data("model", model);
@@ -379,6 +399,34 @@ function onProductVariationRulesMetaboxFooterAction() {
 			
 		}
 						
+		function saveVariationRuleItemCount(container, newValue){
+			var model = container.data('model');
+				
+			var data = {};
+			data.action = 'tc_update_variation_item_count';
+
+			data.productID = jQuery('#post_ID').val();
+			data.variationItemCount = newValue;
+			data.model = JSON.stringify(model);
+			
+			debug.log('saveVariationRuleItemCount : ', data);
+			jQuery.post(ajaxurl, data, 
+				function (result){
+					debug.log('saveVariationRuleItemCount result:'+result.message);
+					debug.log(result);
+					container.data('model', result.model);
+					//cancelEditVariationRuleLabel(container);
+					populateVariationRuleContainerHeader(container)
+					// populateVariationItem(row);
+					// setRowStateToDefault(row);
+				},
+				'json'
+				
+				
+			);
+			
+		}
+						
 		function cancelEditVariationRuleLabel(container){
 			container.find('.variationLabelValue').show();
 			container.find('.editVariationLabelDiv').hide();
@@ -391,6 +439,7 @@ function onProductVariationRulesMetaboxFooterAction() {
 			debug.log("populateVariationRuleContainerHeader, model : ", model);
 			container.find('.variationTitle').text( model.title );
 			container.find('.variationLabelValue').text(model.label);
+			container.find('.variationCountInput').val(model.itemCount);
 		}
 		
 		
@@ -808,7 +857,12 @@ function onProductVariationRulesMetaboxFooterAction() {
 			<button class="saveVariationLabelButton">Save</button>
 			<button class="cancelEditVariationLabelButton">Cancel</button>
 		</div>
+		
 		<button class="editVariationLabelButton">Edit label</button>
+		
+		<span style="padding-left:10px;">Count: <input type="text" class="variationCountInput small-text" /></span>
+		
+		
 		<button class="removeVariationFromProductButton alignright">Remove Variation</button>
 		<button class="addVariationRuleButton alignright">Create Variation Rule</button>
 	</span>

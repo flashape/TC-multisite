@@ -24,7 +24,7 @@ function register_p2p_connections() {
 		'to' => 'tc_products',
 		'reciprocal' => true,
 		'prevent_duplicates' => false,
-		'cardinality'=>'many-to-one',
+		'cardinality'=>'many-to-many',
 		'admin_box' => false
 		) 
 	);

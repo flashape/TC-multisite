@@ -7,6 +7,7 @@ add_action( 'wp_ajax_tc_get_variation_items', array('VariationItemAjax', 'getIte
 add_action( 'wp_ajax_tc_add_variation_to_product', array('ProductVariationRulesAjax', 'addVariationToProduct') );
 add_action( 'wp_ajax_tc_remove_variation_from_product', array('ProductVariationRulesAjax', 'removeVariationFromProduct') );
 add_action( 'wp_ajax_tc_update_variation_label', array('ProductVariationRulesAjax', 'updateVariationLabel') );
+add_action( 'wp_ajax_tc_update_variation_item_count', array('ProductVariationRulesAjax', 'updateVariationItemCount') );
 add_action( 'wp_ajax_tc_get_variations_for_product', array('ProductVariationRulesAjax', 'getVariationsForProduct') );
 add_action( 'wp_ajax_tc_get_rules_for_variation', array('ProductVariationRulesAjax', 'getRulesForVariation') );
 
