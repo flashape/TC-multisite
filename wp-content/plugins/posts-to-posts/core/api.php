@@ -304,52 +304,48 @@ function p2p_delete_meta( $p2p_id, $key, $value = '' ) {
 }
 
 /**
- * List some posts.
+ * List some items.
  *
- * @param object|array A WP_Query instance, or a list of post objects
+ * @param object|array A P2P_List instance, a WP_Query instance, or a list of post objects
  * @param array $args (optional)
  */
 function p2p_list_posts( $posts, $args = array() ) {
-	if ( is_object( $posts ) )
-		$posts = $posts->posts;
-
-	$args = wp_parse_args( $args, array(
-		'before_list' => '<ul>', 'after_list' => '</ul>',
-		'before_item' => '<li>', 'after_item' => '</li>',
-		'separator' => false,
-		'template' => false
-	) );
-
-	extract( $args, EXTR_SKIP );
-
-	if ( empty( $posts ) )
-		return;
-
-	echo $before_list;
-
-	$i = 0;
-
-	foreach ( $posts as $post ) {
-		$GLOBALS['post'] = $post;
-
-		setup_postdata( $post );
-
-		if ( !$separator ) echo $before_item;
-
-		if ( $template )
-			locate_template( $template, true, false );
-		else
-			if ( 0 < $i && $separator ) echo $separator;
-
-			echo html( 'a', array( 'href' => get_permalink() ), get_the_title() );
-
-		if ( !$separator ) echo $after_item;
-
-		$i++;
+	if ( is_a( $posts, 'P2P_List' ) ) {
+		$list = $posts;
+	} else {
+		$list = new P2P_List_Post( $posts );
 	}
 
-	echo $after_list;
+	return $list->render( $args );
+}
 
-	wp_reset_postdata();
+/**
+ * Given a list of objects and another list of connected items,
+ * distribute each connected item to it's respective counterpart.
+ *
+ * @param array List of objects
+ * @param array List of connected objects
+ * @param string Name of connected array property
+ */
+function p2p_distribute_connected( $items, $connected, $prop_name ) {
+	$indexed_list = array();
+
+	foreach ( $items as $item ) {
+		$item->$prop_name = array();
+		$indexed_list[ $item->ID ] = $item;
+	}
+
+	foreach ( $connected as $inner_item ) {
+		if ( $inner_item->ID == $inner_item->p2p_from ) {
+			$outer_item_id = $inner_item->p2p_to;
+		} elseif ( $inner_item->ID == $inner_item->p2p_to ) {
+			$outer_item_id = $inner_item->p2p_from;
+		} else {
+			trigger_error( "Corrupted data for item $inner_item->ID", E_USER_WARNING );
+			continue;
+		}
+
+		array_push( $indexed_list[ $outer_item_id ]->$prop_name, $inner_item );
+	}
 }
 

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</string>
+	<string>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -179,36 +179,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/includes/init_ajax.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>84</integer>
-				<key>line</key>
-				<integer>31</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>72</integer>
-				<key>line</key>
-				<integer>31</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>93</integer>
-				<key>line</key>
-				<integer>31</integer>
-			</dict>
-		</dict>
 		<key>wp-content/plugins/tastyclouds-cms/includes/init_dashboard_widgets.php</key>
 		<dict>
 			<key>caret</key>
@@ -253,6 +223,20 @@
 			<key>firstVisibleLine</key>
 			<integer>44</integer>
 		</dict>
+		<key>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>138</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>192</integer>
+		</dict>
 		<key>wp-content/plugins/tastyclouds-cms/includes/init_recent_items_toolbar.php</key>
 		<dict>
 			<key>caret</key>
@@ -267,63 +251,77 @@
 			<key>firstVisibleLine</key>
 			<integer>7</integer>
 		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/metabox/OrderDetailsMetabox.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>31</integer>
-				<key>line</key>
-				<integer>9</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/metabox/ProductDetailsMetabox.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>1</integer>
-				<key>line</key>
-				<integer>25</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</key>
+		<key>wp-content/plugins/tastyclouds-cms/includes/init_taxonomies.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>107</integer>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>43</integer>
+				<key>line</key>
+				<integer>33</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>862</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>840</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>862</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>863</integer>
 			</dict>
+		</dict>
+		<key>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>2</integer>
+				<key>line</key>
+				<integer>108</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>68</integer>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-crm/tastyclouds-crm.php</key>
 		<dict>
@@ -427,6 +425,106 @@
 				<integer>654</integer>
 			</dict>
 		</dict>
+		<key>wp-content/themes/index.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/featured-pages.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>81</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>66</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>81</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>82</integer>
+			</dict>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/js/flexslider.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>35</integer>
+				<key>line</key>
+				<integer>24</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/theme-js.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>47</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>20</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/theme-metaboxes.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>26</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/theme-widgets.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>wp-includes/js/jquery/jquery.form.dev.js</key>
 		<dict>
 			<key>caret</key>
@@ -444,15 +542,17 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
+		<string>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</string>
 		<string>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/init_recent_items_toolbar.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/init_dashboard_widgets.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/metabox/ProductDetailsMetabox.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/init_metaboxes.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/classes/OrderProxy.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/classes/ProductProxy.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/metabox/OrderDetailsMetabox.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/classes/SaveOrderCommand.php</string>
+		<string>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</string>
+		<string>wp-content/plugins/tastyclouds-cms/includes/init_taxonomies.php</string>
+		<string>wp-content/themes/wp-clearvideo/js/flexslider.js</string>
+		<string>wp-content/themes/wp-clearvideo/featured-pages.php</string>
+		<string>wp-content/themes/index.php</string>
+		<string>wp-content/themes/wp-clearvideo/theme-widgets.php</string>
+		<string>wp-content/themes/wp-clearvideo/theme-metaboxes.php</string>
+		<string>wp-content/themes/wp-clearvideo/theme-js.php</string>
+		<string>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -484,29 +584,7 @@
 									<true/>
 									<key>subItems</key>
 									<dict>
-										<key>ajax</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
 										<key>includes</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict>
-												<key>classes</key>
-												<dict>
-													<key>isExpanded</key>
-													<true/>
-													<key>subItems</key>
-													<dict/>
-												</dict>
-											</dict>
-										</dict>
-										<key>metabox</key>
 										<dict>
 											<key>isExpanded</key>
 											<true/>
@@ -538,6 +616,6 @@
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{0, 99}, {1920, 959}}</string>
+	<string>{{12, 91}, {1920, 967}}</string>
 </dict>
 </plist>

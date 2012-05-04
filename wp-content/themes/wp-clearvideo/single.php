@@ -2,6 +2,8 @@
 
 	<?php
 	global $wp_query;
+
+	
 	$postid = $wp_query->post->ID;
 	if ( get_post_meta( $postid, 'post_featpages', true ) == "Yes" ) { ?>
 		<?php include (TEMPLATEPATH . '/featured-pages.php'); ?>

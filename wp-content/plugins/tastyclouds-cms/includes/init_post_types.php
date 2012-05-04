@@ -138,14 +138,18 @@ function register_tc_products_posttype() {
 		'public' 			=> true,
 		'show_ui' 			=> true,
 		'publicly_queryable'=> true,
-		'query_var'			=> true,
+		'query_var'			=> 'tc_products',
 		'capability_type' 	=> 'post',
-		'has_archive' 		=> false,
+		'has_archive' 		=> true,
 		'hierarchical' 		=> true,
-		'rewrite' 			=> array('slug' => 'products', 'with_front' => false),
+		'rewrite' 			=> array('slug' => 'products/%taxonomy_name%'),
+		// 'rewrite' 			=> array('slug' => 'products', 'with_front' => false),
 		'supports' 			=> $supports,
 		'menu_position' 	=> 0,
+		'taxonomies' => array('post_tag')
 	 );
+	
+	
 	 register_post_type('tc_products',$post_type_args);
 }
 

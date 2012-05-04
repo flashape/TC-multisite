@@ -107,7 +107,41 @@ function tc_init_taxonomies() {
 	tc_init_event_type_taxonomy();
 	tc_init_who_are_they_taxonomy();
 	//tc_init_activity_type_taxonomy();
+	tc_init_product_type_taxonomy();
+}
 
+function tc_init_product_type_taxonomy(){
+	$labels = array( 
+        'name' => _x( 'Product Types', 'product type' ),
+        'singular_name' => _x( 'Product Type', 'product type' ),
+        'search_items' => _x( 'Search Product Types', 'product type' ),
+        'popular_items' => _x( 'Popular Product Types', 'product type' ),
+        'all_items' => _x( 'All Product Types', 'product type' ),
+        'parent_item' => _x( 'Parent Product Type', 'product type' ),
+        'parent_item_colon' => _x( 'Parent Product Type:', 'product type' ),
+        'edit_item' => _x( 'Edit Product Type', 'product type' ),
+        'update_item' => _x( 'Update Product Type', 'product type' ),
+        'add_new_item' => _x( 'Add New Product Type', 'product type' ),
+        'new_item_name' => _x( 'New Product Type Name', 'product type' ),
+        'separate_items_with_commas' => _x( 'Separate product types with commas', 'product type' ),
+        'add_or_remove_items' => _x( 'Add or remove product types', 'product type' ),
+        'choose_from_most_used' => _x( 'Choose from the most used product types', 'product type' ),
+        'menu_name' => _x( 'Product Types', 'product type' ),
+    );
+
+    $args = array( 
+        'labels' => $labels,
+        'public' => true,
+        'show_in_nav_menus' => false,
+        'show_ui' => true,
+        'show_tagcloud' => true,
+        'hierarchical' => true,
+		'rewrite' => array('slug' => 'products', 'hierarchical' => true, 'with_front' => true),
+        // 'rewrite' => true,
+        'query_var' => 'tc_product_type'
+    );
+
+    register_taxonomy( 'tc_product_type', array('tc_products'), $args );
 }
 
 function tc_init_order_type_taxonomy(){
@@ -359,6 +393,98 @@ function tc_init_who_are_they_taxonomy(){
 //     );
 // 
 //     register_taxonomy( 'tc_activity_type', array('tc_activity'), $args );
+// }
+
+
+//http://wordpress.stackexchange.com/questions/39500/how-to-create-a-permalink-structure-with-custom-taxonomies-and-custom-post-types
+// add_filter('rewrite_rules_array', 'tc_rewrite_rules');
+// function tc_rewrite_rules($rules) {
+// 
+//     $newRules  = array();
+//     $newRules['products/(.+)/(.+)/(.+)/?$'] = 'index.php?custom_post_type_name=$matches[3]'; // my custom structure will also have the post name as the 5th uri segment
+//     //$newRules['products/(.+)/(.+)/(.+)/(.+)/?$'] = 'index.php?custom_post_type_name=$matches[4]'; // my custom structure will also have the post name as the 5th uri segment
+//     //$newRules['products/(.+)/?$'] = 'index.php?taxonomy_name=$matches[1]'; 
+// 	$mergedRules = array_merge($newRules, $rules);
+// 		error_log(var_export($mergedRules, 1));
+//     return $mergedRules;
+// }
+
+function tc_filter_post_type_link($link, $post)
+{
+    if ($post->post_type != 'tc_products')
+        return $link;
+
+    if ($cats = get_the_terms($post->ID, 'tc_product_type'))
+    {
+		//error_log(var_export($cats, 1));
+		$taxonomyParentsString = get_taxonomy_parents(array_pop($cats)->term_id, 'tc_product_type', false, '/', true);
+		// trim the trailing slash, otherwise we wind up with a double slash before the post title
+		$taxonomyParentsString = substr($taxonomyParentsString, 0, -1);
+		error_log("taxonomyParentsString : $taxonomyParentsString" );
+		error_log("before link : $link");
+		
+        $link = str_replace('%taxonomy_name%', $taxonomyParentsString, $link); // see custom function defined below
+		error_log("after link : $link");
+    }
+    return $link;
+}
+add_filter('post_type_link', 'tc_filter_post_type_link', 10, 2);
+
+
+// my own function to do what get_category_parents does for other taxonomies
+function get_taxonomy_parents($id, $taxonomy, $link = false, $separator = '/', $nicename = false, $visited = array()) {    
+    $chain = '';   
+    $parent = &get_term($id, $taxonomy);
+
+    if (is_wp_error($parent)) {
+		error_log("is_wp_error : ");
+		error_log(var_export($parent));
+	
+        return $parent;
+    }
+
+    if ($nicename){
+        $name = $parent -> slug;        
+	}else{    
+        $name = $parent -> name;
+	}
+
+    if ($parent -> parent && ($parent -> parent != $parent -> term_id) && !in_array($parent -> parent, $visited)) {    
+        $visited[] = $parent -> parent;    
+        $chain .= get_taxonomy_parents($parent -> parent, $taxonomy, $link, $separator, $nicename, $visited);
+
+    }
+
+    if ($link) {
+        // nothing, can't get this working :(
+    } else {
+        $chain .= $name . $separator;    
+	}
+	
+	error_log("get_taxonomy_parents : $chain");
+    return $chain;    
+}
+
+
+/**
+ * Define default terms for custom taxonomies in WordPress 3.0.1
+ *
+ * @author    Michael Fields     http://wordpress.mfields.org/
+ * @link http://wordpress.mfields.org/2010/set-default-terms-for-your-custom-taxonomies-in-wordpress-3-0/
+ */
+// function tc_set_default_object_terms( $post_id, $post ) {
+//     if ( 'publish' === $post->post_status ) {
+//         $defaults = array(
+//             'tc_products' => array( '' ),
+//             );
+//         $taxonomies = get_object_taxonomies( $post->post_type );
+//         foreach ( (array) $taxonomies as $taxonomy ) {
+//             $terms = wp_get_post_terms( $post_id, $taxonomy );
+//             if ( empty( $terms ) && array_key_exists( $taxonomy, $defaults ) ) {
+//                 wp_set_object_terms( $post_id, $defaults[$taxonomy], $taxonomy );
+//             }
+//         }
+//     }
 // }
 
 

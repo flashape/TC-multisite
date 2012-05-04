@@ -9,16 +9,27 @@ function _p2p_expand_direction( $direction ) {
 }
 
 /** @internal */
-function _p2p_meta_sql_helper( $data ) {
+function _p2p_normalize( $items ) {
+	if ( !is_array( $items ) )
+		$items = array( $items );
+
+	if ( is_object( reset( $items ) ) )
+		$items = wp_list_pluck( $items, 'ID' );
+
+	return $items;
+}
+
+/** @internal */
+function _p2p_meta_sql_helper( $query ) {
 	global $wpdb;
 
-	if ( isset( $data[0] ) ) {
-		$meta_query = $data;
+	if ( isset( $query[0] ) ) {
+		$meta_query = $query;
 	}
 	else {
 		$meta_query = array();
 
-		foreach ( $data as $key => $value ) {
+		foreach ( $query as $key => $value ) {
 			$meta_query[] = compact( 'key', 'value' );
 		}
 	}

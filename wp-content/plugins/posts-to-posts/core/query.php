@@ -100,7 +100,7 @@ class P2P_Query {
 		if ( 'any' == $q['items'] ) {
 			$search = false;
 		} else {
-			$search = implode( ',', array_map( 'absint', (array) $q['items'] ) );
+			$search = implode( ',', array_map( 'absint', _p2p_normalize( $q['items'] ) ) );
 		}
 
 		$where_parts = array();

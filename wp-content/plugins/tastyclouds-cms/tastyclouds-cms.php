@@ -13,6 +13,26 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
     define('TASTY_CMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 }
 
+
+function alter_the_query( $request ) {
+    $dummy_query = new WP_Query();  // the query isn't run if we don't pass any query vars
+    $dummy_query->parse_query( $request );
+
+	if ( !$dummy_query->is_admin && isset($request['tc_product_type']) ){		
+		$lastSegment = basename($request['tc_product_type']);
+		if(get_term_by('slug',$lastSegment,  'tc_product_type') === FALSE){
+		  	$request['post_type'] = 'tc_products';
+		  	$request['tc_products'] = $lastSegment;
+		  	$request['name'] = $lastSegment;
+		}
+	}
+    
+    return $request;
+}
+add_filter( 'request', 'alter_the_query' );
+
+
+
 // gets recently new or updated posts
 function get_recently_modified_post_ids($posttype = 'post'){
 	global $wpdb;
@@ -106,8 +126,9 @@ function on_doing_it_wrong_trigger_error_filter(){
 }
 
 require_once(TASTY_CMS_PLUGIN_DIR .'includes/init_constants.php');
-require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
+//require_once(TASTY_CMS_PLUGIN_INC_DIR .'not_found_dump.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_taxonomies.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
@@ -132,7 +153,24 @@ require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ShippingAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ActivityAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/MailAjax.php');
 
+
+
 add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
+
+add_action( 'admin_init', 'tc_cms_add_categories_to_pages', 10, 1 );
+// add_action( 'query_vars', 'tc_cms_dump_wp_query', 10, 1 );
+// add_action( 'template_redirect', 'tc_cms_dump_wp_query', 10, 1 );
+
+function tc_cms_dump_wp_query(){
+	global $wp_query;
+	error_log(var_export($wp_query, 1));
+}
+
+function tc_cms_add_categories_to_pages(){
+	//flush_rewrite_rules();
+	//register_taxonomy_for_object_type('category', 'page');
+}
+
 add_filter('update_post_metadata', 'tc_update_post_metadata', 10, 4);
 
 

@@ -882,6 +882,7 @@ jQuery(document).ready(function($){
 	$('#orderItemsTable').on('focusout', 'input.quantity', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.itemDescTextInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
+	$('#orderItemsTable').on('focusout', 'input.variationItemCountInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.customItemTitleInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'input.addTaxCheckbox', checkRowForUpdates)

@@ -1,7 +1,5 @@
 <?php
 
-define( 'ADMIN_BOX_PER_PAGE', 5 );
-
 abstract class P2P_Side {
 
 	public $query_vars;
@@ -10,8 +8,8 @@ abstract class P2P_Side {
 		$this->query_vars = $query_vars;
 	}
 
-	function get_base_qv() {
-		return $this->query_vars;
+	function get_base_qv( $q ) {
+		return array_merge( $this->query_vars, $q );
 	}
 }
 
@@ -26,9 +24,19 @@ class P2P_Side_Post extends P2P_Side {
 		$this->post_type = $this->query_vars['post_type'];
 	}
 
-	function get_base_qv() {
-		return array_merge( $this->query_vars, array(
-			'post_type' => $this->post_type,
+	private function get_ptype() {
+		return get_post_type_object( $this->post_type[0] );
+	}
+
+	function get_base_qv( $q ) {
+		if ( isset( $q['post_type'] ) && 'any' != $q['post_type'] ) {
+			$common = array_intersect( $this->post_type, (array) $q['post_type'] );
+
+			if ( !$common )
+				unset( $q['post_type'] );
+		}
+
+		return array_merge( $this->query_vars, $q, array(
 			'suppress_filters' => false,
 			'ignore_sticky_posts' => true,
 		) );
@@ -59,56 +67,28 @@ class P2P_Side_Post extends P2P_Side {
 		return new WP_Query( $args );
 	}
 
-	function abstract_query( $query ) {
-		return (object) array(
-			'items' => $query->posts,
-			'current_page' => max( 1, $query->get('paged') ),
-			'total_pages' => $query->max_num_pages
+	function translate_qv( $qv ) {
+		$map = array(
+			'exclude' => 'post__not_in',
+			'search' => 's',
+			'page' => 'paged',
+			'per_page' => 'posts_per_page'
 		);
-	}
 
-	private static $admin_box_qv = array(
-		'update_post_term_cache' => false,
-		'update_post_meta_cache' => false,
-		'post_status' => 'any',
-	);
-
-	function get_connections_qv() {
-		return array_merge( self::$admin_box_qv, array(
-			'nopaging' => true
-		) );
-	}
-
-	function get_connectable_qv( $item_id, $page, $search, $to_exclude ) {
-		$qv = array_merge( $this->get_base_qv(), self::$admin_box_qv, array(
-			'posts_per_page' => ADMIN_BOX_PER_PAGE,
-			'paged' => $page,
-		) );
-
-		if ( $search ) {
-			$qv['s'] = $search;
-		}
-
-		$qv['post__not_in'] = $to_exclude;
+		foreach ( $map as $old => $new )
+			if ( isset( $qv["p2p:$old"] ) )
+				$qv[$new] = _p2p_pluck( $qv, "p2p:$old" );
 
 		return $qv;
 	}
 
-	/**
-	 * @param mixed A post type, a post id, a post object, an array of post ids or of objects.
-	 */
 	function item_recognize( $arg ) {
-		if ( is_array( $arg ) ) {
-			$arg = reset( $arg );
-		}
-
 		if ( is_object( $arg ) ) {
+			if ( !isset( $arg->post_type ) )
+				return false;
 			$post_type = $arg->post_type;
 		} elseif ( $post_id = (int) $arg ) {
-			$post = get_post( $post_id );
-			if ( !$post )
-				return false;
-			$post_type = $post->post_type;
+			$post_type = get_post_type( $post_id );
 		} else {
 			$post_type = $arg;
 		}
@@ -119,12 +99,12 @@ class P2P_Side_Post extends P2P_Side {
 		return in_array( $post_type, $this->post_type );
 	}
 
-	protected function get_ptype() {
-		return get_post_type_object( $this->post_type[0] );
-	}
+	function item_id( $arg ) {
+		$post = get_post( $arg );
+		if ( $post )
+			return $post->ID;
 
-	function item_exists( $item_id ) {
-		return (bool) get_post( $item_id );
+		return false;
 	}
 
 	function item_title( $item ) {
@@ -139,6 +119,12 @@ class P2P_Side_Attachment extends P2P_Side_Post {
 		P2P_Side::__construct( $query_vars );
 
 		$this->post_type = array( 'attachment' );
+	}
+
+	function get_base_qv( $q ) {
+		return array_merge( parent::get_base_qv( $q ), array(
+			'post_status' => 'inherit'
+		) );
 	}
 }
 
@@ -169,40 +155,34 @@ class P2P_Side_User extends P2P_Side {
 		return new WP_User_Query( $args );
 	}
 
-	function abstract_query( $query ) {
-		return (object) array(
-			'items' => $query->get_results(),
-			'current_page' => isset( $query->query_vars['_p2p_page'] ) ? $query->query_vars['_p2p_page'] : 1,
-			'total_pages' => ceil( $query->get_total() / ADMIN_BOX_PER_PAGE )
-		);
-	}
+	function translate_qv( $qv ) {
+		if ( isset( $qv['p2p:exclude'] ) )
+			$qv['exclude'] = _p2p_pluck( $qv, 'p2p:exclude' );
 
-	function get_connections_qv() {
-		return array();
-	}
+		if ( isset( $qv['p2p:search'] ) && $qv['p2p:search'] )
+			$qv['search'] = '*' . _p2p_pluck( $qv, 'p2p:search' ) . '*';
 
-	function get_connectable_qv( $item_id, $page, $search, $to_exclude ) {
-		$qv = array_merge( $this->get_base_qv(), array(
-			'number' => ADMIN_BOX_PER_PAGE,
-			'offset' => ADMIN_BOX_PER_PAGE * ( $page - 1 ),
-			'_p2p_page' => $page
-		) );
-
-		if ( $search ) {
-			$qv['search'] = '*' . $search . '*';
+		if ( isset( $qv['p2p:page'] ) && $qv['p2p:page'] > 0 ) {
+			$qv['number'] = $qv['p2p:per_page'];
+			$qv['offset'] = $qv['p2p:per_page'] * ( $qv['p2p:page'] - 1 );
 		}
-
-		$qv['exclude'] = $to_exclude;
 
 		return $qv;
 	}
 
 	function item_recognize( $arg ) {
-		return false;
+		return is_a( $arg, 'WP_User' );
 	}
 
-	function item_exists( $item_id ) {
-		return (bool) get_user_by( 'id', $item_id );
+	function item_id( $arg ) {
+		if ( $this->item_recognize( $arg ) )
+			return $arg->ID;
+
+		$user = get_user_by( 'id', $arg );
+		if ( $user )
+			return $user->ID;
+
+		return false;
 	}
 
 	function item_title( $item ) {

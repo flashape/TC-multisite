@@ -269,6 +269,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			if (model.variations.length > 0){
 				jQuery.each(model.variations, function(key, variation) {
 					t.setDropdownForVariation(row, variation);
+					t.setItemCountsForVariation(row, variation);
 				});
 			}
 			
@@ -306,8 +307,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 		},
 		
+		
+
+		
 		setDropdownForVariation : function(row, variation){
-			variantDropDowns = row.find('.variationDropdown');
+			var variantDropDowns = row.find('.variationDropdown');
 			//id="variation_'+variation+'__p2pid_'+variation.p2p_id+
 			var variationID = variation.variationID;
 			var p2pid = variation.p2pid;
@@ -315,6 +319,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			var idString = 'variation_'+variationID+'__p2pid_'+p2pid;
 			
+			debug.log("dropdown id string : "+idString);
 			
 			jQuery.each(variantDropDowns, function(key, selectElem) {
 
@@ -327,6 +332,28 @@ var OrderItemsViewMediatorClass = JS.Class({
 				}
 
 			});
+			
+		},
+				
+		setItemCountsForVariation : function(row, variation){
+			var p2pid = variation.p2pid;
+			var variantItemCountInputs = row.find('.variationCountInput');
+			debug.log('variationCountInputs length : '+variantItemCountInputs.length);
+			idString = 'itemCount_p2pid_'+p2pid;
+			debug.log('idString : '+idString);
+			
+			jQuery.each(variantItemCountInputs, function(key, selectElem) {
+
+				var input = jQuery(selectElem);
+				var inputID = input.attr('id');
+				debug.log('inputID : '+inputID);
+				if (inputID.indexOf(idString) != -1){
+					input.val(variation.itemCount);
+					return false;
+				}
+
+			});
+			
 		},
 		
 		
@@ -386,8 +413,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 				
 				variationsDiv += '<p>'+variation.label;
 				
-				//append p2p_id to the select id because that will always be unique.
-				//salt the id with a timestamp and random number/
+				// append p2p_id to the select id because that will always be unique.
+				// salt the id with a timestamp and random number in case we have the same item in the cart multiple times.
 				var ts = new Date().getTime();
 				var r = Math.floor(Math.random()*1000001);
 				var randomnumber= ts + r;
@@ -400,6 +427,12 @@ var OrderItemsViewMediatorClass = JS.Class({
 				});
 				
 				variationsDiv += '</select>';
+				debug.log('variation : ', variation);
+				variationsDiv += 'Count: <input type="text" id="itemCount_p2pid_'+variation.p2p_id+'__r_'+randomnumber+'" class="variationCountInput small-text" value="'+variation.itemCount+'" /></span>';
+				
+				
+				
+				
 				variationsDiv += '</p>';
 			});
 			

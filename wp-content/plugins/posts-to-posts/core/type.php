@@ -1,6 +1,6 @@
 <?php
 
-class Generic_Connection_Type {
+class P2P_Connection_Type {
 
 	public $indeterminate = false;
 
@@ -21,6 +21,17 @@ class Generic_Connection_Type {
 			$class = 'P2P_Side_' . ucfirst( $this->object[ $direction ] );
 
 			$this->side[ $direction ] = new $class( _p2p_pluck( $args, $direction . '_query_vars' ) );
+		}
+
+		if ( $this->object['from'] == $this->object['to'] ) {
+			if ( 'post' == $this->object['to'] ) {
+				$common = array_intersect( $this->side['from']->post_type, $this->side['to']->post_type );
+
+				if ( !empty( $common ) )
+					$this->indeterminate = true;
+			}
+		} else {
+			$this->self_connections = true;
 		}
 
 		$this->set_cardinality( _p2p_pluck( $args, 'cardinality' ) );
@@ -110,14 +121,17 @@ class Generic_Connection_Type {
 	}
 
 	/**
-	 * Attempt to guess direction based on a post id or post type.
+	 * Attempt to guess direction based on a parameter.
 	 *
-	 * @param int|string $arg A post id or a post type.
+	 * @param mixed A post type, object or object id.
 	 * @param bool Whether to return an instance of P2P_Directed_Connection_Type or just the direction
 	 *
 	 * @return bool|object|string False on failure, P2P_Directed_Connection_Type instance or direction on success.
 	 */
 	public function find_direction( $arg, $instantiate = true ) {
+		if ( is_array( $arg ) )
+			$arg = reset( $arg );
+
 		foreach ( array( 'from', 'to' ) as $direction ) {
 			if ( !$this->side[ $direction ]->item_recognize( $arg ) )
 				continue;
@@ -131,119 +145,28 @@ class Generic_Connection_Type {
 		return false;
 	}
 
-	/**
-	 * Optimized inner query, after the outer query was executed.
-	 *
-	 * Populates each of the outer querie's $post objects with a 'connected' property, containing a list of connected posts
-	 *
-	 * @param object $query WP_Query instance.
-	 * @param string|array $extra_qv Additional query vars for the inner query.
-	 * @param string $prop_name The name of the property used to store the list of connected items on each post object.
-	 */
-	public function each_connected( $query, $extra_qv = array(), $prop_name = 'connected' ) {
-		if ( empty( $query->posts ) || !is_object( $query->posts[0] ) )
-			return;
+	// Used in each_connected()
+	private function find_direction_multiple( $post_types ) {
+		$possible_directions = array();
 
-		$post_type = $query->get( 'post_type' );
-		if ( empty( $post_type ) )
-			$post_type = 'post';
-
-		$directed = $this->find_direction( $post_type );
-		if ( !$directed )
-			return false;
-
-		$posts = array();
-
-		foreach ( $query->posts as $post ) {
-			$post->$prop_name = array();
-			$posts[ $post->ID ] = $post;
-		}
-
-		// ignore pagination
-		foreach ( array( 'showposts', 'posts_per_page', 'posts_per_archive_page' ) as $disabled_qv ) {
-			if ( isset( $extra_qv[ $disabled_qv ] ) ) {
-				trigger_error( "Can't use '$disabled_qv' in an inner query", E_USER_WARNING );
+		foreach ( array( 'from', 'to' ) as $direction ) {
+			if ( 'post' == $this->object[$direction] ) {
+				foreach ( $post_types as $post_type ) {
+					if ( !$this->side[ $direction ]->item_recognize( $post_type ) ) {
+						$possible_directions[] = $direction;
+						break;
+					}
+				}
 			}
 		}
-		$extra_qv['nopaging'] = true;
 
-		$q = $directed->get_connected( array_keys( $posts ), $extra_qv, 'abstract' );
-
-		foreach ( $q->items as $inner_item ) {
-			if ( $inner_item->ID == $inner_item->p2p_from ) {
-				$outer_item_id = $inner_item->p2p_to;
-			} elseif ( $inner_item->ID == $inner_item->p2p_to ) {
-				$outer_item_id = $inner_item->p2p_from;
-			} else {
-				trigger_error( "Corrupted data for item $inner_item->ID", E_USER_WARNING );
-				continue;
-			}
-
-			array_push( $posts[ $outer_item_id ]->$prop_name, $inner_item );
-		}
-	}
-
-	public function get_desc() {
-		foreach ( array( 'from', 'to' ) as $key ) {
-			$$key = $this->side[ $key ]->get_desc();
-		}
-
-		if ( $this->indeterminate )
-			$arrow = '&harr;';
-		else
-			$arrow = '&rarr;';
-
-		$label = "$from $arrow $to";
-
-		$title = $this->title[ 'from' ];
-
-		if ( $title )
-			$label .= " ($title)";
-
-		return $label;
-	}
-}
-
-
-class P2P_Connection_Type extends Generic_Connection_Type {
-
-	public function __construct( $args ) {
-		parent::__construct( $args );
-
-		$common = array_intersect( $this->from, $this->to );
-
-		if ( !empty( $common ) )
-			$this->indeterminate = true;
-	}
-
-	public function __get( $key ) {
-		if ( 'from' == $key || 'to' == $key )
-			return $this->side[ $key ]->post_type;
-	}
-
-	/**
-	 * Get a list of posts connected to other posts connected to a post.
-	 *
-	 * @param int|array $post_id A post id or array of post ids
-	 * @param array $extra_qv Additional query variables to use.
-	 *
-	 * @return bool|object False on failure; A WP_Query instance on success.
-	 */
-	public function get_related( $post_id, $extra_qv = array() ) {
-		$post_id = (array) $post_id;
-
-		$connected = $this->get_connected( $post_id, $extra_qv );
-		if ( !$connected )
+		if ( empty( $possible_directions ) )
 			return false;
 
-		if ( !$connected->have_posts() )
-			return $connected;
+		if ( count( $possible_directions ) > 1 )
+			return 'any';
 
-		$connected_ids = wp_list_pluck( $connected->posts, 'ID' );
-
-		return $this->get_connected( $connected_ids, array(
-			'post__not_in' => $post_id,
-		) );
+		return reset( $possible_directions );
 	}
 
 	/** Alias for get_prev() */
@@ -285,18 +208,22 @@ class P2P_Connection_Type extends Generic_Connection_Type {
 	 * @return bool|object False on failure, post object on success
 	 */
 	public function get_adjacent( $from, $to, $which ) {
+
+		// The direction needs to be based on the second parameter,
+		// so that it's consistent with $this->connect( $from, $to ) etc.
 		$directed = $this->find_direction( $to );
 		if ( !$directed )
 			return false;
 
-		if ( !method_exists( $directed, 'get_orderby_key' ) )
+		$key = $directed->get_orderby_key();
+		if ( !$key )
 			return false;
 
 		$p2p_id = $directed->get_p2p_id( $to, $from );
 		if ( !$p2p_id )
 			return false;
 
-		$order = (int) p2p_get_meta( $p2p_id, $directed->get_orderby_key(), true );
+		$order = (int) p2p_get_meta( $p2p_id, $key, true );
 
 		$adjacent = $directed->get_connected( $to, array(
 			'connected_meta' => array(
@@ -305,12 +232,72 @@ class P2P_Connection_Type extends Generic_Connection_Type {
 					'value' => $order + $which
 				)
 			)
-		) )->posts;
+		), 'abstract' );
 
-		if ( empty( $adjacent ) )
+		return _p2p_first( $adjacent->items );
+	}
+
+	/**
+	 * Optimized inner query, after the outer query was executed.
+	 *
+	 * Populates each of the outer querie's $post objects with a 'connected' property, containing a list of connected posts
+	 *
+	 * @param object|array $items WP_Query instance or list of post objects
+	 * @param string|array $extra_qv Additional query vars for the inner query.
+	 * @param string $prop_name The name of the property used to store the list of connected items on each post object.
+	 */
+	public function each_connected( $items, $extra_qv = array(), $prop_name = 'connected' ) {
+		if ( is_a( $items, 'WP_Query' ) )
+			$items =& $items->posts;
+
+		if ( empty( $items ) || !is_object( $items[0] ) )
+			return;
+
+		$post_types = array_unique( wp_list_pluck( $items, 'post_type' ) );
+
+		if ( count( $post_types ) > 1 ) {
+			$direction = $this->find_direction_multiple( $post_types );
+			$extra_qv['post_type'] = 'any';
+		} else {
+			$direction = $this->find_direction( $post_types[0], false );
+		}
+
+		if ( !$direction )
 			return false;
 
-		return $adjacent[0];
+		$directed = $this->set_direction( $direction );
+
+		// ignore pagination
+		foreach ( array( 'showposts', 'posts_per_page', 'posts_per_archive_page' ) as $disabled_qv ) {
+			if ( isset( $extra_qv[ $disabled_qv ] ) ) {
+				trigger_error( "Can't use '$disabled_qv' in an inner query", E_USER_WARNING );
+			}
+		}
+		$extra_qv['nopaging'] = true;
+
+		$q = $directed->get_connected( $items, $extra_qv, 'abstract' );
+
+		p2p_distribute_connected( $items, $q->items, $prop_name );
+	}
+
+	public function get_desc() {
+		foreach ( array( 'from', 'to' ) as $key ) {
+			$$key = $this->side[ $key ]->get_desc();
+		}
+
+		if ( $this->indeterminate )
+			$arrow = '&harr;';
+		else
+			$arrow = '&rarr;';
+
+		$label = "$from $arrow $to";
+
+		$title = $this->title[ 'from' ];
+
+		if ( $title )
+			$label .= " ($title)";
+
+		return $label;
 	}
 }
 

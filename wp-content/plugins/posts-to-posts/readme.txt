@@ -2,8 +2,8 @@
 Contributors: scribu, ciobi
 Tags: connections, custom post types, relationships, many-to-many, users
 Requires at least: 3.2
-Tested up to: 3.3
-Stable tag: 1.2
+Tested up to: 3.4
+Stable tag: 1.3
 
 Efficient many-to-many connections between posts, pages, custom post types, users.
 
@@ -11,9 +11,10 @@ Efficient many-to-many connections between posts, pages, custom post types, user
 
 This plugin allows you to create many-to-many relationships between posts of any type: post, page, custom etc. A few example use cases:
 
-* post series
 * manually curated lists of related posts
-* 'actor' posts connected to 'movie' posts
+* post series
+* products connected to retailers
+* etc.
 
 Additionally, you can create many-to-many relationships between posts and users. So, you could also implement:
 
@@ -49,6 +50,14 @@ Make sure your host is running PHP 5. The only foolproof way to do this is to ad
 5. Connection Types screen
 
 == Changelog ==
+
+= 1.3 =
+* allow passing entire objects to get_connected(), connect() etc.
+* made get_related() work with posts-to-users connections
+* made each_connected() work with simple array of posts
+* introduced [p2p_connected] and [p2p_related] shortcodes
+* allow 'default' parameter in 'fields' array
+* [more info](http://scribu.net/wordpress/posts-to-posts/p2p-1-3.html)
 
 = 1.2 =
 * added Tools -> Connection Types admin screen

@@ -3,6 +3,8 @@
 				<?php } ?>
 
 <?php 
+global $wp_query;
+//var_export($wp_query);
 if (is_home()) { 
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 	query_posts(array(

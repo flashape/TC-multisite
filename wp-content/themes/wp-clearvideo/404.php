@@ -1,7 +1,10 @@
 <?php get_header(); ?>
-
+<?php
+global $wp_query;
+var_export($wp_query);
+?>
 	<div id="page" class="clearfix">
-
+		
 		<div id="contentleft" class="maincontent">
 
 			<div id="content">
