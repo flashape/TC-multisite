@@ -35,6 +35,17 @@ class CSShortcodes {
 		add_action('wp_ajax_sws_sc_export', array(&$this,'wp_ajax_sws_admin'));
 		add_action('wp_ajax_sws_sc_import', array(&$this,'wp_ajax_sws_admin'));
 		add_action('wp_ajax_sws_sc_moreinfo', array(&$this,'wp_ajax_sws_admin'));
+		add_action('admin_head', array(&$this,'icon32_style'));	
+	}
+	
+	function icon32_style(){
+?>
+<style>
+.icon32-posts-csshortcode{
+	background: url("<?php echo WPCSS_URL.'images/sws32.png'?>") no-repeat scroll 0 1px transparent !important;
+}
+</style>
+<?php	
 	}
 	
 	function wp_ajax_sws_admin(){
@@ -76,7 +87,7 @@ class CSShortcodes {
 	}
 
 	function meta_filter_posts($query){
-		if(is_admin() && @$query->query['post_type']=='csshortcode'){
+		if(is_admin()&&$query->query['post_type']=='csshortcode'){
 			if(isset($_REQUEST['f_sws_shortcode'])&&trim($_REQUEST['f_sws_shortcode'])!=''){
 				$query->set( 'meta_key', 	'sc_shortcode' );
 				$query->set( 'meta_value', 	$_REQUEST['f_sws_shortcode']);			
@@ -94,8 +105,14 @@ class CSShortcodes {
 	}
 	
 	function admin_init(){
-		add_filter( 'manage_edit-csshortcode_columns', array(&$this,'admin_columns')  );
-		add_action('manage_posts_custom_column', array(&$this,'custom_column'),10,2);		
+		global $wp_version;
+		if($wp_version<3.3){
+			add_filter( 'manage_edit-csshortcode_columns', array(&$this,'admin_columns')  );
+			add_action('manage_posts_custom_column', array(&$this,'custom_column'),10,2);					
+		}else{
+			add_filter( 'manage_csshortcode_posts_columns', array(&$this,'admin_columns')  );
+			add_action('manage_csshortcode_posts_custom_column', array(&$this,'custom_column'),10,2);				
+		}
 	}
 
 	function sws_notifications(){
@@ -261,7 +278,8 @@ jQuery(document).ready(function($) {
 			'exclude_from_search' => true,
 			'menu_position' => 100,
 			'show_in_nav_menus' => false,
-			'taxonomies' => array('csscategory')
+			'taxonomies' => array('csscategory'),
+			'menu_icon'=> WPCSS_URL.'images/sws.png'
 		));		  	
 	}
 
@@ -380,7 +398,7 @@ jQuery(document).ready(function($) {
 	<div class="left">
 		<div class="fieldset">
 			<label class="heading"  for="css-php">PHP code:</label><br />
-			<textarea name="sc_php" rows="10" cols="40"><?php echo get_post_meta($post->ID,'sc_php',true)?></textarea>
+			<textarea name="sc_php" rows="10" cols="40"><?php echo htmlspecialchars(get_post_meta($post->ID,'sc_php',true))?></textarea>			
 		</div>	
 	</div>
 	<div class="clearer"></div>

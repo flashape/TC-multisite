@@ -422,10 +422,13 @@ function tc_filter_post_type_link($link, $post)
 		$taxonomyParentsString = substr($taxonomyParentsString, 0, -1);
 		error_log("taxonomyParentsString : $taxonomyParentsString" );
 		error_log("before link : $link");
-		
         $link = str_replace('%taxonomy_name%', $taxonomyParentsString, $link); // see custom function defined below
 		error_log("after link : $link");
-    }
+    }else{
+		error_log("no taxonomies found for : $link");
+		$link = str_replace('%taxonomy_name%/', '', $link); // see custom function defined below
+        
+	}
     return $link;
 }
 add_filter('post_type_link', 'tc_filter_post_type_link', 10, 2);

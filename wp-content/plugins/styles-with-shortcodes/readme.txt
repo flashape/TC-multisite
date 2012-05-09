@@ -3,16 +3,32 @@ Author: Alberto Lau (RightHere LLC)
 Author URL: http://plugins.righthere.com/styles-with-shortcodes/
 Tags: WordPress, Shortcodes, Shortcode API, jQuery UI, jQuery TOOLS, Toggle, Tabs, Accordion, Syntax Highlighter, Custom underlined links, Overlay, Buttons, Columns, Google Maps, Blockquotes, Pullquotes, Tables, Dividers, Colored Boxes, Picture frames, Tooltips, Facebook, Twitter, LinkedIN, Flattr, Twitter follow me, Google +1
 Requires at least: 3.0
-Tested up to: 3.2.1
-Stable tag: 1.7.7 rev13259
+Tested up to: 3.3.1
+Stable tag: 1.7.9 rev23212
 
 
 ======== Changelog =======
+Version 1.7.9 rev23212 - April 10, 2012
+* Update: Updated Thumbnail.php (TimThumb 2.8.10)
+* Bug Fixed: Prevent warnings related to registered scripts
+* Bug Fixed: Tables where not applying the table width correctly
+
+Version 1.7.9 rev20920 - February 23, 2012
+* Update: Updated Thumbnail.php (TimThumb 2.8.9)
+
+Version 1.7.8 rev15258 - January 6, 2012
+* Update: Thumbnail.php updated with TimThumb 2.8.5
+* Bug Fixed: Custom Post Type column not showing in WP 3.3
+* Bug Fixed: Broken Slider
+* Update: Imported bundle with column fixes
+* Update: Moved JS to init instead of plugins_loaded hook
+* Update: Added new icons for menu
+
 Version 1.7.7 rev13259 - December 6, 2011
 * Bug Fixed: When adding panel items, sliders where not rendering with the correct min, max and step values
 * Bug Fixed: Jerky Chrome Nivo Slider animation
 * Bug Fixed: Missing Header breaks Chrome caching
-* Update: Thumbnail.php updated to TimThumb 2.8.3 and removed word thumb and old timthumb files.
+* Update: Thumbnail.php updated to TimThumb 2.8.3 and removed word thumb and old TimThumb files.
 
 Version 1.7.6 rev11833 - November 11, 2011
 * New Feature: Added a checkbox field type for Shortcode creation

@@ -31,8 +31,6 @@ class rh_downloadable_content {
 		foreach($defaults as $property => $default){
 			$this->$property = isset($args[$property])?$args[$property]:$default;
 		}	
-	
-		wp_register_script('rh-dc', 	$this->plugin_url.'js/dc.js', array(), '1.0.0');		
 		
 		add_action('admin_menu',array(&$this,'admin_menu'));
 		
@@ -43,6 +41,7 @@ class rh_downloadable_content {
 	}
 	
 	function init(){
+		wp_register_script('rh-dc', 	$this->plugin_url.'js/dc.js', array(), '1.0.0');
 		wp_register_style('rh-dc', 		$this->plugin_url.'css/dc.css', array(), '1.0.0');
 	}
 	
@@ -65,6 +64,7 @@ class rh_downloadable_content {
 	}
 	
 	function get_bundles(){
+		error_reporting(0);
 		if(count($this->license_keys)==0){
 			$this->send_error( sprintf( __('There is no downloadable content at this time.  You must register %s before you can actually see available downloadable content. For more information on how to register %s, please go the Options menu and the License tab.',$this->tdom),$this->product_name,$this->product_name));
 		}
@@ -87,6 +87,7 @@ class rh_downloadable_content {
 	}
 	
 	function download_bundle(){
+		error_reporting(0);
 		if(count($this->license_keys)==0){
 			$this->send_error( __('Please register the product before downloading content.',$this->tdom) );
 		}

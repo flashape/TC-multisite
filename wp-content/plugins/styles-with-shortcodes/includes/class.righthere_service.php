@@ -13,6 +13,7 @@ class righthere_service {
 	}
 	
 	function rh_service($url){
+		error_reporting(0);
 		if( 'true'==ini_get('allow_url_fopen') || true==ini_get('allow_url_fopen') ){
 			return $this->get_remote_with_fopen($url);
 		}else if(function_exists('curl_init')&&function_exists('curl_setopt')&&function_exists('curl_exec')){

@@ -92,18 +92,20 @@ class custom_shortcode_styling {
 	}
 	
 	function init(){
+		wp_enqueue_script('sws_frontend',WPCSS_URL.'js/sws_frontend.js',array('jquery'),'1.0.0');
 		if(is_admin()):
-			wp_enqueue_style('wpcss-toggle',WPCSS_URL.'css/toggle.css',array(),'1.0.3');
+			if(@$_REQUEST['post_type']!='slider')wp_enqueue_style('wpcss-toggle',WPCSS_URL.'css/toggle.css',array(),'1.0.3');
 			wp_enqueue_style('jquery-colorpicker',WPCSS_URL.'colorpicker/css/colorpicker.css',array(),'1.0.0');
 			wp_register_style( 'sws-insert-tool', WPCSS_URL.'css/insert_tool.css', array(),'1.0.0');
 			wp_register_style( 'sws-options', WPCSS_URL.'css/pop.css', array(),'1.0.0');
+			
+			wp_enqueue_script('wpsws',WPCSS_URL.'js/sws.js',array(),'1.0.2');
+			wp_enqueue_script('jquery-colorpicker',WPCSS_URL.'colorpicker/js/colorpicker.js',array('jquery'),'1.0.0');				
+			wp_register_script( 'sws-insert-tool', WPCSS_URL.'js/insert_tool.js', array(),'1.0.0');			
 		endif;
 	}
 	
-	function plugins_loaded(){		
-		//wp_enqueue_script('jquery');	
-		wp_enqueue_script('sws_frontend',WPCSS_URL.'/js/sws_frontend.js',array('jquery'),'1.0.0');		
-		
+	function plugins_loaded(){			
 		//-- register scripts ----
 		require_once WPCSS_PATH.'includes/bundled_scripts_and_styles.php';	
 		new bundled_scripts_and_styles();//
@@ -118,11 +120,6 @@ class custom_shortcode_styling {
 		new sws_lightbox($this->options);
 		
 		if(is_admin()):
-			wp_enqueue_script('wpsws',WPCSS_URL.'js/sws.js',array(),'1.0.2');
-			
-			wp_enqueue_script('jquery-colorpicker',WPCSS_URL.'colorpicker/js/colorpicker.js',array('jquery'),'1.0.0');				
-			wp_register_script( 'sws-insert-tool', WPCSS_URL.'js/insert_tool.js', array(),'1.0.0');
-			
 			if(!isset($this->options['editor_capability']) || ''==$this->options['editor_capability'] || current_user_can($this->options['editor_capability']) ){				
 				require_once WPCSS_PATH.'includes/class.CSSEditor.php';
 				new CSSEditor($this->editor_parameters);

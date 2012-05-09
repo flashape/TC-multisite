@@ -86,13 +86,6 @@
 		if('undefined'!=typeof(sws_lightbox.closeDuration)){
 			$.lightbox().overlay.options.closeDuration = parseInt(sws_lightbox.closeDuration);
 		}
-//this dont seem to do anything on le js.
-//		if('undefined'!=typeof(sws_lightbox.moveDuration)){
-//			$.extend($.lightbox().options, {'moveDuration':sws_lightbox.moveDuration});
-//		}
-//		if('undefined'!=typeof(sws_lightbox.resizeDuration)){
-//			$.extend($.lightbox().options, {'resizeDuration':sws_lightbox.resizeDuration});
-//		}
 
 		$(this).lightbox(options);
 		return this.each(function() {

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</string>
+	<string>wp-content/plugins/tastyclouds-cms/includes/init_taxonomies.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -228,14 +228,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>138</integer>
+				<integer>109</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>192</integer>
+			<integer>95</integer>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-cms/includes/init_recent_items_toolbar.php</key>
 		<dict>
@@ -256,28 +256,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>409</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>107</integer>
-		</dict>
-		<key>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>43</integer>
-				<key>line</key>
-				<integer>33</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>387</integer>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</key>
 		<dict>
@@ -314,14 +300,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>8</integer>
 				<key>line</key>
-				<integer>108</integer>
+				<integer>225</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>68</integer>
+			<integer>191</integer>
 		</dict>
 		<key>wp-content/plugins/tastyclouds-crm/tastyclouds-crm.php</key>
 		<dict>
@@ -425,12 +411,70 @@
 				<integer>654</integer>
 			</dict>
 		</dict>
-		<key>wp-content/themes/index.php</key>
+		<key>wp-content/themes/wp-clearvideo/featured-pages.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+				<integer>13</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
 				<integer>0</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/featured-wide.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>2</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/featured-yt-vids.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/index1.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>76</integer>
 				<key>line</key>
 				<integer>0</integer>
 			</dict>
@@ -439,35 +483,19 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>wp-content/themes/wp-clearvideo/featured-pages.php</key>
+		<key>wp-content/themes/wp-clearvideo/index2.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>5</integer>
+				<integer>46</integer>
 				<key>line</key>
-				<integer>81</integer>
+				<integer>16</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>66</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>81</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>82</integer>
-			</dict>
+			<integer>0</integer>
 		</dict>
 		<key>wp-content/themes/wp-clearvideo/js/flexslider.js</key>
 		<dict>
@@ -482,6 +510,94 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/postinfo.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/sidebar-narrow.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>30</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/single-tc_products.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+		</dict>
+		<key>wp-content/themes/wp-clearvideo/single.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>15</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>75</integer>
+			</dict>
 		</dict>
 		<key>wp-content/themes/wp-clearvideo/theme-js.php</key>
 		<dict>
@@ -516,14 +632,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>70</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>594</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>594</integer>
 		</dict>
 		<key>wp-includes/js/jquery/jquery.form.dev.js</key>
 		<dict>
@@ -542,17 +658,19 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</string>
 		<string>wp-content/plugins/tastyclouds-cms/tastyclouds-cms.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/includes/not_found_dump.php</string>
 		<string>wp-content/plugins/tastyclouds-cms/includes/init_taxonomies.php</string>
-		<string>wp-content/themes/wp-clearvideo/js/flexslider.js</string>
-		<string>wp-content/themes/wp-clearvideo/featured-pages.php</string>
-		<string>wp-content/themes/index.php</string>
+		<string>wp-content/themes/wp-clearvideo/index1.php</string>
+		<string>wp-content/themes/wp-clearvideo/sidebar-narrow.php</string>
+		<string>wp-content/themes/wp-clearvideo/single.php</string>
+		<string>wp-content/themes/wp-clearvideo/single-tc_products.php</string>
+		<string>wp-content/themes/wp-clearvideo/postinfo.php</string>
+		<string>wp-content/themes/wp-clearvideo/featured-yt-vids.php</string>
 		<string>wp-content/themes/wp-clearvideo/theme-widgets.php</string>
-		<string>wp-content/themes/wp-clearvideo/theme-metaboxes.php</string>
-		<string>wp-content/themes/wp-clearvideo/theme-js.php</string>
-		<string>wp-content/plugins/tastyclouds-cms/metabox/ProductVariationRulesMetabox.php</string>
+		<string>wp-content/themes/wp-clearvideo/index2.php</string>
+		<string>wp-content/themes/wp-clearvideo/featured-wide.php</string>
+		<string>wp-content/themes/wp-clearvideo/featured-pages.php</string>
+		<string>wp-content/plugins/tastyclouds-cms/includes/init_post_types.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -566,56 +684,17 @@
 			<true/>
 			<key>subItems</key>
 			<dict>
-				<key>wp-content</key>
+				<key>wp-includes</key>
 				<dict>
 					<key>isExpanded</key>
 					<true/>
 					<key>subItems</key>
-					<dict>
-						<key>plugins</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>tastyclouds-cms</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict>
-										<key>includes</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
-									</dict>
-								</dict>
-							</dict>
-						</dict>
-						<key>themes</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>wp-clearvideo</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict/>
-								</dict>
-							</dict>
-						</dict>
-					</dict>
+					<dict/>
 				</dict>
 			</dict>
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{12, 91}, {1920, 967}}</string>
+	<string>{{-1893, 104}, {1920, 954}}</string>
 </dict>
 </plist>

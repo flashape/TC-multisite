@@ -23,9 +23,9 @@
 	border:1px solid #E6E6E6;
 	color:#4E4C41;
 	cursor:pointer;
-	font-size:1.2em;
 	margin:15px 0 0;
-	padding:15px 15px 15px 40px;
+	font-size: 1.5em;
+	padding: 15px 15px 15px 40px;
 }
 
 #css-options-cont .toggle-option h3.option-title span{
@@ -361,7 +361,8 @@
 
 /* jquery-ui tools rangeinput*/
 /* slider root element */
-.slider { 
+#pop-options-cont .slider,
+#css-mce-fields-cont .slider { 
 	background:#3C72E6 url(images/h30.png) repeat-x 0 0; 
 	height:9px; 
 	position:relative; 
@@ -377,7 +378,8 @@
 }
 
 /* progress bar (enabled with progress: true) */
-.progress {
+#pop-options-cont .progress,
+#css-mce-fields-cont .progress {
 	height:9px; 
 	background-color:#C5FF00; 
 	display:none;
@@ -385,7 +387,8 @@
 }
 
 /* drag handle */
-.handle { 
+#pop-options-cont .handle,
+#css-mce-fields-cont .handle { 
 	background:#fff url(images/h30.png) repeat-x 0 0; 
 	height:28px;
 	width:28px;
@@ -403,7 +406,8 @@
 }
 
 /* the input field */
-.range {
+#pop-options-cont .range,
+#css-mce-fields-cont .range {
 	border:1px inset #ddd;
 	float:left;
 	font-size:20px;

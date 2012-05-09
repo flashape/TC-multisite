@@ -18,7 +18,7 @@ class ImportExport {
 		
 		$sco = (object)array();
 		$sco->post_title = $wpdb->get_var("SELECT post_title FROM `{$wpdb->posts}` WHERE ID=$post_id AND post_type=\"csshortcode\" AND post_status=\"publish\"",0,0);
-		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_scripts','sc_styles','sc_info') as $meta_name){
+		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_priority_shortcode','sc_scripts','sc_styles','sc_info') as $meta_name){
 			$sco->$meta_name = get_post_meta($post_id,$meta_name,true);
 		}
 		$sco->sc_fields = is_array($sco->sc_fields)?$sco->sc_fields:array();
@@ -77,7 +77,7 @@ class ImportExport {
 			return false;
 		}
 		
-		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_scripts','sc_styles','sc_info') as $field){
+		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_priority_shortcode','sc_scripts','sc_styles','sc_info') as $field){
 			update_post_meta($post_id,$field,$obj->$field);		
 		}
 		if($import_terms){
@@ -160,7 +160,7 @@ class ImportExport {
 			return false;
 		}
 		
-		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_scripts','sc_styles','sc_info') as $field){
+		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_priority_shortcode','sc_scripts','sc_styles','sc_info') as $field){
 			if(property_exists($obj,$field)){
 				update_post_meta($post_id,$field,$obj->$field);		
 			}
@@ -204,7 +204,7 @@ class ImportExport {
 			return false;
 		}
 		
-		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_scripts','sc_styles','sc_info') as $field){
+		foreach(array('sc_shortcode','sc_shortcodes','sc_template','sc_php','sc_css','sc_js','sc_fields','sc_bundle','sc_preview','sc_priority_shortcode','sc_scripts','sc_styles','sc_info') as $field){
 			if(property_exists($obj,$field)){
 				update_post_meta($post_id,$field,$obj->$field);		
 			}

@@ -10,12 +10,6 @@
 class bundled_scripts_and_styles {
 	function bundled_scripts_and_styles(){
 		add_action('init',array(&$this,'init'));
-		
-		if(is_admin()){
-			$this->load_after_theme_setup();
-		}else{
-			add_action('after_setup_theme',array(&$this,'load_after_theme_setup'));
-		}
 	}
 	
 	function init(){
@@ -61,10 +55,7 @@ class bundled_scripts_and_styles {
 		
 		wp_register_style('sws-picture-frames',WPCSS_URL.'css/picture_frames.css',array(),'1.0.0');	
 		$sws_plugin->add_style('sws-picture-frames','Picture frames','');	
-	}
-	
-	function load_after_theme_setup(){
-		global $sws_plugin;
+
 		//jquery-tools have a tabs method, if this is included by the theme or another plugin then our tabs dont work.
 		wp_register_script('sws-jquery-tools',WPCSS_URL.'js/jquery.tools.min.js',array('jquery'),'1.2.5');
 		$sws_plugin->add_script('sws-jquery-tools','jQuery TOOLS','http://flowplayer.org/tools/index.html');	
