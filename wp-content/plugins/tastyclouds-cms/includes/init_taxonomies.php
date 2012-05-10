@@ -420,12 +420,12 @@ function tc_filter_post_type_link($link, $post)
 		$taxonomyParentsString = get_taxonomy_parents(array_pop($cats)->term_id, 'tc_product_type', false, '/', true);
 		// trim the trailing slash, otherwise we wind up with a double slash before the post title
 		$taxonomyParentsString = substr($taxonomyParentsString, 0, -1);
-		error_log("taxonomyParentsString : $taxonomyParentsString" );
-		error_log("before link : $link");
+		//error_log("taxonomyParentsString : $taxonomyParentsString" );
+		//error_log("before link : $link");
         $link = str_replace('%taxonomy_name%', $taxonomyParentsString, $link); // see custom function defined below
-		error_log("after link : $link");
+		//error_log("after link : $link");
     }else{
-		error_log("no taxonomies found for : $link");
+		//error_log("no taxonomies found for : $link");
 		$link = str_replace('%taxonomy_name%/', '', $link); // see custom function defined below
         
 	}

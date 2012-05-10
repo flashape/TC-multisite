@@ -1,5 +1,7 @@
+
 <?php
 	global $solostream_options;
+	//echo "solostream_options['solostream_layout'] = ".$solostream_options['solostream_layout'];
 	if ( $solostream_options['solostream_layout'] == "Content | Sidebar-Narrow | Sidebar-Wide" ||
 	$solostream_options['solostream_layout'] == "Sidebar-Narrow | Content | Sidebar-Wide" ||
 	$solostream_options['solostream_layout'] == "Sidebar-Wide | Sidebar-Narrow | Content" ||
@@ -7,7 +9,7 @@
 ?>
 
 <div id="sidebar-narrow" class="clearfix">
-
+	
 	<?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar('Sidebar-Narrow') ) : ?>
 
 	<div class="widget">

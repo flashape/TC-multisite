@@ -5,7 +5,7 @@
 		<?php related_posts(); ?>
 	</div>
 	<?php } ?>
-
+	<!--
 	<div class="subscribe">
 
 		<h3><?php _e("Subscribe", "solostream"); ?></h3>
@@ -32,4 +32,5 @@
 		<?php include (TEMPLATEPATH . '/sub-icons.php'); ?>
 
 	</div>
+	-->
 </div>

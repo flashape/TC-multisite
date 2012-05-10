@@ -14,12 +14,12 @@
 	<?php } ?>
 
 	<div id="page" class="clearfix">
-		TC_PRODUCTS
+		<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<p id="breadcrumbs">','</p>'); } ?>
+		
 		<div id="contentleft">
 
 			<div id="content" class="maincontent">
 
-				<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<p id="breadcrumbs">','</p>'); } ?>
 
 				<?php include (TEMPLATEPATH . '/banner468.php'); ?>
 
@@ -28,9 +28,8 @@
 				<div class="singlepost">
 
 					<div class="post" id="post-main-<?php the_ID(); ?>">
-
 						<div class="entry">
-
+							
 							<h1 class="post-title single"><a href="<?php the_permalink() ?>" rel="<?php _e("bookmark", "solostream"); ?>" title="<?php _e("Permanent Link to", "solostream"); ?> <?php the_title(); ?>"><?php the_title(); ?></a></h1>
 
 							<?php include (TEMPLATEPATH . '/postinfo.php'); ?>
@@ -51,11 +50,10 @@
 
 						</div>
 
-						<?php include (TEMPLATEPATH . '/auth-bio.php'); ?>
 
-						<?php include (TEMPLATEPATH . '/related.php'); ?>
+						<?php /*include (TEMPLATEPATH . '/related.php'); */ ?> 
 
-						<?php comments_template('', true); ?>
+
 
 					</div>
 
@@ -71,6 +69,6 @@
 
 		</div>
 
-<?php get_sidebar(); ?>
+<?php get_sidebar('products'); ?>
 
 <?php get_footer(); ?>

@@ -7,19 +7,6 @@
 
 			<div id="sidebar" class="clearfix">
 				<?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar('Sidebar-Wide - Top') ) : ?>
-				<div class="widget">
-					<h3 class="widgettitle"><span>Text Widget</span></h3>
-					<div class="textwidget">
-						This is a widget area. Visit the Widget page in your WordPress control panel to add some content here
-					</div>
-				</div>
-
-				<div class="widget">
-					<h3 class="widgettitle"><span>Text Widget</span></h3>
-					<div class="textwidget">
-						This is a widget area. Visit the Widget page in your WordPress control panel to add some content here
-					</div>
-				</div>
 				<?php endif; ?>
 			</div>
 

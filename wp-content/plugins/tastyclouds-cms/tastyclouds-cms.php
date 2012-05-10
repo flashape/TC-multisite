@@ -130,6 +130,9 @@ require_once(TASTY_CMS_PLUGIN_DIR .'includes/init_constants.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_taxonomies.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'widgets/TC_AddToCartWidget.php');
+
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_widgets.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_cms_p2p_connections.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_ajax.php');
@@ -226,6 +229,8 @@ function tc_update_post_metadata($dummy = NULL, $object_id, $meta_key, $meta_val
 		break;
 	}
 }
+
+add_action( 'admin_head', 'tc_testamonials_icons' );
 
 	
 // Styling for the custom post type icon
