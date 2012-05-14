@@ -69,11 +69,13 @@ EOT;
 			$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
 
 
-			foreach($variations as $variation){
-				error_log(var_export($variation, 1));
+			foreach($variations as &$variation){
+				//error_log(var_export($variation, 1));
 				
 				$variation['items'] = VariationItemAjax::getItemsForVariation($variation['id'], true);
 				$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
+				//error_log(var_export($variation, 1));
+				
 			}
 
 			$productModel['variations'] = $variations;
@@ -87,9 +89,9 @@ EOT;
 			//TODO:  Make this work with other input types besides SELECT.
 			
 			//loop through each variation and add the UI for it.
-			foreach($productModel['variations'] as $variation) {
-				error_log(var_export($variation, 1));
-				$variationsDiv .= '<p>'.$variation['label'] .' : ';
+			foreach($productModel['variations'] as $theVariation) {
+				error_log(var_export($theVariation, 1));
+				$variationsDiv .= '<p>'.$theVariation['label'] .' : ';
 				
 				// append p2p_id to the select id because that will always be unique.
 				// salt the id with a timestamp and random number in case we have the same item in the cart multiple times.
@@ -97,15 +99,15 @@ EOT;
 				$r = mt_rand();
 				$randomnumber= $ts + $r;
 				
-				$variationsDiv .= '<select id="variation_'.$variation['id'].'__p2pid_'.$variation['p2p_id'].'__r_'.$randomnumber.'" class="variationDropdown" style="width:150px">';
+				$variationsDiv .= '<select id="variation_'.$theVariation['id'].'__p2pid_'.$theVariation['p2p_id'].'__r_'.$randomnumber.'" class="variationDropdown" style="width:150px">';
 				
 				//generate the list of variationItems
-				foreach($variation['items'] as $variationItem) {
+				foreach($theVariation['items'] as $variationItem) {
 					$variationsDiv .= '<option value="'.$variationItem->id.'">'.$variationItem->title.'</option>';
 				}
 				
 				$variationsDiv .= '</select>';
-				$variationsDiv .= ' <span id="itemCount" style="font-style:italic;color:#333;font-size:10px;">(Count: '.$variation['itemCount'].')</span>';
+				$variationsDiv .= ' <span id="itemCount" style="font-style:italic;color:#333;font-size:10px;">(Count: '.$theVariation['itemCount'].')</span>';
 				
 				
 				

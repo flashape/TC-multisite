@@ -464,7 +464,7 @@ function get_taxonomy_parents($id, $taxonomy, $link = false, $separator = '/', $
         $chain .= $name . $separator;    
 	}
 	
-	error_log("get_taxonomy_parents : $chain");
+	//error_log("get_taxonomy_parents : $chain");
     return $chain;    
 }
 
