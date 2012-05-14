@@ -23,6 +23,22 @@ class CartAjax
 		$_SESSION['cart_'.$cartID ] = array('id'=>$cartID , 'items'=>array(), 'session_id'=>session_id());
 		return $cartID;
 	}
+	
+	public static function hasCartInSession(){
+		$sessionKeys = array_keys($_SESSION);
+		foreach($sessionKeys as $key){
+			if ( strpos($key, 'cart_') !== FALSE){
+				return $key;
+			}
+		}
+		return false;
+	}
+	
+	
+	public static function removeCartInSession($cartKey){
+		error_log("Removing cart from session : $cartKey");
+		unset($_SESSION[$cartKey]);
+	}
 
 	
 	// Gets the cart from the session.

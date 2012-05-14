@@ -5,7 +5,17 @@ global $post, $post_id ,$pagenow;
 global $cartID;
 $summaryRows = '';
 error_log("pagenow : $pagenow");
+
 if ($pagenow == 'post-new.php'){
+	
+	$cartKey = CartAjax::hasCartInSession();
+	error_log("cartKey : $cartKey");
+	
+	if ($cartKey !== FALSE){
+		CartAjax::removeCartInSession($cartKey);
+	}
+	
+	
 	$cartID = CartAjax::create();
 	error_log("cartID : $cartID");
 	$contactID = '';

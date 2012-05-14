@@ -436,6 +436,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 				variationsDiv += '</p>';
 			});
 			
+			
+			
 			variationsDiv += '</div>';
 			
 			row.find('.titleColumn').append(variationsDiv);

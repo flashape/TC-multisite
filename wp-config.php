@@ -98,6 +98,9 @@ define('AUTOSAVE_INTERVAL', 300 ); // seconds
 
 define('WP_POST_REVISIONS', false );
 
+define('FORCE_SSL_ADMIN', true);
+define('FORCE_SSL_LOGIN', true);
+
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */

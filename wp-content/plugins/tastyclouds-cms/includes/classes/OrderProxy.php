@@ -259,7 +259,6 @@ class OrderProxy
 								$itemPrice = FreshbooksUtils::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
 							}
 						}
-
 					}
 
 					$flavorsDesc = 'Selected Flavors : ' . implode(", ", $flavorsArray);

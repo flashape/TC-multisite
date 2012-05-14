@@ -69,7 +69,6 @@ function get_activities_for_user($userID){
 	) );
 	
 	return $connectedActivities;
-	
 }
 
 
@@ -87,11 +86,12 @@ function tc_cms_dequeue_autosave(){
 
 function tc_cms_init_session(){
 	if (!session_id()){
-		error_log("\tc_cms_init_session , no session_id, starting new\n");
+		error_log(" starting session...\n");
 		session_start();
+		error_log(" session id : ".session_id()."\n");
+		//error_log(var_export($_SESSION, 1));
+		
 	}
-	
-	
 }
 
 

@@ -5,6 +5,17 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
 
+#https rules added following the comment at this link: http://stackoverflow.com/a/10426820/506182
+# force https for all URLs in /checkout
+RewriteCond %{HTTPS} =off
+RewriteRule ^checkout https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# force http for all other URLs that are not in /checkout
+RewriteCond %{HTTPS} =on
+RewriteCond %{REQUEST_URI} !^/(checkout|index.php/checkout)
+RewriteRule .* http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+
 # uploaded files
 RewriteRule ^files/(.+) wp-includes/ms-files.php?file=$1 [L]
 
@@ -12,5 +23,7 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 RewriteRule . index.php [L]
+
+
 
 # END WordPress

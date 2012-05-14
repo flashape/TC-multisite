@@ -1,0 +1,358 @@
+#maxbuttons {
+	margin: 0px 15px 20px 0px;
+}
+#maxbuttons .wrap {
+	margin-right: 0px;
+}
+#maxbuttons .logo {
+	float: left;
+	margin-top: 10px;
+	margin-left: 50px;
+	font-weight: bold;
+	font-style: italic;
+}
+#maxbuttons .logo img {
+	vertical-align: middle;
+	padding-left: 5px;
+}
+#maxbuttons h2.title {
+	float: left;
+}
+#maxbuttons h2.tabs {
+	border-bottom: solid 1px #cccccc;
+	padding-bottom: 0px;
+	margin-top: 10px;
+}
+#maxbuttons h2.tabs .spacer {
+	padding-right: 20px;
+}
+#maxbuttons h4 a {
+	text-decoration: none;
+}
+#maxbuttons input[type='text'] {
+	width: 400px;
+}
+#maxbuttons input[type='text'].tiny {
+	width: 35px;
+	margin-top: 5px;
+}
+#maxbuttons input[type='text'].tiny-nopad {
+	width: 35px;
+}
+#maxbuttons input[type='checkbox'] {
+	margin-top: 7px;
+}
+#maxbuttons select {
+	width: 150px;
+}
+#maxbuttons textarea {
+	width: 400px;
+	height: 100px;
+	white-space: nowrap;
+	overflow: scroll;
+}
+#maxbuttons .clear {
+	clear: both;
+}
+#maxbuttons .default {
+	float: left;
+	padding-left: 20px;
+	padding-top: 4px;
+	font-style: italic;
+	color: #808080;
+}
+#maxbuttons .default-color {
+	float: left;
+	padding-left: 54px;
+	padding-top: 8px;
+	font-style: italic;
+	color: #808080;
+}
+#maxbuttons .default-other {
+	float: left;
+	padding-left: 40px;
+	padding-top: 8px;
+	font-style: italic;
+	color: #808080;
+}
+#maxbuttons .option-container {
+	margin-bottom: 20px;
+	border: solid 1px #cccccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+#maxbuttons .option-container .title {	
+	font-family: Georgia;
+	font-size: 14px;
+	font-weight: normal;
+	padding: 9px 8px 9px 8px;
+	text-align: left;
+	text-shadow: 0px 1px 0px #ffffff;
+	background-color: #f1f1f1;
+	background: linear-gradient(#f9f9f9 50%, #ececec);
+	background: -moz-linear-gradient(#f9f9f9 50%, #ececec);
+	background: -o-linear-gradient(#f9f9f9 50%, #ececec);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.50, #f9f9f9), color-stop(1, #ececec));
+}
+#maxbuttons .option-container .inside {
+	padding: 10px 15px 10px 15px;
+	border-top: solid 1px #cccccc;
+}
+#maxbuttons .option {
+	margin-bottom: 20px;
+}
+#maxbuttons .option .label {
+	float: left;
+	font-weight: bold;
+	padding-top: 3px;
+	padding-left: 3px;
+	width: 100px;
+}
+#maxbuttons .option .note {
+	float: left;
+	font-weight: normal;
+	font-style: italic;
+	color: #808080;
+	padding-top: 3px;
+}
+#maxbuttons .option .input {
+	margin-top: 3px;
+}
+#maxbuttons .option-design {
+	margin-bottom: 5px;
+}
+#maxbuttons .option-design .label {
+	float: left;
+	font-weight: bold;
+	padding-left: 3px;
+	padding-top: 3px;
+	width: 140px;
+}
+#maxbuttons .option-design .input {
+	float: left;
+}
+#maxbuttons .option-design .input td {
+	padding: 0px 20px 20px 0px;
+}
+#maxbuttons .option-design .input td div.cell-label {
+	padding: 1px 10px 0px 5px;
+	font-weight: bold;
+	border-bottom: solid 1px #d1d1d1;
+	width: 180px;
+}
+#maxbuttons .option-design .input table.text-line th {
+	vertical-align: bottom;
+}
+#maxbuttons .option-design .input table.text-line td {
+	padding: 0px 5px 0px 0px;
+}
+#maxbuttons .option-design .input table.text-line td.label {
+	width: 140px;
+	font-weight: bold;
+	float: none;
+	padding-left: 3px;
+	padding-right: 0px;
+}
+#maxbuttons .option-design .input table.text-line td input[type='text'].words {
+	width: 150px;
+}
+#maxbuttons .option-design .input table.text-line td select.small {
+	width: 60px;
+}
+#maxbuttons .option-design .input table.text-line td select.medium {
+	width: 80px;
+}
+#maxbuttons .option-design .input table.text-line td.padding {
+	padding-left: 7px;
+	padding-right: 7px;
+}
+#maxbuttons .option-design .input table.color-line th {
+	vertical-align: bottom;
+	text-align: center;
+	width: 80px;
+}
+#maxbuttons .option-design .input table.color-line td {
+	padding: 0px 0px 0px 23px;
+}
+#maxbuttons .option-design .input table.color-line td.label {
+	text-align: left;
+	padding-left: 3px;
+	padding-top: 7px;
+	width: 115px;
+}
+#maxbuttons .form-actions {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: dashed 1px #d1d1d1;
+}
+#maxbuttons .form-actions a {
+	margin-right: 10px;
+}
+#maxbuttons .spacer {
+	margin-bottom: 20px;
+}
+#maxbuttons .colorpicker-box {
+	background: url('js/colorpicker/images/select2.png') transparent repeat scroll 0 0;
+	display: block;
+	float: left;
+	width: 36px;
+	height: 36px;
+	position: relative;
+}
+#maxbuttons .colorpicker-box span {
+	background: url('js/colorpicker/images/select2.png') transparent center;
+	display: block;
+	width: 28px;
+	height: 28px;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+}
+#maxbuttons .message {
+	background-color: #ffffe0;
+	border: solid 1px #e6db55;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 10px;
+	margin: 10px 0px 10px 0px;
+	display: none;
+}
+#maxbuttons .output {
+	position: fixed;
+	top: 210px;
+	left: 760px;
+	background-color: #ffffff;
+	border: solid 1px #414141;
+	box-shadow: 0px 0px 6px #808080;
+	z-index: 99;
+}
+#maxbuttons .output .header {
+	text-align: center;
+	color: #424852;
+	background-color: #95c5ed;
+	background: linear-gradient(#95c5ed 50%, #7baed8);
+	background: -moz-linear-gradient(#95c5ed 50%, #7baed8);
+	background: -o-linear-gradient(#95c5ed 50%, #7baed8);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.50, #95c5ed), color-stop(1, #7baed8));
+	border-bottom: solid 1px #414141;
+	font-family: Georgia;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 8px 0px 8px 0px;
+	cursor: move;
+}
+#maxbuttons .output .inner {
+	padding: 5px;
+}
+#maxbuttons .output .note {
+	float: left;
+	margin: 8px 0px 0px 10px;
+}
+#maxbuttons .output .result {
+	padding: 20px;
+}
+#maxbuttons .output .result p {
+	padding: 5px 0px 5px 0px;
+}
+#maxbuttons .button-list {
+	margin-top: 10px;
+}
+#maxbuttons .button-list p {
+	font-size: 13px;
+}
+#maxbuttons .button-list a {
+	text-decoration: none;
+	font-size: 13px;
+}
+#maxbuttons .button-list a.button-name {
+	font-weight: bold;
+}
+#maxbuttons .button-list a.action {
+	padding-right: 10px;
+}
+#maxbuttons .button-list table {
+	background-color: #f9f9f9;
+	border-top: solid 1px #dfdfdf;
+	border-left: solid 1px #dfdfdf;
+	border-right: solid 1px #dfdfdf;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+#maxbuttons .button-list th {
+	font-family: Georgia;
+	font-size: 14px;
+	font-weight: normal;
+	padding: 10px 8px 10px 8px;
+	text-align: left;
+	text-shadow: 0px 1px 0px #ffffff;
+	border-bottom: solid 1px #dfdfdf;
+	background-color: #f1f1f1;
+	background: linear-gradient(#f9f9f9 50%, #ececec);
+	background: -moz-linear-gradient(#f9f9f9 50%, #ececec);
+	background: -o-linear-gradient(#f9f9f9 50%, #ececec);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.50, #f9f9f9), color-stop(1, #ececec));
+}
+#maxbuttons .button-list th input[type='checkbox'] {
+	margin-left: 10px;
+}
+#maxbuttons .button-list tr:nth-child(odd) {
+	background-color: #fcfcfc;
+}
+#maxbuttons .button-list td {
+	padding: 10px 8px 10px 8px;
+	border-top: solid 1px #ffffff;
+	border-bottom: solid 1px #dfdfdf;
+	vertical-align: top;
+}
+#maxbuttons .button-list td input[type='checkbox'] {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+#maxbuttons .pack {
+	width: 250px;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 30px;
+	margin-bottom: 30px;
+}
+#maxbuttons .pack a {
+	text-decoration: none;
+}
+#maxbuttons .pack h3 {
+	margin: 5px 0px 5px 0px;
+}
+#maxbuttons .pack h4 {
+	margin: 0px;
+}
+#maxbuttons .pack .image {
+	width: 240px;
+	height: 180px;
+}
+#maxbuttons .pack .image img:hover {
+    box-shadow: 0px 0px 4px #111111;
+	-moz-box-shadow: 0px 0px 4px #111111;
+    -webkit-box-shadow: 0px 0px 4px #111111;
+}
+#maxbuttons .pack-meta {
+	margin-top: 20px;
+}
+#maxbuttons .pack-meta a {
+	text-decoration: none;
+}
+#maxbuttons .pack-meta img {
+	float: left;
+	padding-right: 20px;
+	padding-bottom: 20px;
+}
+#maxbuttons .import {
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom: dashed 1px #d1d1d1;
+}
+#maxbuttons .import a {
+	margin-left: 10px;
+}

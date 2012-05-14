@@ -25,8 +25,12 @@ class TC_AddToCartWidget extends WP_Widget {
      **/
 	function widget( $args, $instance ) {
 		error_log("TC_AddToCartWidget->widget()");
-		error_log(print_r($args, 1));
 		extract( $args, EXTR_SKIP );
+		global $post;
+		$productID = $post->ID;
+		$productModel = ProductProxy::getProductByID($productID);
+		
+		echo $before_widget;
 		
 // 		$style = <<<EOD
 // 			<style type="text/css" media="screen">
@@ -43,9 +47,86 @@ class TC_AddToCartWidget extends WP_Widget {
 		// echo $before_title;
 		// echo ''; // Can set this with a widget option, or omit altogether
 		// echo $after_title;
+		$basePrice = '$'.number_format($productModel['price'], 2, '.', '');
+		
+		$table = <<<EOT
+		<table id="productDetailsTable" style="width:100%">
+			<tbody>
+				<tr>
+					<td>Price:</td>
+					<td>$basePrice</td>
+				</tr>
+			</tbody>
+		</table>
+EOT;
+		echo $table;
+					
+					
 		ob_start();			
-			echo $before_widget;
-			echo "Add to Cart";
+			echo '<p>';
+			include (TASTY_CMS_PLUGIN_INC_DIR . 'utils/quantity_dropdown.php');
+			echo '</p>';
+			$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
+
+
+			foreach($variations as $variation){
+				error_log(var_export($variation, 1));
+				
+				$variation['items'] = VariationItemAjax::getItemsForVariation($variation['id'], true);
+				$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
+			}
+
+			$productModel['variations'] = $variations;
+			
+			
+			
+			
+			$variationsDiv = '<div class="variationsDiv">';
+			
+			//TODO:  use a sperate factory method to generate the variation content.
+			//TODO:  Make this work with other input types besides SELECT.
+			
+			//loop through each variation and add the UI for it.
+			foreach($productModel['variations'] as $variation) {
+				error_log(var_export($variation, 1));
+				$variationsDiv .= '<p>'.$variation['label'] .' : ';
+				
+				// append p2p_id to the select id because that will always be unique.
+				// salt the id with a timestamp and random number in case we have the same item in the cart multiple times.
+				$ts = time();
+				$r = mt_rand();
+				$randomnumber= $ts + $r;
+				
+				$variationsDiv .= '<select id="variation_'.$variation['id'].'__p2pid_'.$variation['p2p_id'].'__r_'.$randomnumber.'" class="variationDropdown" style="width:150px">';
+				
+				//generate the list of variationItems
+				foreach($variation['items'] as $variationItem) {
+					$variationsDiv .= '<option value="'.$variationItem->id.'">'.$variationItem->title.'</option>';
+				}
+				
+				$variationsDiv .= '</select>';
+				$variationsDiv .= ' <span id="itemCount" style="font-style:italic;color:#333;font-size:10px;">(Count: '.$variation['itemCount'].')</span>';
+				
+				
+				
+				
+				$variationsDiv .= '</p>';
+			}
+			
+			
+			
+			$variationsDiv .= '</div>';
+			
+
+			$lineItem['name'] = $productModel['productName'];
+			$basePrice = $productModel['price'];
+
+			$itemPrice = $basePrice;
+			
+			echo $variationsDiv;
+			
+			echo do_shortcode('[maxbutton id="2"]');
+			
 			echo $after_widget;
 			
 			$content = ob_get_contents();
