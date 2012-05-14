@@ -10,7 +10,6 @@ function admin_settings_render_default_page($title, $summary, $plugin_name, $tab
 	</div>
 
 	<h2><?php echo $title; ?></h2>
-
 	<?php echo $summary; ?>
 	<form action="options.php" method="post">
 		<?php settings_fields($plugin_name); ?>
@@ -25,7 +24,7 @@ function admin_settings_render_default_page($title, $summary, $plugin_name, $tab
                     $first = true;
                     foreach ($tabs as $tab) {
                         $class = $first ? "nav-tab nav-tab-active" : "nav-tab";
-                        echo "<a href='#' rel='cont-{$tab['id']}' class='$class'>{$tab['title']}</a>";
+                        echo "<a href='#{$tab['id']}' class='$class'>{$tab['title']}</a>";
                         if ($first) { $first = false; }
                     }
                 ?>
@@ -36,7 +35,7 @@ function admin_settings_render_default_page($title, $summary, $plugin_name, $tab
                     foreach ($tabs as $tab) {
                         $style = $first ? "" : "style='display:none'";
 
-                        echo "<div class='nav-container' id='cont-{$tab['id']}' $style>";
+                        echo "<div class='nav-container' id='{$tab['id']}_tab' $style>";
                         do_settings_sections_for_tab($plugin_name, $tab['sections']);
                         echo "</div>";
                         if ($first) { $first = false; }

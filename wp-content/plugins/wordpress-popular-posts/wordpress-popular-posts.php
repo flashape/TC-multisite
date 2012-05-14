@@ -490,7 +490,7 @@ if ( !class_exists('WordpressPopularPosts') ) {
 <!-- Wordpress Popular Posts v<?php echo $this->version; ?> -->
 <script type="text/javascript" charset="utf-8">
     /* <![CDATA[ */				
-	jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {action: 'wpp_update', token: '<?php echo $nonce; ?>', id: <?php echo $id; ?>});
+	jQuery.post('<?php echo admin_url('admin-ajax.php', 'http'); ?>', {action: 'wpp_update', token: '<?php echo $nonce; ?>', id: <?php echo $id; ?>});
     /* ]]> */
 </script>
 <!-- End Wordpress Popular Posts v<?php echo $this->version; ?> -->

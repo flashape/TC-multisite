@@ -21,11 +21,14 @@ if(!defined('TC_SHARED_DIR')){
 }
 
 if(!defined('TC_SHARED_JS_URL')){
-    define('TC_SHARED_JS_URL', WP_CONTENT_URL . '/tc_shared/js/');
+    //define('TC_SHARED_JS_URL', WP_CONTENT_URL . '/tc_shared/js/');
+    define('TC_SHARED_JS_URL', content_url('/tc_shared/js/'));
 }
 
 if(!defined('TC_SHARED_CSS_URL')){
-    define('TC_SHARED_CSS_URL', WP_CONTENT_URL . '/tc_shared/css/');
+    //define('TC_SHARED_CSS_URL', WP_CONTENT_URL . '/tc_shared/css/');
+    define('TC_SHARED_CSS_URL', content_url('/tc_shared/css/'));
+
 }
 
 define('SWIFTMAIL_REQUIRED_FILE', ABSPATH . 'swiftmailer/lib/swift_required.php');

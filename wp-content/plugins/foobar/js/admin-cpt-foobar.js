@@ -56,17 +56,47 @@ jQuery(document).ready(function($) {
         },
         
         init : function() {
+            $('#post').submit(function(event){
+              var title = $('#title').val();
+              if( title.length == 0 || title.replace(/\s/g,'').length == 0 ){
+                event.preventDefault();
+                $('div#notice').remove();
+                $("<div id='notice' class='error below-h2'><p>Please provide a title.</p></div>").insertAfter('h2');
+                alert("Please provide a title.");
+                $('#title').focus();
+                $('#ajax-loading').hide();
+                $('#publish').removeClass('button-primary-disabled');
+              }
+            });
             
-            $('.colors').miniColors();
+            if (jQuery().miniColors) {
+              $('.colors').miniColors();
+            }
 
-            $('.checkbox-toggle').checkbox({ theme: 'switch'});
+            if (jQuery().checkbox) {
+              $('.checkbox-toggle').checkbox({ theme: 'switch'});
+            }
 
-            $('.num-slider').numeric();
+            if (jQuery().numeric) {
+              $('.num-slider').numeric();
+            }
 
-            $('.radio').radio();
+            if (jQuery().radio) {
+              $('.radio').radio();
+            }
 
-            $(".button_theme_radio a").click(function() {
+            $(".button_theme_radio a").click(function(e) {
+                e.preventDefault();
+
                 $(".button_theme_radio a").removeClass("selected");
+
+                $(this).addClass("selected");
+            });
+            
+            $(".navigation_theme_radio a").click(function(e) {
+                e.preventDefault();
+
+                $(".navigation_theme_radio a").removeClass("selected");
 
                 $(this).addClass("selected");
             });
@@ -90,13 +120,6 @@ jQuery(document).ready(function($) {
                     $rows.hide();
                 }
             });
-
-            $(".rad_foobar_type").change(function() {
-              $("tr.foobar_type_row").hide();
-
-              $("tr.foobar_type_row_" + $(this).val()).show();
-            });
-
 
             $(".rad_styling").change(function() {
               $("tr.styling_row").hide();
@@ -168,7 +191,9 @@ jQuery(document).ready(function($) {
                 var new_icon = $(".txt_social_icon:visible").val();
                 var new_url = $(".txt_social_url:visible").val();
 
-                new_icon = $("#hdn_social_icon_base").val() + new_icon;
+                if (new_icon.indexOf("http") != 0) {
+                  new_icon = $("#hdn_social_icon_base").val() + new_icon;
+                }
 
                 var $row = $(this).parents("tr:first");
 

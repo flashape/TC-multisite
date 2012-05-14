@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title>foobar - a notification bar plugin for WordPress!</title>
+	
+	<link type="text/css" href="css/styles.css" media="all" rel="stylesheet" />
+	<link type="text/css" href="../css/jquery.foobar.2.3.css" rel="Stylesheet" />
+  <link type="text/css" href="css/facebox.css" rel="Stylesheet" />
+	
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.foobar.2.3.min.js"></script>
+  <script type="text/javascript" src="scripts/facebox.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      $(".modal").facebox();
+      
+      $foobar({
+        "height" : {
+          "bar" : 45,
+          "button" : 30
+        },
+        
+        "width": {
+          "left": "*",
+          "center": "800px",
+          "right": "*",
+          "button": "80px"
+        },
+        
+        "display" : {
+          "backgroundColor" : "FireBrick",
+          "theme": {
+            "bar": "x-white gradient",
+            "navigation": "x-white"
+          }
+        },
+        "message": {
+          "navigation": true
+        },
+        "messages": [ 
+          "This is what your FooBar will look like in WordPress",
+          "Follow the <a href='#setup'>instructions</a> below to install the plugin and get it working within WordPress",
+          "Check out the <a href='#features'>awesome features</a> available only with Foobar WordPress plugin!"
+        ],
+        
+        "leftHtml": "<a class='btt' href='#body'>Back to top</a>"
+      });
+      
+    });
+  </script>
+</head>
+<body id="body">
+<div id="wrapper">
+	<div id="header">
+		<h1><span>foo</span>bar <span class="small">WP v2.3.1</span></h1>
+		<p>A WordPress plugin for adding great looking notification bars to your site!</p>
+    <div class="in-action"></div>
+	</div>
+	
+	<div id="content">
+    <p>
+    <a class="demo-link" href="#setup">Quick Start Guide</a>
+    <a class="demo-link" href="#features">Features</a>
+    <a class="demo-link" href="#changelog">Changelog</a>
+    </p>
+    
+    <a name="setup"></a>
+		<h2>Quick Start Guide</h2>    
+    <p>
+      <ol>
+        <li>You have obviously installed the Foobar WordPress plugin right? If not <a href="../readme.txt">read this</a>.</li>
+        <li>Click the "Foobar Settings" menu item under the Settings menu section. (<a class="modal" href="http://themergency.com/foobar2.0/WP_docs/menu.jpg" target="_blank">image</a>)</li>
+        <li>(OPTIONAL) If you want you can rebrand Foobar to be called whatever you like. E.g. "Alert Bars" or "Notifications" etc. (<a class="modal" href="http://themergency.com/foobar2.0/WP_docs/rebrand.jpg" target="_blank">image</a>)</li>
+        <li>(OPTIONAL) Click the "Social Profiles" tab and setup any default social profiles that you can use on all of your Foobars. (<a class="modal" href="http://themergency.com/foobar2.0/WP_docs/social.jpg" target="_blank">image</a>)</li>
+        <li>A new menu section will be available in the admin menu. Click on FooBars to manage the different Foobars you will use on your site. NOTE : If you rebranded Foobar, then the menu will change to your new rebranded name. (<a class="modal" href="http://themergency.com/foobar2.0/WP_docs/foobar_menu.jpg" target="_blank">image</a>)</li>
+        <li>Add a Foobar exactly like you would a page or post, and once you are happy will all the settings, then click "Create". (<a class="modal" href="http://themergency.com/foobar2.0/WP_docs/create.jpg" target="_blank">image</a>)</li>
+      </ol>
+      <h3>Or watch this <a href="#foobar-video" class="modal" href="http://www.screenr.com/embed/sR1s">Online video</a> to see how to use the Foobar WordPress plugin.</h3>
+      <div id="foobar-video" style="display:none">
+        <iframe src="http://www.screenr.com/embed/sR1s" width="800" height="487" frameborder="0"></iframe>      
+      </div>
+    </p>
+    
+    <a name="features"></a>
+		<h2>Features</h2>
+    <div class="feature_container">
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/PerPageCustomization.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/PerPageCustomization_thumb.jpg" alt="Different Foobars Per Page" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Different Foobars Per Page</h3>
+      <p>
+          You can choose which Foobar is shown on a page-by-page basis. The default Foobar will be showm, but you can override it per post or per page. You can also choose to not show a Foobar on a certain page.
+        </p>
+      <div class="clear"></div>
+      </div>    
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/MultipleFoobars.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/MultipleFoobars_thumbs.jpg" alt="Unlimited Foobars" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">Unlimited Foobars</h3>
+      <p>
+          Create as many notification bars as you like. And manage them all from the WordPress backend. Then decide which bar you want to display on which page or post, and select which bar you want as your default. Check out the demos to see what we are talking about.
+        </p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/Rebrand.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/Rebrand_thumb.jpg" alt="Rebrand Foobar" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Rebrand Foobar</h3>
+      <p>
+          You can override what the Foobar is called. We realise that "FooBar" is not the most intuitive name to display to website   admins or clients, so you can rename Foobar to something more meaningful, like "Alert Bar".
+        </p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/SocialProfiles.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/SocialProfiles_thumb.jpg" alt="Social Profiles" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">Social Profiles</h3>
+      <p>
+          Setup your default social profiles that you display on every Foobar. You can then customize them per individual Foobar. Show them on the right or left. Or don't display any social profiles at all.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/Customize.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/Customize_thumb.jpg" alt="Customize, Customize, Customize" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Customize, Customize, Customize</h3>
+      <p>
+          Each Foobar can have different colors, different heights, different borders, different open/close button themes. A Foobar can be fixed at the top of the site, or it can be inline, so that it scrolls out of view. Set your Foobar to display after 3 seconds, or only show it once your visitor scrolls the page. There are an unlimited number of ways to customize the Foobar!</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/LookFeel.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/LookFeel_thumb.jpg" alt="Message Look and Feel" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">Message Look and Feel</h3>
+      <p>
+          Style your Foobar messages to suit your needs and match your site's theme. Every aspect from color, font, shadows, borders, and more, can be customized.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/CustomHTML.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/CustomHTML_thumb.jpg" alt="Custom HTML" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Custom HTML</h3>
+      <p>
+          The Foobar messages can contain any HTML. But the right and left section can also contain custom HTML. Add your Facebook like, Tweet and Google+ buttons. Or include a newsletter signup form or a website search form.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/Messages.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/Messages_thumb.jpg" alt="Multiple Messages" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">Multiple Messages</h3>
+      <p>
+          You can define multiple messages for each Foobar. Easliy add new messages (which can contain HTML). Then easily reorder them using drag and drop.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/Twitter.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/Twitter_thumb.jpg" alt="Show Latest Tweets" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Show Latest Tweets</h3>
+      <p>
+          Automatically include your latest tweets into the Foobar. Define from who and how many tweets you want to show and they will be added after any messages.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/RSS.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/RSS_thumb.jpg" alt="RSS Feed Integration" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">RSS Feed Integration</h3>
+      <p>
+          Include an RSS feed into your Foobar to display the latest posts from your blog. Or include someone else's feed to promote their blog.</p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature alt">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/Demo.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/Demo_thumb.jpg" alt="Inline Admin Demos" title="Click to view a larger image" width="400" height="300" class="alignright media size-full" /></a></p>
+      <h3 class="header3">Inline Admin Demos</h3>
+      <p>
+          Are you sure you like the look of that Foobar? Well, demo what your Foobar will look like before it goes live. See it in action right from within the WordPress admin. You can also turn off the demo if you like (but why would you?).
+        </p>
+      <div class="clear"></div>
+      </div>
+      <div class="feature">
+        <a class="modal" href="http://themergency.com/foobar2.0/WP_docs/features/BuiltforWordPress.jpg"><img src="http://themergency.com/foobar2.0/WP_docs/features/BuiltforWordPress_thumb.jpg" alt="Built For WordPress" title="Click to view a larger image" width="400" height="300" class="alignleft media size-full" /></a></p>
+      <h3 class="header3">Built For WordPress</h3>
+      <p>
+          Foobar was built using core features within WordPress 3+. We use custom post types to store the Foobars. We use custom metaboxes to display all the options. We utilize the Settings API to store all your settings. We also took the WordPress Admin Bar into account, so both bars work nicely together. Oh, and did we mention Foobar supports shortcodes in the messages and custom HTML sections?
+        </p>
+      <div class="clear"></div>
+    </div>
+    
+    <a name="changelog"></a>
+		<h2>Changelog</h2>
+		<div id="changelog">
+			<dl>
+        <dt>11/04/2012 - v2.3.1</dt>
+					<dd>- Updated to use jQuery foobar v2.3</dd>
+          <dd>- Now 100% SSL compatible</dd>
+          <dd>- Added Pinterest Social icon</dd>
+          <dd>- Added new setting to disable foobar on mobile devices</dd>
+          <dd>- changed some CSS classes to avoid theme CSS conflicts</dd>
+          <dd>- minor improvements to settings page</dd>
+        <dt>22/02/2012 - v2.2</dt>
+					<dd>- Updated to use jQuery foobar v2.1</dd>
+          <dd>- Removed the need for Google API key for twitter and RSS feed</dd>        
+        <dt>22/01/2012 - v2.1</dt>
+					<dd>- Fixed issue with generating scripts to static files</dd>
+          <dd>- Fixed issue with placing script in footer</dd>      
+        <dt>12/01/2012 - v2.0</dt>
+					<dd>- Using foobar js v2</dd>
+          <dd>- Settings reorganised</dd>
+          <dd>- Dynamic JS & CSS options (dynamic / inline / generated to disk)</dd>
+          <dd>- Set scripts to load in footer for performance</dd>
+          <dd>- Encode HTML messages (so they work with caching plugins)</dd>
+          <dd>- Supports conditional logic for displaying foobars</dd>
+          <dd>- Choose which post types the "display foobar" metabox will show on</dd>
+          <dd>- Allow only administrators to manage foobars</dd>
+          <dd>- Custom CSS and custom JS which are applied to all foobars</dd>
+          <dd>- Check for plugin updates</dd>
+          <dd>- Better support for cookies</dd>
+          <dd>- Set navigation theme aswell as the button theme</dd>
+          <dd>- Option to set a transparent BG color</dd>
+          <dd>- Allow you to set the collapse type (toggle / close)</dd>
+          <dd>- You can now style the social text</dd>
+          <dd>- Add custom JS and CSS per foobar</dd>
+          <dd>- MANY bug fixes and changed!</dd>
+        <dt>03/10/2011 - v1.8</dt>
+					<dd>- Updated to use foobar v1.8</dd>
+					<dd>- Under Foobar settings, new setting to disable Foobar completely</dd>
+					<dd>- Under Foobar settings, new setting to not automatically include jQuery script!</dd>
+					<dd>- Under Foobar settings, added 'Admin UI' tab where you can disable enhanced UI, like color pickers and numeric sliders</dd>
+					<dd>- Added option to disable scrolling text for long messages</dd>
+					<dd>- Added option to ignore the Admin bar and always place the foobar at the very top</dd>
+					<dd>- Added option to show messages randomly</dd>
+					<dd>- Increased foobar z-index to 9999</dd>
+					<dd>- Added more social icons (google+, deviantArt, About.me)</dd>
+					<dd>- Cleaned up foobar listing table</dd>
+					<dd>- Fixed issues when disabling borders</dd>
+					<dd>- Fixed issues when unsetting default Foobar</dd>
+					<dd>- Fixed issues where certain values were not being set</dd>
+					<dd>- Fixed issue with extra long messages being but off</dd>
+					<dd>- Fixed issue when setting the close button to 'hidden'</dd>
+					<dd>- Fixed issue with Twitter feeds in IE. Now uses google's feed API</dd>
+					<dd>- Fixed issue with color's not prefixed with #</dd>
+        <dt>31/07/2011 - v1.0</dt>
+					<dd>- First release of the FooBAR WordPress plugin!</dd>
+			</dl>
+		</div>  
+    
+    
+    <div id="footer">
+      <p>&copy; 2012 <a href="http://themergency.com">themergency.com</a></p>
+    </div>
+
+  </div>
+</body>
+</html>

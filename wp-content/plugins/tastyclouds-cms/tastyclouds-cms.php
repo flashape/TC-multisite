@@ -14,7 +14,7 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
 }
 
 
-function alter_the_query( $request ) {
+function alter_tc_product_query( $request ) {
     $dummy_query = new WP_Query();  // the query isn't run if we don't pass any query vars
     $dummy_query->parse_query( $request );
 
@@ -29,7 +29,7 @@ function alter_the_query( $request ) {
     
     return $request;
 }
-add_filter( 'request', 'alter_the_query' );
+add_filter( 'request', 'alter_tc_product_query' );
 
 
 
@@ -163,6 +163,18 @@ add_action( 'admin_enqueue_scripts', 'tc_cms_admin_enqueue_scripts', 10, 1 );
 add_action( 'admin_init', 'tc_cms_add_categories_to_pages', 10, 1 );
 // add_action( 'query_vars', 'tc_cms_dump_wp_query', 10, 1 );
 // add_action( 'template_redirect', 'tc_cms_dump_wp_query', 10, 1 );
+add_action( 'template_redirect', 'tc_cms_enqueue_scripts', 10, 1 );
+
+function tc_cms_enqueue_scripts(){
+	global $post;
+	error_log('get_post_type($post) = '.get_post_type($post));
+	if (get_post_type($post) == 'tc_products'){
+		wp_enqueue_script('jquery');
+		wp_enqueue_script('jquery-ui-core');
+		wp_enqueue_script( 'jquery-ui-button' );
+		
+	}
+}
 
 function tc_cms_dump_wp_query(){
 	global $wp_query;
@@ -203,8 +215,8 @@ function tc_cms_admin_enqueue_scripts(){
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('jquery-ui-core');
 	
-	wp_register_script('validate','http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js' , array('jquery'));
-	wp_register_script('validate-additional-methods','http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js' , array('jquery'));
+	wp_register_script('validate','https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js' , array('jquery'));
+	wp_register_script('validate-additional-methods','https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js' , array('jquery'));
 	wp_enqueue_script( 'validate' ); 
 	wp_enqueue_script( 'validate-additional-methods' );
 	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_URL .'/ba-debug.js', __FILE__ );
@@ -235,7 +247,7 @@ add_action( 'admin_head', 'tc_testamonials_icons' );
 	
 // Styling for the custom post type icon
  
-add_action( 'admin_head', 'tc_testamonials_icons' );
+//add_action( 'admin_head', 'tc_testamonials_icons' );
  
 function tc_testamonials_icons() {
 	

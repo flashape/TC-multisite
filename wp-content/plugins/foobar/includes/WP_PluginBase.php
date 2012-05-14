@@ -14,23 +14,16 @@ extract all overridable functions out into another file somehow
 
 */
 
+if (!class_exists('WP_PluginBase_v1_5')) {
 
-
-
-define('WPPB_LOAD_ADMIN', 1);
-define('WPPB_LOAD_ADMIN_SETTINGS', 2);
-define('WPPB_LOAD_FRONT', 4);
-define('WPPB_LOAD_FRONT_HOME', 8);
-
-if (!class_exists('WP_PluginBase')) {
-
-    abstract class WP_PluginBase {
+    abstract class WP_PluginBase_v1_5 {
         protected $_file;                 //the filename of the plugin
         protected $_plugin_dir;           //the folder path of the plugin
         protected $_plugin_dir_name;      //the folder name of the plugin
         protected $_plugin_url;           //the plugin url
         protected $_plugin_name;          //the name of the plugin (derived from the file)
-        protected $_plugin_title;			//the friendly title of the plugin
+        protected $_plugin_title;	//the friendly title of the plugin
+        protected $_plugin_settings_summary;	//the summary html that is displayed on the default settings page
         private $_default_js_exists;    //if the default plugin js file exists
         private $_default_css_exists;   //if the default plugin css file exists
         private $_settings = array();           //the plugin settings array
@@ -40,11 +33,21 @@ if (!class_exists('WP_PluginBase')) {
 
         /* overridable variables */
         protected $_has_settings = true;     //does the plugin have options?
-        protected $_when_to_load_default_js = WPPB_LOAD_ADMIN_SETTINGS;	//only load the default js on the settings page
-        protected $_when_to_load_default_css = WPPB_LOAD_ADMIN_SETTINGS;	//only load the default css on the settings page
+        protected $_when_to_load_default_js = 2;	//only load the default js on the settings page
+        protected $_when_to_load_default_css = 2;	//only load the default css on the settings page
+        /* 
+         * 1 = load in admin
+         * 2 = load on admin settings page
+         * 4 = load on front
+         * 8 = load on front page
+         */
         
         protected $_load_dynamic_css = true;
         protected $_load_dynamic_js = true;
+        
+        protected $_admin_errors = false;
+        
+        protected $_mobile = false;
 
         //PHP 4 constructor
         function WP_PluginBase() {
@@ -65,7 +68,7 @@ if (!class_exists('WP_PluginBase')) {
             $this->_file = $reflector->getFilename();
             $this->_plugin_dir = dirname($this->_file) . '/';
             $this->_plugin_dir_name = plugin_basename($this->_plugin_dir);
-            $this->_plugin_url = WP_PLUGIN_URL . '/' . $this->_plugin_dir_name . '/';
+            $this->_plugin_url = trailingslashit(plugins_url('', $this->_file));
             
             //load any plugin base deps
             $this->load_dependancies();
@@ -80,6 +83,11 @@ if (!class_exists('WP_PluginBase')) {
         //load dependancies        
         function load_dependancies() {
           include_once( $this->_plugin_dir . 'includes/WPPBUtils.php' );          
+          include_once( $this->_plugin_dir . 'includes/mobile.php' );
+          
+          if (class_exists('WPPBMobile')) {
+            $this->_mobile = new WPPBMobile();
+          }
         }
 
         // check the version of PHP running on the server
@@ -128,6 +136,9 @@ if (!class_exists('WP_PluginBase')) {
                 // Add or alter any admin menus
                 add_action('admin_menu', array(&$this, "admin_add_menus"));
                 
+                
+                add_action('admin_notices', array(&$this, "admin_show_messages"));
+                
                 $this->admin_init();
                 
             } else {
@@ -147,20 +158,24 @@ if (!class_exists('WP_PluginBase')) {
         function check_can_load($input) {
             $can_load = false;
             
-            if ($input === (WPPB_LOAD_ADMIN & $input)) {
+            if ($input === (1 & $input)) {
                 $can_load = is_admin();
             } 
-            if ($input === (WPPB_LOAD_ADMIN_SETTINGS & $input)) {
-                $can_load = is_admin() && array_key_exists('page', $_GET) && ($_GET['page'] == $this->_plugin_name);
+            if ($input === (2 & $input)) {
+                $can_load = $this->check_admin_settings_page();
             }
-            if ($input === (WPPB_LOAD_FRONT & $input)) {
+            if ($input === (4 & $input)) {
                 $can_load = !is_admin();
             }
-            if ($input === (WPPB_LOAD_FRONT_HOME & $input)) {
+            if ($input === (8 & $input)) {
                 $can_load = is_front_page();
             }
 
             return $can_load;
+        }
+        
+        function check_admin_settings_page() {
+          return is_admin() && array_key_exists('page', $_GET) && ($_GET['page'] == $this->_plugin_name);
         }
 
         // register and enqueue a CSS
@@ -169,8 +184,12 @@ if (!class_exists('WP_PluginBase')) {
               $v = $this->current_plugin_version();
             }
 
-            $css_src_url = $this->_plugin_url . 'css/' . $file;
-            $h = str_replace('.', '-', $file);
+            $css_src_url = $file;
+            if ( ! WPPBUtils::str_contains($file, '://') ) {
+              $css_src_url = $this->_plugin_url . 'css/' . $file;
+            }
+            
+            $h = str_replace('.', '-', pathinfo( $file, PATHINFO_FILENAME ) );
 
             wp_register_style(
                     $handle = $h,
@@ -182,19 +201,23 @@ if (!class_exists('WP_PluginBase')) {
         }
 
         // register and enqueu a script
-        function register_and_enqueue_js($file, $d = array(), $v = false) {
+        function register_and_enqueue_js($file, $d = array(), $v = false, $f = false) {
             if ($v === false) {
               $v = $this->current_plugin_version();
             }
 
-            $js_src_url = $this->_plugin_url . 'js/' . $file;
-            $h = str_replace('.', '-', $file);
+            $js_src_url = $file;
+            if ( ! WPPBUtils::str_contains($file, '://') ) {
+              $js_src_url = $this->_plugin_url . 'js/' . $file;
+            }            
+            $h = str_replace('.', '-', pathinfo( $file, PATHINFO_FILENAME ) );
 
             wp_register_script(
                     $handle = $h,
                     $src = $js_src_url,
                     $deps = $d,
-                    $ver = $v);
+                    $ver = $v,
+                    $in_footer = $f);
 
             wp_enqueue_script($h);
         }
@@ -276,6 +299,50 @@ if (!class_exists('WP_PluginBase')) {
             if ($this->check_can_load($this->_when_to_load_default_css) && $this->_default_css_exists) {
                 wp_enqueue_style($this->admin_css_default_handle());
             }
+        }
+        
+        function admin_add_error_message($message, $session = false) {
+          if ($session) {
+            //save the errors to the sessions;
+            $errors = $_SESSION[$this->_plugin_name . '_admin_errors'];
+            //add the error
+            $errors[] = $message;
+            //save it back to the session
+            $_SESSION[$this->_plugin_name . '_admin_errors'] = $errors;
+          } else {
+            //store it normally
+            $this->_admin_errors[] = $message;
+          }
+        }
+        
+        function admin_show_messages() {
+          
+          //first check the session
+          $session_error_messages = $_SESSION[$this->_plugin_name . '_admin_errors'];
+          if (is_array($session_error_messages)) {
+            foreach ( $session_error_messages as $error ) {
+              $this->admin_show_message($message, true);
+            }
+            
+            //now clear the session
+            $_SESSION[$this->_plugin_name . '_admin_errors'] = null;
+          }
+          
+          if (is_array($this->_admin_errors)) {
+            foreach ( $this->_admin_errors as $error ) {
+              $this->admin_show_message($message, true);
+            }
+          }
+        }
+        
+        function admin_show_message($message, $error = false) {
+          if ($error) {
+            echo '<div id="message" class="error">';
+          } else {
+            echo '<div id="message" class="updated fade">';
+          }
+
+          echo "<p><strong>$message</strong></p></div>";
         }
 
         // register any options/settings we may want to store for this plugin
@@ -415,8 +482,9 @@ if (!class_exists('WP_PluginBase')) {
                   $checked = '';
                   if ( isset( $options[$id] ) && $options[$id] == 'on' )
                       $checked = ' checked="checked"';
+                  //else if ( )
 
-                  echo '<input' . $field_class . ' type="checkbox" id="' . $id . '" name="'.$this->_plugin_name.'[' . $id . ']" value="on"' . $checked . ' /> <label for="' . $id . '">' . $desc . '</label>';
+                  echo '<input' . $field_class . ' type="checkbox" id="' . $id . '" name="'.$this->_plugin_name.'[' . $id . ']" value="on"' . $checked . ' /> <label for="' . $id . '"><small>' . $desc . '</small></label>';
 
                   break;
 
@@ -427,7 +495,7 @@ if (!class_exists('WP_PluginBase')) {
                       $selected = '';
                       if ( $options[$id] == $value )
                           $selected = ' selected="selected"';
-                      echo '<option value="' . $value . '">' . $label . '</option>';
+                      echo '<option '.$selected.' value="' . $value . '">' . $label . '</option>';
                   }
 
                   echo '</select>';
@@ -436,11 +504,13 @@ if (!class_exists('WP_PluginBase')) {
 
                 case 'radio':
                   $i = 0;
+                  $saved_value = $options[$id];
+                  if (empty($saved_value)) { $saved_value = $std; }
                   foreach ( $choices as $value => $label ) {
                       $selected = '';
-                      if ( $options[$id] == $value )
-                          $selected = ' selected="selected"';
-                      echo '<input' . $field_class . ' type="radio" name="'.$this->_plugin_name.'[' . $id . ']" id="' . $id . $i . '" value="' . $value . '"> <label for="' . $id . $i . '">' . $label . '</label>';
+                      if ( $saved_value == $value )
+                          $selected = ' checked="checked"';
+                      echo '<input' . $field_class . $selected . ' type="radio" name="'.$this->_plugin_name.'[' . $id . ']" id="' . $id . $i . '" value="' . $value . '"> <label for="' . $id . $i . '">' . $label . '</label>';
                       if ( $i < count( $choices ) - 1 )
                           echo '<br />';
                       $i++;
@@ -460,6 +530,25 @@ if (!class_exists('WP_PluginBase')) {
 
                 case 'text':
                   echo '<input' . $field_class . ' type="text" id="' . $id . '" name="'.$this->_plugin_name.'[' . $id . ']" placeholder="' . $std . '" value="' . $options[$id] . '" />';
+
+                  break;
+
+                case 'checkboxlist':
+                  $i = 0;
+                  foreach ( $choices as $value => $label ) {
+
+                    $checked = '';
+                    if ( isset($options[$id][$value]) && $options[$id][$value] == 'true') {
+                      $checked = 'checked="checked"';
+                    }
+
+                    echo '<input' . $field_class . ' ' . $checked . ' type="checkbox" name="'.$this->_plugin_name.'[' . $id . '|' . $value . ']" id="' . $id . $i . '" value="on"> <label for="' . $id . $i . '">' . $label . '</label>';
+                    if ( $i < count( $choices ) - 1 )
+                      echo '<br />';
+                    $i++;
+                  }
+
+                  //echo '<div style="display:none"><input type="checkbox" checked="checked" name="'.$this->_plugin_name.'[' . $id . '|_none_]" id="' . $id . '_none" value="on"></div>';
 
                   break;
 
@@ -497,7 +586,36 @@ if (!class_exists('WP_PluginBase')) {
 //
 //            }
 
-            return $input;
+          foreach ($this->_settings as $setting) {
+            $this->admin_settings_validate_item( $setting, $input );
+          }
+
+          return $input;
+        }
+
+        function admin_settings_validate_item( $setting, &$input ) {
+          //validate a single setting
+
+          if ($setting['type'] == 'checkboxlist') {
+
+            unset($checkboxarray);
+            $check_values = array();
+            foreach ($setting['choices'] as $value => $label ) {
+              if ( !empty( $input[$setting['id'] . '|' . $value] ) ) {
+                  // If it's not null, make sure it's true, add it to an array
+                  $checkboxarray[$value] = 'true';
+              }
+              else {
+                  $checkboxarray[$value] = 'false';
+              }
+            }
+
+            if (!empty($checkboxarray)) {
+              $input[$setting['id']] = $checkboxarray;
+            }
+          }
+
+
         }
 
         // add a settings admin menu
@@ -516,7 +634,7 @@ if (!class_exists('WP_PluginBase')) {
             } else {
                 //render the settings using our default page
                 include_once($this->_plugin_dir . "includes/default_settings.php");
-                admin_settings_render_default_page($this->_plugin_title . ' Settings', '', $this->_plugin_name, $this->_settings_tabs);
+                admin_settings_render_default_page($this->_plugin_title . ' Settings', $this->_plugin_settings_summary, $this->_plugin_name, $this->_settings_tabs);
             }
         }
 
@@ -541,6 +659,53 @@ if (!class_exists('WP_PluginBase')) {
         // register any custom shortcodes
         function register_shortcodes() { }
 
+        // Get the remote XML file contents and return its data (Version and Changelog)
+        // Uses the cached version if available and inside the time interval defined
+        // original code found here : https://github.com/mordauk/WordPress-Plugin-Update-Notifier-for-Code-Canyon
+        function check_plugin_version($check_url, $interval = 0) {
+          $db_cache_field = 'updatecheck-cache';
+          $db_cache_field_last_updated = 'updatecheck-last-updated';
+
+          $last = $this->get_option( $db_cache_field_last_updated );
+          $now = time();
+          // check the cache
+          if ( !$last || $interval == 0 || (( $now - $last ) > $interval) ) {
+            // cache doesn't exist, or is old, so refresh it
+            if( function_exists('curl_init') ) { // if cURL is available, use it...
+              $ch = curl_init($check_url);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              curl_setopt($ch, CURLOPT_HEADER, 0);
+              curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+              $cache = curl_exec($ch);
+              curl_close($ch);
+            } else {
+              $cache = file_get_contents($check_url); // ...if not, use the common file_get_contents()
+            }
+
+            if ($cache) {
+              // we got good results
+              $this->save_option( $db_cache_field, $cache );
+              $this->save_option( $db_cache_field_last_updated, time() );
+            }
+            // read from the cache file
+            $update_data = $this->get_option( $db_cache_field );
+          }
+          else {
+            // cache file is fresh enough, so read from it
+            $update_data = $this->get_option( $db_cache_field );
+          }
+
+          // Let's see if the $xml data was returned as we expected it to.
+          // If it didn't, use the default 1.0 as the latest version so that we don't have problems when the remote server hosting the XML file is down
+          if( strpos((string)$update_data, '<notifier>') === false ) {
+            $update_data = '<?xml version="1.0" encoding="UTF-8"?><notifier><latest>1.0</latest><changelog></changelog></notifier>';
+          }
+
+          // Load the remote XML data into a variable and return it
+          $xml = simplexml_load_string($update_data);
+
+          return $xml;
+        }
 
         // get a value using the transient API by the key
         // if the key does not exist, then call the function to get the value and store that
@@ -585,13 +750,21 @@ if (!class_exists('WP_PluginBase')) {
         }
 
         //get a WP option value for the plugin
-        function get_option($key) {
+        function get_option($key, $default = false) {
           $options = get_option( $this->_plugin_name );
           if ($options) {
-            return ( array_key_exists($key, $options) ) ? $options[$key] : false;
+            return ( array_key_exists($key, $options) ) ? $options[$key] : $default;
           }
 
-          return false;
+          return $default;
+        }
+
+        function delete_option($key) {
+          $options = get_option( $this->_plugin_name );
+          if (options) {
+            unset($options[$key]);
+            update_option($this->_plugin_name, $options);
+          }
         }
     }
 }

@@ -309,8 +309,8 @@
       var moving = false;
       var wasMoving = false;
       
-      if ( settings.displayvalue == 'left' ) { $value.css({ 'float': 'left', 'margin-right': Math.abs(left) }); }
-      else if ( settings.displayvalue == 'right' ) { $value.css({ 'float': 'right', 'margin-left': Math.abs(left) }); };
+      if ( settings.displayvalue == 'left' ) { $value.css({ 'float': 'left', 'padding-right': Math.abs(left) }); }
+      else if ( settings.displayvalue == 'right' ) { $value.css({ 'float': 'right', 'padding-left': Math.abs(left) }); };
 
       var mu = {
         round: function( num, pre ) {

@@ -42,11 +42,11 @@ if (!class_exists('WPPBUtils')) {
      * @param     string
      * @return    bool
      */
-    function starts_with($haystack, $needle){
+    static function starts_with($haystack, $needle){
         return strpos($haystack, $needle) === 0;
     }
 
-    function ends_with($haystack, $needle, $case=true)
+    static function ends_with($haystack, $needle, $case=true)
     {
       $expectedPosition = strlen($haystack) - strlen($needle);
 
@@ -64,7 +64,7 @@ if (!class_exists('WPPBUtils')) {
     * @param    string    $word    English noun to pluralize
     * @return string Plural noun
     */
-    function pluralize($word)
+    static function pluralize($word)
     {
         $plural = array(
         '/(quiz)$/i' => '1zes',
@@ -125,7 +125,7 @@ if (!class_exists('WPPBUtils')) {
     * @param    string    $word    English noun to singularize
     * @return string Singular noun.
     */
-    function singularize($word)
+    static function singularize($word)
     {
         $singular = array (
         '/(quiz)zes$/i' => '\1',
@@ -195,7 +195,7 @@ if (!class_exists('WPPBUtils')) {
     * @param    integer    $number    Number to get its ordinal value
     * @return string Ordinal representation of given string.
     */
-    function ordinalize($number)
+    static function ordinalize($number)
     {
         if (in_array(($number % 100),range(11,13))){
             return $number.'th';
@@ -214,9 +214,22 @@ if (!class_exists('WPPBUtils')) {
                 break;
             }
         }
-    }    
+    }
 
-    function get_files_by_ext($extension, $path){
+    /**
+     * Replace all linebreaks with one whitespace.
+     *
+     * @access public
+     * @param string $string
+     *   The text to be processed.
+     * @return string
+     *   The given text without any linebreaks.
+     */
+    static function replace_newline($string) {
+      return (string)str_replace(array("\r", "\r\n", "\n"), '', $string);
+    }
+  
+    static function get_files_by_ext($extension, $path){
       $list = array(); //initialise a variable
       $dir_handle = @opendir($path) or die("Unable to open $path"); //attempt to open path
       while($file = readdir($dir_handle)){ //loop through all the files in the path
