@@ -90,7 +90,17 @@ function tc_cms_init_session(){
 		session_start();
 		error_log(" session id : ".session_id()."\n");
 		//error_log(var_export($_SESSION, 1));
-		
+		if (!is_admin()){
+			error_log('IS NOT ADMIN, checking for cart in session...');
+			$cartID = CartAjax::hasCartInSession();
+			if($cartID === FALSE){
+				error_log('Creating new cart...');
+				CartAjax::create();
+			}else{
+				error_log("Exisitng cartID : $cartID");
+			}
+		}
+
 	}
 }
 
@@ -164,6 +174,7 @@ add_action( 'admin_init', 'tc_cms_add_categories_to_pages', 10, 1 );
 // add_action( 'query_vars', 'tc_cms_dump_wp_query', 10, 1 );
 // add_action( 'template_redirect', 'tc_cms_dump_wp_query', 10, 1 );
 add_action( 'template_redirect', 'tc_cms_enqueue_scripts', 10, 1 );
+//add_action( 'wp_head', 'tc_cms_enque_js');
 
 function tc_cms_enqueue_scripts(){
 	global $post;
@@ -172,9 +183,39 @@ function tc_cms_enqueue_scripts(){
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('jquery-ui-core');
 		wp_enqueue_script( 'jquery-ui-button' );
+		//wp_enqueue_script('json2');
+		
+		wp_enqueue_script( 'ba-debug', TC_SHARED_JS_URL .'/ba-debug.js', __FILE__ );
+		
+		
+		if(!is_admin()){
+			$productModel = ProductProxy::getProductByID($post->ID);
+			wp_enqueue_script( 'tc-ajax', TC_CMS_JS_URL . 'tc_ajax.js', array('jquery'));
+			$cartID = str_replace('cart_', '', CartAjax::hasCartInSession());
+			error_log('tc_cms_enque_js, cartID : '.$cartID);
+			$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php', 'http' ), 
+				'site'=>mt_rand(), 
+				'addToCartNonce'=> wp_create_nonce( 'tc_nonce' ), 
+				'cartID'=>$cartID,
+				'productID'=>$post->ID,
+				'price'=>$productModel['price']
+				);
+			wp_localize_script( 'tc-ajax', 'TCAjax', $vars  );
+		}
 		
 	}
+	
+
 }
+
+// function tc_cms_enque_js(){
+// 	if(!is_admin()){
+// 		wp_enqueue_script( 'tc-ajax', TC_CMS_JS_URL . 'tc_ajax.js', array('jquery'));
+// 		$cartID = str_replace('cart_', '', CartAjax::hasCartInSession());
+// 		error_log('tc_cms_enque_js, cartID : '.$cartID);
+// 		wp_localize_script( 'tc-ajax', 'TCAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php', 'http' ), 'site'=>mt_rand(), 'addToCartNonce'=> wp_create_nonce( 'tc_nonce' ), 'cartID'=>$cartID ) );
+// 	}
+// }
 
 function tc_cms_dump_wp_query(){
 	global $wp_query;

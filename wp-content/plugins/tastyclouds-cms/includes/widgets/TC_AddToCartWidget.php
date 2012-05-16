@@ -24,6 +24,12 @@ class TC_AddToCartWidget extends WP_Widget {
      * @return void Echoes it's output
      **/
 	function widget( $args, $instance ) {
+		
+		if (!CartAjax::hasCartInSession()){
+			
+		}
+		
+		
 		error_log("TC_AddToCartWidget->widget()");
 		extract( $args, EXTR_SKIP );
 		global $post;
