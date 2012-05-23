@@ -7,6 +7,7 @@ $summaryRows = '';
 error_log("pagenow : $pagenow");
 
 if ($pagenow == 'post-new.php'){
+
 	
 	$cartKey = CartAjax::hasCartInSession();
 	error_log("cartKey : $cartKey");

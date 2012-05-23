@@ -16,6 +16,10 @@ if(!defined('TC_CMS_JS_URL')){
     define('TC_CMS_JS_URL', plugins_url('tastyclouds-cms/js/'));
 }
 
+if(!defined('TC_CMS_CSS_URL')){
+    define('TC_CMS_CSS_URL', plugins_url('tastyclouds-cms/css/'));
+}
+
 if(!defined('TC_SHARED_DIR')){
     define('TC_SHARED_DIR', WP_CONTENT_DIR.'/tc_shared/');
 }

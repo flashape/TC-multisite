@@ -484,7 +484,8 @@ if ( !class_exists('WordpressPopularPosts') ) {
 			wp_reset_query();
 			
 			// if we're on a page or post, load the script
-			if ( (is_single() || is_page()) && !is_user_logged_in() ) {
+			// Added disable for checkout page - RR 5/23/12
+			if ( (is_single() || is_page()) && !is_user_logged_in() && !is_page('checkout') ) {
 				$id = $wp_query->post->ID;
 			?>
 <!-- Wordpress Popular Posts v<?php echo $this->version; ?> -->
@@ -983,8 +984,10 @@ if ( !class_exists('WordpressPopularPosts') ) {
 		
 		// insert Wordpress Popular Posts' stylesheet in theme's head section, just in case someone needs it
 		function wpp_print_stylesheet() {
-			$css_path = (@file_exists(TEMPLATEPATH.'/wpp.css')) ? get_stylesheet_directory_uri().'/wpp.css' : plugin_dir_url( __FILE__ ).'style/wpp.css';
-			echo "\n"."<!-- Wordpress Popular Posts v".$this->version." -->"."\n".'<link rel="stylesheet" href="'. $css_path .'" type="text/css" media="screen" />'."\n"."<!-- End Wordpress Popular Posts v".$this->version." -->"."\n";	
+			if(!is_page('checkout')){	
+				$css_path = (@file_exists(TEMPLATEPATH.'/wpp.css')) ? get_stylesheet_directory_uri().'/wpp.css' : plugin_dir_url( __FILE__ ).'style/wpp.css';
+				echo "\n"."<!-- Wordpress Popular Posts v".$this->version." -->"."\n".'<link rel="stylesheet" href="'. $css_path .'" type="text/css" media="screen" />'."\n"."<!-- End Wordpress Popular Posts v".$this->version." -->"."\n";	
+			}
 		}
 		
 		// create Wordpress Popular Posts' maintenance page

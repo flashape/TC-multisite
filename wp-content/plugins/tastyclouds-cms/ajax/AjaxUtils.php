@@ -33,6 +33,13 @@ class AjaxUtils
 		// always use die() when echoing content for ajax requests
 		die();
 	}
+		
+	public static function returnHTML($toReturn){
+		
+		echo $toReturn;
+		// always use die() when echoing content for ajax requests
+		die();
+	}
 	
 	
 }

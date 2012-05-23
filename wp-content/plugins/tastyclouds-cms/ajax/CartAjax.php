@@ -11,6 +11,29 @@ class CartAjax
 		//do_dump($_POST);
 	}
 	
+	
+	public function getUpsellPopup(){
+		$productID = $_POST['productID'];
+		
+		if (empty($productID) || !is_numeric($productID)){
+			error_log("CatAjax::getUpsellPopup, invalid productID");
+			die('Error');
+		}
+		
+
+	
+	
+		
+		//$content =  "<b>Item (ID : $productID) successfully added to cart.  What next?</b>";
+		
+		AjaxUtils::returnHTML($content);
+		
+		
+		
+	}
+	
+	
+	
 	// returns a new cart instance with the specified id
 	public static function create(){
 		$cartID = uniqid(rand());
@@ -105,8 +128,41 @@ class CartAjax
 		$cartID = $_POST['cartID'];
 		error_log("add item, cartID: $cartID");
 		
+		$nonce = $_POST['addToCartNonce'];
+
+		
+		// Add-to-cart AJAX requests from the front end of the site
+		// will have a (meaningless) 'site' variable sent with the request,
+		// requests from the admin will not.
+		
+		if (isset($_POST['site'])){
+			// check to see if the submitted nonce matches with the
+		    // generated nonce we created earlier
+			error_log("request is from front end, checking nonce...");
+		    if ( ! wp_verify_nonce( $nonce, 'tc_add_to_cart_nonce' ) ){
+				$result = AjaxUtils::createResult('Invalid request.',false);
+			}
+			error_log("nonce is valid.");	
+		}
+		
+		
+		
 		$cart =& self::getCartById($cartID);
 		$model = AjaxUtils::jsonDecodePostKey('model');
+		$productID = $model->productID;
+		
+		$productModel = ProductProxy::getProductByID($productID);
+		
+		if(!$productModel){
+			$result = AjaxUtils::createResult('Product not found.',false);
+		}
+		
+		// requests from the front end of the site
+		// won't contain price data to prevent tampering.
+		if(!isset($model->price)){
+			error_log("product price was not set, using default price.");
+			$model->price = $productModel['price'];
+		}
 		
 		$error = self::getLastJsonError();
 		
@@ -117,7 +173,16 @@ class CartAjax
 			$cartItemID = uniqid();
 			$model->cartItemID = $cartItemID;
 			$cart['items'][$cartItemID] = $model;
-			$result = AjaxUtils::createResult('Item Added Successfully.', true, array('cartItemID'=>$cartItemID, 'cart'=>$cart, 'model'=>$model, 'jsonError'=>$error));
+			$arrayToReturn = array('cartItemID'=>$cartItemID, 'cart'=>$cart, 'model'=>$model, 'jsonError'=>$error);
+			
+			if(isset($_POST['site'])){
+				ob_start();
+				include(TASTY_CMS_PLUGIN_INC_DIR.'upsell.php');
+				$arrayToReturn['popupContent'] = ob_get_clean();
+			}
+			
+			
+			$result = AjaxUtils::createResult('Item Added Successfully.', true, $arrayToReturn);
 			self::overwriteCartInSession($cart);
 		}else{
 			$result = self::createCartNotFoundResult();

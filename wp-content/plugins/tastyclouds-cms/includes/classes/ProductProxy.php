@@ -13,6 +13,11 @@ class ProductProxy
 	public function getProductByID($productID)
 	{
 		$productPost = get_post($productID);
+		
+		if(!$productPost){
+			return null;
+		}
+		
 		$productModel = array();
 		$productModel['type'] = 'tc_products';
 		$productModel['productName'] = $productPost->post_title;

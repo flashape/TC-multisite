@@ -34,7 +34,7 @@
 			</div>
 		<?php } ?>
 
-		&copy;  <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. <?php _e("All rights reserved.", "solostream"); ?> <a href="http://www.solostream.com"><?php _e("Premium WordPress Themes", "solostream"); ?></a>.
+		&copy;  <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. <?php _e("All rights reserved.", "solostream"); ?>
 
 	</div>
 </div>

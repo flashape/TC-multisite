@@ -20,6 +20,8 @@ add_action( 'wp_ajax_tc_add_cart_item', array('CartAjax', 'addItem') );
 add_action( 'wp_ajax_nopriv_tc_add_cart_item', array('CartAjax', 'addItem') );
 add_action( 'wp_ajax_tc_remove_cart_item', array('CartAjax', 'removeItem') );
 add_action( 'wp_ajax_tc_update_cart_item', array('CartAjax', 'updateItem') );
+add_action( 'wp_ajax_tc_upsell_popup', array('CartAjax', 'getUpsellPopup') );
+add_action( 'wp_ajax_nopriv_tc_upsell_popup', array('CartAjax', 'getUpsellPopup') );
 
 
 add_action( 'wp_ajax_tc_update_discount', array('CartAjax', 'updateDiscount') );
