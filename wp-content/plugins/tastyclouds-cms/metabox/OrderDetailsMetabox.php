@@ -319,111 +319,111 @@ $loaderGif = plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif');
 
 
 
-	.order-items-radio {
-		margin-left:15px
-	}	
-	.event-items-radio {
-		float: left;
-		width: 20%;	
-	}
-	
-	.yellow-callout{
-		background-color:#FFFFE0;
-		border:1px solid #E6DB55;
-		padding:5px;
-		margin-bottom:5px;
-	}
-	
-	#tc-order-types-div {
+.order-items-radio {
+	margin-left:15px
+}	
+.event-items-radio {
+	float: left;
+	width: 20%;	
+}
 
-	}	
-	#submitErrorBox {
-		padding: 10px;
-		border:1px solid #E6DB55;
-		font-weight:bold;
-		display:none;
-	}
+.yellow-callout{
+	background-color:#FFFFE0;
+	border:1px solid #E6DB55;
+	padding:5px;
+	margin-bottom:5px;
+}
+
+#tc-order-types-div {
+
+}	
+#submitErrorBox {
+	padding: 10px;
+	border:1px solid #E6DB55;
+	font-weight:bold;
+	display:none;
+}
+
+.itemName{
+	color:#990000;
+	font-weight:bold;
+}
+
+.customItemTitleInput{
+	color:#990000;
+	font-weight:bold;
+}
+		
+.titleColumn{
+	text-align:left;
 	
-	.itemName{
-		color:#990000;
-		font-weight:bold;
-	}
+}
+		
+.descriptionColumn{
+	text-align:left;
+}
 	
-	.customItemTitleInput{
-		color:#990000;
-		font-weight:bold;
-	}
-			
-	.titleColumn{
-		text-align:left;
 		
-	}
-			
-	.descriptionColumn{
-		text-align:left;
-	}
+.itemPriceColumn{
+	text-align:right;
+}
+				
+.quantityColumn{
+	text-align:left;
+}
+	
 		
-			
-	.itemPriceColumn{
-		text-align:right;
-	}
+.rowTotalColumn{
+	text-align:right;
+}
+				
+.removeItemColumn{
+	text-align:right;
+}
 					
-	.quantityColumn{
-		text-align:left;
-	}
-		
-			
-	.rowTotalColumn{
-		text-align:right;
-	}
-					
-	.removeItemColumn{
-		text-align:right;
-	}
+.addNextItemColumn{
+	text-align:right;
+}
 						
-	.addNextItemColumn{
-		text-align:right;
-	}
+.address-form-label-column{
+	text-align:right;
+	font-size:12px;
+	color:#555;
+}
 							
-	.address-form-label-column{
-		text-align:right;
-		font-size:12px;
-		color:#555;
-	}
+.shippingRadio{
+	font-size:12px;
+	color:#555;
+}
 								
-	.shippingRadio{
-		font-size:12px;
-		color:#555;
-	}
+.addressFormHeader{
+	font-size:12px;
+	font-weight:bold;
+	color:#000;
+}
 									
-	.addressFormHeader{
-		font-size:12px;
-		font-weight:bold;
-		color:#000;
-	}
-										
-	.addressBookDropdown{
-		width:200px;
-		
-	}
+.addressBookDropdown{
+	width:200px;
 	
-	.balanceDue {
-		text-align:right;
-		font-weight:bold;
-		font-size:14px !important;
-		color:#990000 !important;
-		
-	}
-		
-	#addressDiv{
-		width:825px;
-		clear:both;
-	}
+}
+
+.balanceDue {
+	text-align:right;
+	font-weight:bold;
+	font-size:14px !important;
+	color:#990000 !important;
 	
-	#totalRow td{
-		font-weight:bold;
-	}
-					
+}
+	
+#addressDiv{
+	width:825px;
+	clear:both;
+}
+
+#totalRow td{
+	font-weight:bold;
+}
+				
 
 	
 </style>

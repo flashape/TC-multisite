@@ -12,8 +12,17 @@ class OrderProxy
 	}
 	
 	
-	public static function insertNew($data){
+	public static function insertNew(){
+	   $order = array(
+			'post_title' => '',
+			'post_content' => "",
+			'post_status' => 'publish',
+			'post_type' => "tc_order"
+	             );
 
+		$orderID = wp_insert_post($order);
+		
+		return $orderID;
 	}
 	
 	public static function removeContactTaxonomyTerms($orderID){

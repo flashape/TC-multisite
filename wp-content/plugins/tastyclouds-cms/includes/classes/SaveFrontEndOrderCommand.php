@@ -22,62 +22,60 @@ class SaveFrontEndOrderCommand
 	public function execute(){
 		
 		
-		$this->checkoutAsGuest =  (@$_POST['checkoutAsGuest'] == "yes");
-		//$this->isNewOrder = (defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST );
-		//$this->orderWasReloaded = (@$_POST['tc_selected_billing_addr'] == "1");
+		$this->checkoutAsGuest =  (@$_POST['tc_guest_checkout'] == "yes");
 		
 
 		$this->contactModel = $this->processContact();
 		$this->contactID = $this->contactModel['contactID'];		
+
 		
 		$this->billingAddress = $this->processBillingAddress();
 		$this->shippingAddress = $this->processShippingAddress($this->billingAddress);
-		
-		
-		// save payment info if submitted with order
-		if (!empty($_POST['payment_amount'] ) ){
+
+		// // save payment info if submitted with order
+		if (!empty($_POST['stripeToken'] ) ){
 			$this->paymentID = $this->processPayment();
 		}	
-
-		OrderProxy::removeContactTaxonomyTerms($this->orderID);
-
-		OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
-
-		if(isset($_POST['_tc_event_date'])){
-			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
-			// store the formatted date to make it easier to search for today's orders later
-			$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
-			error_log("_tc_event_date_formated : $formattedDate"  );	
-			update_post_meta( $this->orderID, '_tc_event_date_formatted', $formattedDate );					
-		}
-		update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
-		update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
-		update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
-
-
-		if ($this->isNewOrder || $this->orderWasReloaded){
-			$cartID = $_POST['cartID'];
-			$this->cart = CartAjax::getCartById($cartID);
-			OrderProxy::saveCart($this->cart, $this->orderID, $cartID);
-		}
-		
-		
-		
-		if ( $this->isNewOrder  || $this->orderWasReloaded ){
-			//if this is a new order, check to see if we need to create an invoice on Freshbooks.
-
-			// TODO: determine if we want to save this invoice to FB.
-			$orderType = $_POST['_tc_order_type'];
-
-			// if we are saving any type of order except "Walk In", link with freshbooks
-			// to send customer an invoice.
-			if ($orderType == "36"){ // 36 is a walk-in order, we dont need an invoice on Freshbooks for that.
-				return;
-			}
-			
-			$this->createInvoice();
-
-		}
+		// 
+		// OrderProxy::removeContactTaxonomyTerms($this->orderID);
+		// 
+		// OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
+		// 
+		// if(isset($_POST['_tc_event_date'])){
+		// 	update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
+		// 	// store the formatted date to make it easier to search for today's orders later
+		// 	$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
+		// 	error_log("_tc_event_date_formated : $formattedDate"  );	
+		// 	update_post_meta( $this->orderID, '_tc_event_date_formatted', $formattedDate );					
+		// }
+		// update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
+		// update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
+		// update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
+		// 
+		// 
+		// if ($this->isNewOrder || $this->orderWasReloaded){
+		// 	$cartID = $_POST['cartID'];
+		// 	$this->cart = CartAjax::getCartById($cartID);
+		// 	OrderProxy::saveCart($this->cart, $this->orderID, $cartID);
+		// }
+		// 
+		// 
+		// 
+		// if ( $this->isNewOrder  || $this->orderWasReloaded ){
+		// 	//if this is a new order, check to see if we need to create an invoice on Freshbooks.
+		// 
+		// 	// TODO: determine if we want to save this invoice to FB.
+		// 	$orderType = $_POST['_tc_order_type'];
+		// 
+		// 	// if we are saving any type of order except "Walk In", link with freshbooks
+		// 	// to send customer an invoice.
+		// 	if ($orderType == "36"){ // 36 is a walk-in order, we dont need an invoice on Freshbooks for that.
+		// 		return;
+		// 	}
+		// 	
+		// 	$this->createInvoice();
+		// 
+		// }
 		
 	}
 	
@@ -89,295 +87,99 @@ class SaveFrontEndOrderCommand
 		$customerEmail = $this->contactModel['customerEmail'];
 		
 		if (empty($customerEmail) || filter_var($customerEmail, FILTER_VALIDATE_EMAIL) === FALSE){
-			error_log("\n\nNo valid email provided, skipping Freshbooks invoice.\n\n");								
+			error_log("\n\nNo valid email provided, skipping invoice.\n\n");								
 			return;
 		}
-
-		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksService.php');
-		require_once(TASTY_CMS_PLUGIN_LIBS_DIR .'freshbooks/FreshbooksUtils.php');
-		$freshbooksService = new FreshbooksService();
-
-		$fbClientID = FreshbooksUtils::getFreshbooksClientID($this->contactID);
-
-		if (empty($fbClientID)){
-			$clientObj = FreshbooksUtils::createClientObject(array('contact'=>$this->contactModel, 'address'=>$this->billingAddress));
-
-			$createClientResult = $freshbooksService->createNewClient($clientObj);
-			$response = $createClientResult['response'];
-
-			if ($createClientResult['success']){
-				error_log("\n\nSuccessfully created new client on freshbooks!");
-				$fbClientID = $response['client_id'];
-				update_post_meta($this->contactID, '_tc_fb_id', $fbClientID);
-			}else{
-				// throw a fit
-				error_log("\n\nError adding client to freshbooks");
-				error_log(print_r($response, 1));
-				error_log(print_r($createClientResult['error'], 1));
-				return;
-			}	
-		}
 		
-		error_log("fbClientID : $fbClientID");
-
-		/**********************************************
-		 * Now that we have a client id for Freshbooks,
-		 * create a new invoice for the order.
-		//  **********************************************/
-		
-		
-		
-		$invoiceItems = FreshbooksUtils::getInvoiceFromCart($fbClientID, $this->cart);
-		error_log(var_export($invoiceItems,1));
-		
-		$isEstimate = isset($_POST['order_status']['is_estimate'])  &&  $_POST['order_status']['is_estimate'] == "on";
-		
-		if($isEstimate){
-			$createEstimateResult = $freshbooksService->createEstimate($invoiceItems);
-			$estimateResponse = $createEstimateResult['response'];
-
-			if ($createEstimateResult['success']){
-				error_log("\n\nSuccessfully created new estimate on freshbooks!");								
-				$estimateID = $estimateResponse['estimate_id'];
-			}else{
-				error_log("\n\nError adding estimate to fresbooks");
-				error_log(print_r($estimateResponse, 1));
-				error_log(print_r($createEstimateResult['error'], 1));
-				return;
-			}
-			
-			
-			
-			/**********************************************
-			 * Now that the estimate is ready, email to the client
-			//  **********************************************/
-			$emailInfo = array();
-			$emailInfo['estimate_id'] = $estimateID;
-			$emailInfo['message'] = 'You have a new estimate. Get it here: ::estimate link::';
-			$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Estimate';
-
-			$sendEstimateResult = $freshbooksService->sendEstimateByEmail($emailInfo);
-			$sendEstimateResponse = $sendEstimateResult['response'];
-
-			if ($sendEstimateResult['success']){
-				error_log("\n\nSuccessfully send email!");
-
-			}else{
-				error_log("\n\nError sending email");
-				error_log(print_r($sendEstimateResponse, 1));
-				error_log(print_r($sendEstimateResult['error'], 1));
-				return;
-			}
-			
-			
-			
-			
-		}else{
-			
-			$createInvoiceResult = $freshbooksService->createInvoice($invoiceItems);
-			$invoiceResponse = $createInvoiceResult['response'];
-
-			if ($createInvoiceResult['success']){
-				error_log("\n\nSuccessfully created new invoice on freshbooks!");								
-				$invoiceID = $invoiceResponse['invoice_id'];
-			}else{
-				error_log("\n\nError adding invoice to fresbooks");
-				error_log(print_r($invoiceResponse, 1));
-				error_log(print_r($createInvoiceResult['error'], 1));
-				return;
-			}
-
-
-			/**********************************************
-			 * If there was a payment submitted with this order,
-			 * save the payment as a post, save it to Freshbooks, 
-			 * and add the payment to the invoice
-			//  **********************************************/
-			if ( isset($this->paymentID) ){
-				// save payment to Freshbooks
-				$payment = FreshbooksUtils::createNewInvoicePaymentFromPost($invoiceID);
-				$createPaymentResult = $freshbooksService->createPaymentForInvoice($payment);
-				$paymentResponse = $createPaymentResult['response'];
-
-				if ($createPaymentResult['success']){
-					error_log("\n\nSuccessfully created new payment on freshbooks!");
-					$invoicePaymentID = $paymentResponse['payment_id'];
-					update_post_meta($this->paymentID, '_tc_fb_payment_id', $invoicePaymentID);
-				}else{
-					error_log("\n\nError adding payment to freshbooks");
-					error_log(print_r($paymentResponse, 1));
-					error_log(print_r($createPaymentResult['error'], 1));
-					return;
-				}
-			}
-
-
-			/**********************************************
-			 * Now that the invoice is ready, email to the client
-			//  **********************************************/
-			$emailInfo = array();
-			$emailInfo['invoice_id'] = $invoiceID;
-			$emailInfo['message'] = 'You have a new invoice. Get it here: ::invoice link::';
-			$emailInfo['subject'] = 'Tasty Clouds Cotton Candy Company : Invoice';
-
-			$sendInvoiceResult = $freshbooksService->sendInvoiceByEmail($emailInfo);
-			$sendInvoiceResponse = $sendInvoiceResult['response'];
-
-			if ($sendInvoiceResult['success']){
-				error_log("\n\nSuccessfully send email!");
-
-			}else{
-				error_log("\n\nError sending email");
-				error_log(print_r($sendInvoiceResponse, 1));
-				error_log(print_r($sendInvoiceResult['error'], 1));
-				return;
-			}
-			
-			
-		}
-		
-
+		// TODO: generate invoice email and send to customer
 		
 		
 	}
 	
 	private function processContact(){
 		
+		// For the front end, we will have one of the following:
+		//		- A logged in user -  get the previously saved customer info.
+		//		- Checkout as guest - Create new contact info from the billing address
+		//		- Create an account - Create new contact info from the billing address, create WP user, link contact model with WP user id
 		
 		
-		$customerFirstName = @$_POST['customer_address_first_name'];
-		$customerLastName = @$_POST['customer_address_last_name'];
-		$customerEmail = @$_POST['customer_email'];
-		$customerPhone = @$_POST['customer_phone'];
-		$customerCompany = @$_POST['customer_company'];
-
-		$contactModel = array(
-			'customerFirstName'=>$customerFirstName,
-			'customerLastName'=>$customerLastName,
-			'customerEmail'=>$customerEmail,
-			'customerPhone'=>$customerPhone,
-			'customerCompany'=>$customerCompany
-		);
-		
-		$contactModelString = implode('', $contactModel);
-		$contactInfoWasSubmitted = !empty($contactModelString);
-		
-		
-		$this->isNewOrder = (defined( 'IS_NEW_ORDER_POST' ) && IS_NEW_ORDER_POST );
-		
-		$linkContactToOrder = false;
-		$contactIDToLink = '';
-		
-		$selectedContactID = $_POST['tc_selected_contact'];
-		
-		if ( !$this->isNewOrder){
-			error_log("this is a previously saved order...");
+		if (is_user_logged_in()){
+			// TODO : handle logged in user
+		}else{
+			// Create a contact using the billing address
+			$customerFirstName = @$_POST['billing_address_first_name'];
+			$customerLastName = @$_POST['billing_address_last_name'];
+			$customerEmail = @$_POST['customer_email'];
+			$customerPhone = @$_POST['customer_phone'];
+			$customerCompany = @$_POST['billing_address_company'];
 			
-			//this is a previously saved order.
-			$savedContactID = OrderProxy::getContactIDForOrder($this->orderID);
+			$contactModel = array(
+				'customerFirstName'=>$customerFirstName,
+				'customerLastName'=>$customerLastName,
+				'customerEmail'=>$customerEmail,
+				'customerPhone'=>$customerPhone,
+				'customerCompany'=>$customerCompany
+			);
 			
-			if ($savedContactID == $selectedContactID && !$contactInfoWasSubmitted){
-				error_log("no contact info was changed, return the existing contact model...");
-				
-				// no contact info was changed, return the existing contact model.
-				$contactModel = ContactProxy::getContactByID($savedContactID);
-				return $contactModel;
-			}
+			$newContactID = ContactProxy::createNew(array('use_post'=>false));
+			$contactModel['contactID'] = $newContactID;
+			ContactProxy::updateMeta($contactModel);
 			
-			
-			if ($savedContactID == $selectedContactID && $contactInfoWasSubmitted){
-				error_log("it's the same contact, but the info was updated...");
-				// it's the same contact, but the info was updated.
-				$contactModel['contactID'] = $savedContactID;
-				ContactProxy::updateMeta($contactModel);
-				return $contactModel;
-			}
-			
-			
-			if ($savedContactID != $selectedContactID){
-				error_log("a different contact was selected for this order...");
-				
-				if (!$contactInfoWasSubmitted){
-					error_log("no contact info was submitted...");
-					
-					// A different customer was selected with no changes
-					// switch the contact id linked to this order.
-					$this->deleteExistingContactConnectionToOrder();
-					
-					$contactModel = ContactProxy::getContactByID($selectedContactID);
-				}else{
-					error_log("a new contact was selected, but changes were made...");
-					
-					// a new contact was selected, but changes were made.
-					$this->deleteExistingContactConnectionToOrder();
-					
-					$contactModel['contactID'] = $selectedContactID;
-					ContactProxy::updateMeta($contactModel);
-				}
-				
-				$linkContactToOrder = true;
-				$contactIDToLink = $selectedContactID;
-			}
-		}
-		
-		
-		
-		if($this->isNewOrder){
-			if ( $contactInfoWasSubmitted ){
-				error_log("contact info was submitted!");
-
-				if( empty($selectedContactID) ){
-					$newContactID = ContactProxy::createNew(array('use_post'=>true));
-				}
-
-				//store the contact meta info with the post
-				$contactModel['contactID'] = $newContactID;
-				ContactProxy::updateMeta($contactModel);
-
-				$linkContactToOrder = true;
-				$contactIDToLink = $newContactID;
-				
-
-			}elseif( !$contactInfoWasSubmitted && $selectedContactID ){
-				error_log("no contact info was submitted and contactID is $selectedContactID, linking to order....");
-				$linkContactToOrder = true;
-				$contactIDToLink = $selectedContactID;
-				$contactModel = ContactProxy::getContactByID($selectedContactID);
-				
-			}
 			
 		}
 		
+		error_log("Connecting contactID : $contactIDToLink to orderID : ".$this->orderID);
+		$c = p2p_type( 'contact_to_order' )->connect( $contactModel['contactID'], $this->orderID, array(
+			'date' => current_time('mysql'),			
+		) );
 		
-		
-		if ($linkContactToOrder){
-			error_log("Connected contactID : $contactIDToLink to orderID : ".$this->orderID);
-			$c = p2p_type( 'contact_to_order' )->connect( $contactIDToLink, $this->orderID, array(
-				'date' => current_time('mysql'),			
-			) );
-			
-			error_log('linked contact to order, p2pid: ');
-			error_log(var_export($c, 1));
-		}
-		
+		error_log('linked contact to order, p2pid: ');
+		error_log(var_export($c, 1));
+
 		return $contactModel;
+		
+
 	}
 	
-	private function deleteExistingContactConnectionToOrder(){
-		$p2pConnections = p2p_get_connections( 'contact_to_order', array('to'=>$this->orderID, 'fields'=>'p2p_id') );
-		$p2pConnectionID = $p2pConnections[0];
-		p2p_delete_connection($p2pConnectionID);
-		
-	}
-		
-	private function deleteExistingUserConnectionToOrder($userID){
-		$p2pConnections = p2p_get_connections( 'order_to_user', array('to'=>$userID, 'fields'=>'p2p_id') );
-		$p2pConnectionID = $p2pConnections[0];
-		p2p_delete_connection($p2pConnectionID);
-		
-	}
 	
-	private function processPayment(){		
+	private function processPayment(){
+		// TODO:  submit payment to stripe
+		// set your secret key: remember to change this to your live secret key in production
+		// see your keys here https://manage.stripe.com/account
+		Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
+
+		// get the credit card details submitted by the form
+		$token = $_POST['stripeToken'];
+		
+		// If they chose to create an account, create a Stripe Customer object and charge that,
+		// If they chose to check out as guest, just charge the card directly.
+		
+		$description = array('orderID'=>$this->orderID);
+		
+		$descriptionJSON = json_encode($description);
+		
+		if($this->checkoutAsGuest){
+			// create the charge on Stripe's servers - this will charge the user's card
+			$charge = Stripe_Charge::create(array(
+				  "amount" => 1000, // amount in cents, again
+				  "currency" => "usd",
+				  "card" => $token,
+				  "description" => $descriptionJSON 
+				)
+			);
+			
+			
+			
+		}else{
+			
+			
+		}
+		
+
+		
+		
+				
 		$paymentID = PaymentProxy::insertNew(array('use_post'=>true, 'orderID'=>$this->orderID));
 
 		p2p_type( 'payment_to_order' )->connect( $paymentID, $this->orderID, array(

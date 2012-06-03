@@ -27,13 +27,20 @@ add_action( 'wp_ajax_nopriv_tc_upsell_popup', array('CartAjax', 'getUpsellPopup'
 add_action( 'wp_ajax_tc_update_discount', array('CartAjax', 'updateDiscount') );
 
 add_action( 'wp_ajax_tc_validate_coupon', array('CartAjax', 'validateCoupon') );
+add_action( 'wp_ajax_tc_validate_coupon_checkout', array('CartAjax', 'validateCouponForCheckout') );
+add_action( 'wp_ajax_nopriv_tc_validate_coupon_checkout', array('CartAjax', 'validateCouponForCheckout') );
+
 add_action( 'wp_ajax_tc_remove_coupon', array('CartAjax', 'removeCoupon') );
+add_action( 'wp_ajax_tc_remove_coupon_checkout', array('CartAjax', 'removeCouponForCheckout') );
+add_action( 'wp_ajax_nopriv_tc_remove_coupon_checkout', array('CartAjax', 'removeCouponForCheckout') );
 
 add_action( 'wp_ajax_tc_get_cart', array('CartAjax', 'getCart') );
 add_action( 'wp_ajax_tc_reload_order', array('CartAjax', 'reloadOrder') );
 add_action( 'wp_ajax_tc_enable_tax', array('CartAjax', 'enableTax') );
 
 add_action( 'wp_ajax_tc_update_shipping_rates',  array('ShippingAjax', 'retrieveShippingRates') );
+add_action( 'wp_ajax_tc_get_checkout_shipping_rates',  array('ShippingAjax', 'getShippingRatesForCheckout') );
+add_action( 'wp_ajax_nopriv_tc_get_checkout_shipping_rates',  array('ShippingAjax', 'getShippingRatesForCheckout') );
 
 
 add_action( 'wp_ajax_tc_insert_activity', array('ActivityAjax', 'insertActivity') );

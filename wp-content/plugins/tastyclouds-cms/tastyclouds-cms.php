@@ -49,7 +49,7 @@ function updatePostModifiedTime($postID){
 
 add_action('plugins_loaded','tc_cms_init_session');
 add_action('plugins_loaded','tc_cms_dequeue_autosave');
-add_action('manage_tc_order_posts_columns','tc_cms_manage_order_posts_columns');
+//add_action('manage_tc_order_posts_columns','tc_cms_manage_order_posts_columns');
 
 
 
@@ -162,6 +162,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_dashboard_widgets.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_emails.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/CartProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/SaveOrderCommand.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/SaveFrontEndOrderCommand.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ActivityProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/ContactProxy.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'classes/OrderProxy.php');
@@ -225,9 +226,21 @@ function tc_cms_enqueue_scripts(){
 		wp_enqueue_script( 'tc-checkout', TC_CMS_JS_URL . 'tc_checkout.js', array('jquery'));
 		wp_enqueue_style( 'tc.checkout', TC_CMS_CSS_URL . 'tc_checkout.css', __FILE__);
 		wp_enqueue_style( 'tc.columns', TC_CMS_CSS_URL . 'columns.css', __FILE__);
+		wp_enqueue_style( 'glDatePicker', TC_CMS_JS_URL . 'glDatePicker-v1.3/css/default.css', __FILE__);
 		
 		wp_enqueue_script( 'jquery-collapse', TC_CMS_JS_URL . 'jquery_collapse/jquery.collapse.js', array('jquery'));
 		wp_enqueue_script( 'jquery-cookie', TC_CMS_JS_URL . 'jquery_collapse/jquery.cookie.js', array('jquery'));
+		wp_enqueue_script( 'jquery-glDatePicker', TC_CMS_JS_URL . 'glDatePicker-v1.3/js/glDatePicker.js', array('jquery'));
+		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v1/');
+		
+		$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php'), 
+			'site'=>mt_rand(), 
+			'shippingNonce'=> wp_create_nonce( 'tc_add_shipping_nonce' ), 
+			);
+		wp_localize_script( 'tc-checkout', 'TCCheckoutAjax', $vars  );
+		
+		wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
+		wp_enqueue_style( 'jquery.colorbox', TC_SHARED_CSS_URL . 'colorbox/colorbox.css', __FILE__);
 		
 	}
 	

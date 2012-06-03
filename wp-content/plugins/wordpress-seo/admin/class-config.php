@@ -489,7 +489,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 			}
 			$content .= '<br/>';
 			$content .= '<h4 class="big">'.__('Special pages', 'wordpress-seo' ).'</h4>';
-			$content .= '<h4>'.__('Author Archives').'</h4>';
+			$content .= '<h4>'.__('Author Archives', 'wordpress-seo').'</h4>';
 			$content .= $this->textinput('title-author',__('Title template', 'wordpress-seo' ));
 			$content .= $this->textarea('metadesc-author',__('Meta description template', 'wordpress-seo' ), '', 'metadesc' );
 			if ( isset($options['usemetakeywords']) && $options['usemetakeywords'] )
@@ -688,7 +688,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 		}
 		
 		function internallinks_page() {
-			$this->admin_header(__('Internal Links'), false, true, 'yoast_wpseo_internallinks_options', 'wpseo_internallinks');
+			$this->admin_header(__('Internal Links','wordpress-seo'), false, true, 'yoast_wpseo_internallinks_options', 'wpseo_internallinks');
 
 			$content = $this->checkbox('breadcrumbs-enable',__('Enable Breadcrumbs', 'wordpress-seo' ));
 			$content .= '<br/>';
@@ -944,7 +944,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 
 			$content = $this->checkbox('enablexmlsitemap',__('Check this box to enable XML sitemap functionality.', 'wordpress-seo' ), false);
 			$content .= '<div id="sitemapinfo">';
-			if ( $options['enablexmlsitemap'] )
+			if ( isset($options['enablexmlsitemap']) && $options['enablexmlsitemap'] )
 				$content .= '<p>'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'wordpress-seo' ), '<a target="_blank" class="button-secondary" href="'.home_url($base.'sitemap_index.xml').'">', '</a>').'<br/><br/>'.__( 'You do <strong>not</strong> need to generate the XML sitemap, nor will it take up time to generate after publishing a post.', 'wordpress-seo' ).'</p>';
 			else
 				$content .= '<p>'.__('Save your settings to activate XML Sitemaps.', 'wordpress-seo' ).'</p>';
@@ -1144,7 +1144,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 			if ( !isset($options['fbadminapp']) || $options['fbadminapp'] == 0 ) {
 				$button_text = __( 'Add Facebook Admin', 'wordpress-seo' );
 				$primary = true;
-				if ( is_array($options['fb_admins']) && count($options['fb_admins']) > 0 ) {
+				if ( isset($options['fb_admins']) && is_array($options['fb_admins']) && count($options['fb_admins']) > 0 ) {
 					$fbconnect .= '<p>'.__( 'Currently connected Facebook admins:', 'wordpress-seo' ).'</p>';
 					$fbconnect .= '<ul>';
 					$nonce = wp_create_nonce('delfbadmin');

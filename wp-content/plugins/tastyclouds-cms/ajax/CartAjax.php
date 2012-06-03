@@ -57,6 +57,15 @@ class CartAjax
 		return false;
 	}
 	
+	public static function getCartIDFromSession(){
+		$cartKey = CartAjax::hasCartInSession();
+		error_log("getCartIDFromSession, cartKey : $cartKey");
+		if ($cartKey !== FALSE){
+			$cartID = str_replace('cart_', '', $cartKey);
+			return $cartID;
+		}
+	}
+	
 	
 	public static function removeCartInSession($cartKey){
 		error_log("Removing cart from session : $cartKey");
@@ -248,9 +257,15 @@ class CartAjax
 	}
 	
 	
+	// called from website front end checkout form
+	public static function validateCouponForCheckout(){
+		self::validateCoupon( self::getCartIDFromSession() );
+	}
 	
-	public static function validateCoupon(){
-		$cart = self::getCartById();
+	
+	
+	public static function validateCoupon($cartID = null){
+		$cart = self::getCartById($cartID);
 		
 		if ($cart){
 			$couponCode = $_POST['couponCode'];      
@@ -338,8 +353,15 @@ class CartAjax
 	}
 	
 	
-	public static function removeCoupon(){
-		$cart = self::getCartById();
+	
+	
+	public static function removeCouponForCheckout(){
+		self::removeCoupon( self::getCartIDFromSession() );
+	}
+	
+	
+	public static function removeCoupon($cartID = null){
+		$cart = self::getCartById($cartID);
 		
 		if ($cart){			
 			unset($cart['couponModel']);
