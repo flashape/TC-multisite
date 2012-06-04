@@ -211,11 +211,17 @@ function tc_cms_enqueue_scripts(){
 			
 			$cartID = str_replace('cart_', '', CartAjax::hasCartInSession());
 			error_log('tc_cms_enque_js, cartID : '.$cartID);
+			
+
+			
+			
 			$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php', 'http' ), 
 				'site'=>mt_rand(), 
 				'addToCartNonce'=> wp_create_nonce( 'tc_add_to_cart_nonce' ), 
 				'cartID'=>$cartID,
-				'productID'=>$post->ID,
+				'price'=>$productModel['price'],
+				'productID'=>$post->ID
+
 				);
 			wp_localize_script( 'tc-product-ajax', 'TCProductAjax', $vars  );
 		}
@@ -233,9 +239,27 @@ function tc_cms_enqueue_scripts(){
 		wp_enqueue_script( 'jquery-glDatePicker', TC_CMS_JS_URL . 'glDatePicker-v1.3/js/glDatePicker.js', array('jquery'));
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v1/');
 		
+		
+		$order_types = get_terms( 'tc_order_type', 'hide_empty=0' );
+		$shippingTermID = '';
+		$pickupTermID = '';
+		
+		foreach ( $order_types as $term ) {
+			if ($term->name == 'Shipping'){
+				$shippingTermID = $term->term_id;
+			}
+			
+			if ($term->name == 'Pickup'){
+				$pickupTermID = $term->term_id;
+			}
+		}	
+		
+
 		$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php'), 
 			'site'=>mt_rand(), 
 			'shippingNonce'=> wp_create_nonce( 'tc_add_shipping_nonce' ), 
+			'pickupTermID'=>$pickupTermID,
+			'shippingTermID'=>$shippingTermID,
 			);
 		wp_localize_script( 'tc-checkout', 'TCCheckoutAjax', $vars  );
 		

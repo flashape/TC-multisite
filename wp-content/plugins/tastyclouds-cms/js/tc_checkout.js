@@ -2,6 +2,7 @@
 	$(document).ready(function() {
 		debug.log('tc_product_ajax.js ready');
 		$("#validatingCoupon").hide();
+		$("#couponTitle").hide();
 		
 		$("#_tc_event_date").glDatePicker({
 			allowOld: false,
@@ -36,6 +37,19 @@
 				$('#scheduledDateDiv').hide();
 
 			}
+			return false;
+
+		});
+		
+				
+		$('#checkout').on('change', 'input.shipmentTypeRadioInput', function(event){
+			debug.log('on shipmentTypeRadio change!');
+			if ($('#shipmentTypeRadioInput1').is(':checked')){
+				$('#_tc_order_type').val(TCCheckoutAjax.pickupTermID);
+			}else{
+				$('#_tc_order_type').val(TCCheckoutAjax.shippingTermID);
+			}
+			debug.log('set _tc_order_type to : ', $('#_tc_order_type').val());
 			return false;
 
 		});
@@ -138,7 +152,7 @@
 		        // insert the token into the form so it gets submitted to the server
 		        form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
 		        // and submit
-		        //form$.get(0).submit();
+		        form$.get(0).submit();
 		    }
 		}
 		
@@ -187,7 +201,8 @@
 		function populateCouponInfo (){
 			var couponModel = jQuery('#couponDiv').data('couponModel');
 			
-			jQuery("#couponTitle").text(couponModel.title);  
+			jQuery("#couponTitle").prepend(couponModel.title);  
+			jQuery("#couponTitle").show();
 			debug.log(jQuery("#couponDiv").data('couponModel'));
 			//this.updateShippingDiscount();
 			

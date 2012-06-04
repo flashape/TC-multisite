@@ -52,6 +52,11 @@ if ($cartKey !== FALSE){
 	
 	
 	
+	$saveFrontEndOrderCommand = new SaveFrontEndOrderCommand($orderID, $cart, $cartID);
+	$saveFrontEndOrderCommand->execute();
+	
+	
+	
 	
 	
 	

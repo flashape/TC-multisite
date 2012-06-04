@@ -35,7 +35,6 @@ class TC_AddToCartWidget extends WP_Widget {
 		global $post;
 		$productID = $post->ID;
 		$productModel = ProductProxy::getProductByID($productID);
-		
 		echo $before_widget;
 		
 // 		$style = <<<EOD
@@ -46,7 +45,8 @@ class TC_AddToCartWidget extends WP_Widget {
 // 
 // 		    </style>
 // EOD;
-// 		echo $style;
+// 		echo $style;		
+		
 
 
 		//echo $before_widget;
@@ -60,7 +60,7 @@ class TC_AddToCartWidget extends WP_Widget {
 			<tbody>
 				<tr>
 					<td>Price:</td>
-					<td>$basePrice</td>
+					<td id="priceColumn">$basePrice</td>
 				</tr>
 			</tbody>
 		</table>
@@ -134,6 +134,15 @@ EOT;
 			echo $variationsDiv;
 			
 			echo do_shortcode('[maxbutton id="2"]');
+			
+			$productModelJson = json_encode($productModel);
+		$script = <<<EOD
+			<script type="text/javascript">
+				var productModel = $productModelJson
+		    </script>
+EOD;
+			
+			echo $script;
 			
 			echo $after_widget;
 			

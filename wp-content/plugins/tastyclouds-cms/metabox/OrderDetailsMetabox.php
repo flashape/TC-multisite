@@ -152,7 +152,7 @@ if ($pagenow == 'post-new.php'){
 			$summaryRows .= $shippingSummaryRow;
 			
 		}
-		
+		// TODO: is this supposed to be here?
 		$shippingSummary = '';
 		
 		

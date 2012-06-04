@@ -11,12 +11,15 @@ class SaveFrontEndOrderCommand
 	var $billingAddress;
 	var $shippingAddress;
 	var $cart;
+	var $cartID;
 	var $paymentID;
 	var $checkoutAsGuest;
 	
-	function __construct($orderID)
+	function __construct($orderID, $cart, $cartID)
 	{
 		$this->orderID = $orderID;
+		$this->cart = $cart;
+		$this->cartID = $cartID;
 	}
 	
 	public function execute(){
@@ -36,29 +39,27 @@ class SaveFrontEndOrderCommand
 		if (!empty($_POST['stripeToken'] ) ){
 			$this->paymentID = $this->processPayment();
 		}	
-		// 
-		// OrderProxy::removeContactTaxonomyTerms($this->orderID);
-		// 
-		// OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
-		// 
-		// if(isset($_POST['_tc_event_date'])){
-		// 	update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
-		// 	// store the formatted date to make it easier to search for today's orders later
-		// 	$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
-		// 	error_log("_tc_event_date_formated : $formattedDate"  );	
-		// 	update_post_meta( $this->orderID, '_tc_event_date_formatted', $formattedDate );					
-		// }
+
+
+		OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
+
+		if(isset($_POST['_tc_event_date'])){
+			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
+			// store the formatted date to make it easier to search for today's orders later
+			$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
+			error_log("_tc_event_date_formated : $formattedDate"  );	
+			update_post_meta( $this->orderID, '_tc_event_date_formatted', $formattedDate );					
+		}
+		
+		
 		// update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
 		// update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
 		// update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
 		// 
-		// 
-		// if ($this->isNewOrder || $this->orderWasReloaded){
-		// 	$cartID = $_POST['cartID'];
-		// 	$this->cart = CartAjax::getCartById($cartID);
-		// 	OrderProxy::saveCart($this->cart, $this->orderID, $cartID);
-		// }
-		// 
+		
+		
+		OrderProxy::saveCart($this->cart, $this->orderID, $this->cartID);
+	
 		// 
 		// 
 		// if ( $this->isNewOrder  || $this->orderWasReloaded ){
@@ -147,6 +148,8 @@ class SaveFrontEndOrderCommand
 		// TODO:  submit payment to stripe
 		// set your secret key: remember to change this to your live secret key in production
 		// see your keys here https://manage.stripe.com/account
+		
+		require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
 		Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
 
 		// get the credit card details submitted by the form

@@ -3,9 +3,31 @@
 $cartKey = CartAjax::hasCartInSession();
 if ($cartKey !== FALSE){
 	$cartID = str_replace('cart_', '', $cartKey);
-	$cart = CartAjax::getCartById($cartID );
+	$cart = CartAjax::getCartById( $cartID );
 }
 //TODO:  redirect to cart.php if the cart is empty.
+
+
+$orderSummary = OrderProxy::getOrderSummary($cart);
+
+
+
+$summaryRows = '';
+
+foreach ($orderSummary['lines']['line'] as $lineItem){
+	$row = '<tr>';
+		$row  .= '<td style="text-align:left">'.$lineItem['quantity'].'</td>';
+		$row  .= '<td style="text-align:left">'.$lineItem['name'].'</td>';
+		$row  .= '<td style="text-align:left">'.$lineItem['description'].'</td>';
+		$row  .= '<td style="text-align:left">'.$lineItem['unit_cost'].'</td>';
+		$itemPrice = ($lineItem['unit_cost'] * $lineItem['quantity'] );
+		$row  .= '<td style="text-align:left">'.number_format($itemPrice, 2, '.', '').'</td>';
+	$row  .= '</tr>';
+	
+	$summaryRows .= $row;
+}
+
+
 ?>
 
 
@@ -44,6 +66,7 @@ if ($cartKey !== FALSE){
 		</div>
 		<form id="checkout-form" action="/checkout/process" method="post">
 			<input type="hidden" name="tc_guest_checkout" id="tc_guest_checkout" value="yes" />
+			<input type="hidden" name="_tc_order_type" id="_tc_order_type" value="35" />
 		
 
 
@@ -218,6 +241,33 @@ if ($cartKey !== FALSE){
 			
 			
 			<div class="checkoutBlock">
+		        <h3 class="checkoutBlockTitle">Order Summary</h3>
+		        <div class="checkoutBlockContent clearfix">
+					<div id="orderSummary">
+						<div>
+							<table id="orderSummaryTable">
+								<tbody>
+									<tr>
+										<th style="text-align:left">Quantity</th>				
+										<th style="text-align:left">Item</th>				
+										<th style="text-align:left">Description</th>
+										<th style="text-align:left">Unit Price</th>
+										<th style="text-align:right">Total</th>
+									</tr>
+									
+									<?php echo $summaryRows ?>
+								</tbody>
+							</table>
+						</div>
+						
+						<button id="editOrderButton">Edit Cart</button><br /><br />
+					</div>
+				</div>
+			</div>
+			
+			
+    					
+			<div class="checkoutBlock">
 		        <h3 class="checkoutBlockTitle">Finalize Order</h3>
 		        <div class="checkoutBlockContent clearfix">
 					<div id="couponDiv" class="one-third first">
@@ -228,7 +278,7 @@ if ($cartKey !== FALSE){
 						<div id="validatingCoupon">
 						  <p style="font-size:10px"><img src="<?php echo plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif'); ?>" />Validating coupon...</p>
 						</div>
-						<div id="couponTitle"></div>
+						<div id="couponTitle"><br /><span style="font-style:italic;color:#CCC;font-size:10px;">(Will be applied during checkout)<span></div>
 					</div>
 					<div class="two-thirds" >
 		        		<p>Payment Information:</p>
