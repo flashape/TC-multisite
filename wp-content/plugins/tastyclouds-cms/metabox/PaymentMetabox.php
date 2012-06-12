@@ -12,6 +12,7 @@
 	Payment Type: 	
 	<select name="payment_type" id="payment_type">
 		<option value="square">Square</option>
+		<option value="creditCard">Credit Card</option>
 		<option value="cash">Cash</option>
 		<option value="check">Check</option>
 	</select>

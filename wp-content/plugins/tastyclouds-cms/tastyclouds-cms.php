@@ -176,6 +176,7 @@ require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ContactAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ShippingAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/ActivityAjax.php');
 require_once(TASTY_CMS_PLUGIN_DIR .'ajax/MailAjax.php');
+require_once(TASTY_CMS_PLUGIN_DIR .'ajax/UserAjax.php');
 
 
 
@@ -232,12 +233,15 @@ function tc_cms_enqueue_scripts(){
 		wp_enqueue_script( 'tc-checkout', TC_CMS_JS_URL . 'tc_checkout.js', array('jquery'));
 		wp_enqueue_style( 'tc.checkout', TC_CMS_CSS_URL . 'tc_checkout.css', __FILE__);
 		wp_enqueue_style( 'tc.columns', TC_CMS_CSS_URL . 'columns.css', __FILE__);
+		wp_enqueue_style( 'tc.message.boxes', TC_CMS_CSS_URL . 'message-boxes.css', __FILE__);
 		wp_enqueue_style( 'glDatePicker', TC_CMS_JS_URL . 'glDatePicker-v1.3/css/default.css', __FILE__);
 		
 		wp_enqueue_script( 'jquery-collapse', TC_CMS_JS_URL . 'jquery_collapse/jquery.collapse.js', array('jquery'));
 		wp_enqueue_script( 'jquery-cookie', TC_CMS_JS_URL . 'jquery_collapse/jquery.cookie.js', array('jquery'));
 		wp_enqueue_script( 'jquery-glDatePicker', TC_CMS_JS_URL . 'glDatePicker-v1.3/js/glDatePicker.js', array('jquery'));
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v1/');
+		wp_enqueue_script( 'seahorse', TC_CMS_JS_URL . 'seahorse/seahorse-1.2.js');
+		wp_enqueue_script( 'seahorse.jquery', TC_CMS_JS_URL . 'seahorse/seahorse.jquery-1.2.js');
 		
 		
 		$order_types = get_terms( 'tc_order_type', 'hide_empty=0' );
@@ -261,6 +265,8 @@ function tc_cms_enqueue_scripts(){
 			'pickupTermID'=>$pickupTermID,
 			'shippingTermID'=>$shippingTermID,
 			);
+			
+		
 		wp_localize_script( 'tc-checkout', 'TCCheckoutAjax', $vars  );
 		
 		wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));

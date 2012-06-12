@@ -6,9 +6,22 @@
 		
 		$("#_tc_event_date").glDatePicker({
 			allowOld: false,
-		    startDate: new Date()
+		    startDate: new Date(),
+		 	position: "absolute",
 		});
 		
+		$('td.required').append('<span class="req">*</span>');
+		
+		jQuery(".validate-text").seaBehavior( "text", {"notEmpty":true, "minLength":3}, { "okClass": "ok", "errorClass": "error" } )
+		jQuery(".validate-email").seaBehavior( "email", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
+		jQuery(".validate-phone").seaBehavior( "numeric", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
+		jQuery(".validate-zip").seaBehavior( "numeric", {"notEmpty":true, "allowedCharacters":"-", "aditionalValidation":validateZip, "minLength":5, "maxLength":10}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
+		jQuery("#card-cvc").seaBehavior( "numeric", {"notEmpty":true, "minLength":3, "maxLength":4, "aditionalValidation":validateCreditCardCVC}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
+		jQuery("#card-number").seaBehavior( "numeric", {"notEmpty":true, "minLength":10, "maxLength":20, "aditionalValidation":validateCreditCard}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
+		jQuery("#card-expiry-month").seaBehavior( "text", {"notEmpty":true, "minLength":2, "maxLength":2, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
+		jQuery("#card-expiry-year").seaBehavior( "text", {"notEmpty":true, "minLength":4, "maxLength":4, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
+	
+		//Seahorse.form("checkout-form", function(msjs, array) {alert(msjs);}, "Submit error" );
 		
 		// for stripe testing
 		$('#card-number').val('4242424242424242');
@@ -23,6 +36,19 @@
 				$('#shippingAddressTable').show();
 			}else{
 				$('#shippingAddressTable').hide();
+
+			}
+			return false;
+
+		});		
+				
+		
+		$('#checkout').on('change', 'input.accountRadioInput', function(event){
+			debug.log('on checkoutAsGuest change!');
+			if ($('#accountRadioInput2').is(':checked')){
+				$('#newAccountPwdDiv').show();
+			}else{
+				$('#newAccountPwdDiv').hide();
 
 			}
 			return false;
@@ -72,6 +98,33 @@
 		});
 		
 		
+		
+		function validateZip(element){
+			//US Zip Codes: /(^\d{5}$)|(^\d{5}-\d{4}$)/
+			var zip = $(element).val();
+			var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip);
+			debug.log('validateZip zip : '+zip, isValidZip );
+			return isValidZip;
+			
+		}
+					
+		
+		function validateCreditCard(){
+			debug.log('validateCreditCard : ', Stripe.validateCardNumber( $('#card-number').val() ) );
+			return Stripe.validateCardNumber( $('#card-number').val() )
+			
+		}
+				
+		function validateCreditCardCVC(){
+			debug.log('validateCreditCardCVC : ', Stripe.validateCVC( $('#card-cvc').val() ) );
+			return Stripe.validateCVC( $('#card-cvc').val() )
+		}
+		
+						
+		function validateCreditCardExpiry(){
+			debug.log('validateCreditCardExpiry : ', Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() ) );
+			return Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() )
+		}
 		
 		
 		
@@ -125,19 +178,133 @@
 			$('#shippingContentDiv').append(selectShippingContent);
 		}
 		
+		function formIsValid(){
+			//validate new account password
+			var valid = true;
+			var newPass = $.trim($('#newuser_pwd').val());
+			var confirmNewPass = $.trim($('#confirm_newuser_pwd').val());
+			
+			if (newPass == "" || newPass != confirmNewPass){
+				//TODO: show error
+				$('#newPassValidationError').show();
+				valid = false;
+			}else{
+				$('#newPassValidationError').hide();				
+			}
+			
+			
+			//validate shipping method
+			var radio_buttons = $("input[name='shipmentType']");
+			if( radio_buttons.filter(':checked').length == 0){
+			  	$('#shipmentTypeValidationError').show();
+				valid = false;
+			} else {
+			  // If you need to use the result you can do so without
+			  // another (costly) jQuery selector call:
+			  // var val = radio_buttons.val();
+			  $('#shipmentTypeValidationError').hide();
+
+			}
+			
+			
+			
+			// var result = jQuery(".validate-email").seaVerify();
+			// debug.log("seaVerify result : ", result);			
+			var result = jQuery(".validate-email").seaValidate();
+			debug.log("seaValidate email result : ", result);
+			
+			if(!result){
+				valid = false;
+			}
+			
+			result = jQuery("#card-cvc").seaValidate();
+			debug.log("seaValidate card-cvc result : ", result);
+			
+			if(!result){
+				valid = false;
+			}
+						
+			result = jQuery("#card-number").seaValidate();
+			debug.log("seaValidate card-number result : ", result);
+			
+			if(!result){
+				valid = false;
+			}
+									
+			result = jQuery("#card-expiry-month").seaValidate();
+			debug.log("seaValidate card-expiry-month result : ", result);
+			
+			if(!result){
+				valid = false;
+			}
+												
+			result = jQuery("#card-expiry-year").seaValidate();
+			debug.log("seaValidate card-expiry-year result : ", result);
+			
+			if(!result){
+				valid = false;
+			}
+			
+			// result = Seahorse.validateForm('checkout-form');
+			// debug.log("validateForm result : ", result);
+			
+			return valid;
+		}
+		
 		
 		$('#checkout-form').submit( function(event) {
-			$('.submit-button').attr("disabled", "disabled");
+			//$('.submit-button').attr("disabled", "disabled");
+			
+			if ( formIsValid() ){
+				validateEmail();
+			}
+			
+			//prevent the form from submitting with the default action
+			return false;
+		});
+		
+
+		
+		
+		function validateEmail (){
+			var data = {action:'tc_check_email_exists'};
+			data.email = $('#customer_email').val();
+	        data.site = TCCheckoutAjax.site;
+	
+			jQuery.post(
+			    TCCheckoutAjax.ajaxurl, 
+				data,
+			    function( response ) {
+			        debug.log('validateEmail response : ', response );
+					onEmailValidationResult(response);
+			    },
+				'json'
+			);
+						
+		}
+		
+		function onEmailValidationResult (serviceResult){  
+			debug.log('onEmailValidationResult , serviceResult : ', serviceResult);
+			
+			if(serviceResult.success){
+				getCardToken();
+			}else{
+				alert('There was an error validating the email address : '+serviceResult.message);				
+			}
+		}
+		
+		
+		
+		function getCardToken(){
 		    Stripe.createToken({
 		        number: $('#card-number').val(),
 		        cvc: $('#card-cvc').val(),
 		        exp_month: $('#card-expiry-month').val(),
 		        exp_year: $('#card-expiry-year').val()
 		    }, stripeResponseHandler);
+
 			
-			// prevent the form from submitting with the default action
-			return false;
-		});
+		}
 		
 		
 		function stripeResponseHandler(status, response) {
@@ -146,15 +313,35 @@
 		        // show the errors on the form
 		        $(".payment-errors").text(response.error.message);
 		    } else {
-		        var form$ = $("#checkout-form");
+		        var $form = $("#checkout-form");
 		        // token contains id, last4, and card type
 		        var token = response['id'];
 		        // insert the token into the form so it gets submitted to the server
-		        form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-		        // and submit
-		        form$.get(0).submit();
+		        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+		        
+				doFormSubmit();
 		    }
 		}
+		
+
+		function doFormSubmit(){
+			if( $('#accountRadioInput2').is(':checked') ){
+				var newPass = $('#newuser_pwd').val();
+				$('#tc_newuser_pwd').val(newPass);
+				$('#tc_guest_checkout').val("no");
+			}else{
+				$('#tc_guest_checkout').val("yes");
+				
+			}
+			
+			
+			var $form = $("#checkout-form");
+	        
+			// and submit
+	        $form.get(0).submit();
+	
+		}
+		
 		
 		
 		

@@ -43,7 +43,7 @@ class SaveFrontEndOrderCommand
 
 		OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
 
-		if(isset($_POST['_tc_event_date'])){
+		if( isset($_POST['_tc_event_date']) && !empty($_POST['_tc_event_date']) ){
 			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	
 			// store the formatted date to make it easier to search for today's orders later
 			$formattedDate = date('Y-m-d', strtotime($_POST['_tc_event_date']));	
@@ -52,14 +52,17 @@ class SaveFrontEndOrderCommand
 		}
 		
 		
-		// update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
-		// update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
-		// update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
-		// 
-		
+
 		
 		OrderProxy::saveCart($this->cart, $this->orderID, $this->cartID);
 	
+		$summary = OrderProxy::getOrderSummary($this->cart);
+		//error_log(var_export($summary, 1));
+		$orderTotal = OrderProxy::getOrderTotalFromSummary($summary);
+		error_log("Order total : $orderTotal");
+		update_post_meta( $this->orderID,'tc_order_total', $orderTotal);
+		update_post_meta( $this->orderID,'tc_balance_due', 0);
+		
 		// 
 		// 
 		// if ( $this->isNewOrder  || $this->orderWasReloaded ){
@@ -123,12 +126,64 @@ class SaveFrontEndOrderCommand
 				'customerCompany'=>$customerCompany
 			);
 			
-			$newContactID = ContactProxy::createNew(array('use_post'=>false));
+			$newContactID = ContactProxy::createNew(array('use_post'=>false, 'contactModel'=>$contactModel));
 			$contactModel['contactID'] = $newContactID;
 			ContactProxy::updateMeta($contactModel);
+			$contactIDToLink = $newContactID;
+			error_log("this->checkoutAsGuest : ".$this->checkoutAsGuest);
+			if( !$this->checkoutAsGuest ){
+				$user_name = $customerEmail;
+				//$user_email = @$_POST['newuser_email'];
+				$user_pass = @$_POST['tc_newuser_pwd'];
+				
+			/*	
+			 * 'user_pass' - A string that contains the plain text password for the user.
+			 * 'user_login' - A string that contains the user's username for logging in.
+			 * 'user_nicename' - A string that contains a nicer looking name for the user.
+			 *		The default is the user's username.
+			 * 'user_url' - A string containing the user's URL for the user's web site.
+			 * 'user_email' - A string containing the user's email address.
+			 * 'display_name' - A string that will be shown on the site. Defaults to user's
+			 *		username. It is likely that you will want to change this, for appearance.
+			 * 'nickname' - The user's nickname, defaults to the user's username.
+			 * 'first_name' - The user's first name.
+			 * 'last_name' - The user's last name.
+			 * 'description' - A string containing content about the user.
+			 * 'rich_editing' - A string for whether to enable the rich editor. False
+			 *		if not empty.
+			 * 'user_registered' - The date the user registered. Format is 'Y-m-d H:i:s'.
+			 * 'role' - A string used to set the user's role.
+			 * 'jabber' - User's Jabber account.
+			 * 'aim' - User's AOL IM account.
+			 * 'yim' - User's Yahoo IM account.
+			 */
+				
 			
+				$newUserResult = wp_insert_user(array(
+					'user_pass'=>$user_pass, 
+					'user_login'=>$customerEmail, 
+					'user_email'=>$customerEmail, 
+					'user_nicename'=>$customerFirstName,
+					'display_name'=>$customerFirstName,
+					'first_name'=>$customerFirstName,
+					'last_name'=>$customerLastName,
+					));
+				//$newUserResult = wp_create_user($user_name, $user_pass, $customerEmail);
+				
+				if( is_wp_error($newUserResult) ){
+					error_log('Error creating new user : '.$newUserResult->getErrorMessages());
+				}else{
+					$newUserID = $newUserResult;
+					error_log('Successfully created new user : '.$newUserID);
+					update_post_meta( $newContactID, '_tc_wp_user_id', $newUserID);
+					update_user_meta( $newUserID, '_tc_contact_id', $newContactID);
+				}
+				
+			}
 			
 		}
+		
+		
 		
 		error_log("Connecting contactID : $contactIDToLink to orderID : ".$this->orderID);
 		$c = p2p_type( 'contact_to_order' )->connect( $contactModel['contactID'], $this->orderID, array(
@@ -162,32 +217,43 @@ class SaveFrontEndOrderCommand
 		
 		$descriptionJSON = json_encode($description);
 		
-		if($this->checkoutAsGuest){
+		$paymentAmount = 100;
+		$paymentAmountInCents = $paymentAmount * 100;
+		
+		//if($this->checkoutAsGuest){
 			// create the charge on Stripe's servers - this will charge the user's card
-			$charge = Stripe_Charge::create(array(
-				  "amount" => 1000, // amount in cents, again
+			$stripeCharge = Stripe_Charge::create(array(
+				  "amount" => $paymentAmount, // amount in cents, again
 				  "currency" => "usd",
 				  "card" => $token,
 				  "description" => $descriptionJSON 
 				)
 			);
 			
-			
-			
-		}else{
-			
-			
-		}
+		// }else{
+		// 	
+		// 	
+		// }
 		
 
+		$paymentNote = '';
 		
-		
+		$paymentModel = array(
+			'paymentType' => 'creditCard',
+			'paymentAmount' => $paymentAmount,
+			'paymentNote' => $paymentNote,
+		);
 				
-		$paymentID = PaymentProxy::insertNew(array('use_post'=>true, 'orderID'=>$this->orderID));
-
+		$paymentID = PaymentProxy::insertNew(array('use_post'=>false, 'orderID'=>$this->orderID, 'paymentModel'=>$paymentModel));
+		
+		update_post_meta( $paymentID, '_stripeChargeID', $stripeCharge->id);					
+		update_post_meta( $paymentID, '_stripeCharge', $stripeCharge );					
+		
 		p2p_type( 'payment_to_order' )->connect( $paymentID, $this->orderID, array(
 			'date' => current_time('mysql'),			
 		) );
+		
+		update_post_meta( $this->orderID,'tc_payments_total', $paymentAmount); 
 		
 		return $paymentID;
 		

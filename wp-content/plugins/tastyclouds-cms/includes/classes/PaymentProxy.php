@@ -19,6 +19,12 @@ class PaymentProxy
 			$paymentType = $_POST['payment_type'];
 			$paymentAmount = $_POST['payment_amount'];
 			$paymentNote = $_POST['payment_note'];
+		}else{
+			// if not getting values from post, $data is expected to have a 'paymentModel' property
+			
+			$paymentType = $data['paymentModel']['paymentType'];
+			$paymentAmount = $data['paymentModel']['paymentAmount'];
+			$paymentNote = $data['paymentModel']['paymentNote'];
 		}
 
 		$orderID = $data['orderID'];

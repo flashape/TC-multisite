@@ -99,6 +99,7 @@ class OrderProxy
 		
 	}
 	
+
 	
 	public static function getOrdersForToday(){
 		$todayDate = date('Y-m-d', strtotime('now'));
@@ -401,6 +402,39 @@ class OrderProxy
 
 		
 	}
+	
+	// specific to front-end checkout for now
+	public static function getOrderTotalFromSummary($summary){
+		// var subTotal = this.calculateChargeItemsTotal();
+		// cartTotal += subTotal;
+		// 	
+		// var discountTotal = this.calculateDiscountTotal();
+		// cartTotal -= discountTotal;
+		// 	
+		// var taxTotal = this.calculateTaxTotal();
+		// cartTotal += taxTotal;
+		// 	
+		// 	
+		// var couponDiscountTotal = this.calculateCouponDiscountTotal();
+		// cartTotal -= couponDiscountTotal;
+		// 	
+		// var shippingTotal = this.calculateShippingTotal();
+		// cartTotal += shippingTotal;
+		
+		$total = 0;
+		
+		foreach($summary['lines']['line'] as $lineItem){
+			$total += $lineItem['unit_cost'];
+		}
+		
+		return $total;
+		
+		
+		
+	}
+	
+	
+	
 }
 
 ?>

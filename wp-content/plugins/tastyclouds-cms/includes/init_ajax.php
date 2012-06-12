@@ -49,4 +49,5 @@ add_action( 'wp_ajax_tc_delete_activity', array('ActivityAjax', 'deleteActivity'
 add_action( 'wp_ajax_tc_get_activities_for_post', array('ActivityAjax', 'getActivitiesForPost') );
 add_action( 'wp_ajax_tc_get_mail_for_contact', array('MailAjax', 'getMailForContact') );
 add_action( 'wp_ajax_tc_get_contact_details', array('ContactAjax', 'getContactById') );
+add_action( 'wp_ajax_nopriv_tc_check_email_exists', array('UserAjax', 'validateNewUserEmail') );
 ?>

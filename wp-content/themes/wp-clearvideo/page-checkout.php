@@ -35,7 +35,10 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 
 <?php get_header(); ?>
 
-
+<style type="text/css">
+	.ok { background-color:#f0fff0; }
+	.error { background-color:#fff0f0; }
+</style>
 <script type="text/javascript">
     // this identifies your website in the createToken call below
     Stripe.setPublishableKey('pk_tgdbVsxsj5AJFmCCFM3AakzC3LC0J');
@@ -55,9 +58,29 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 					<h6>New Customer</h6>
 					<p>Register with us for a faster checkout, to track the status of your order and more. You can also checkout as a guest.</p>
 					<label class="accountRadio"><input class="accountRadioInput" type="radio" id="accountRadioInput1" name="checkoutAsGuest" value="yes" />Checkout As Guest</label><br />
-					<label class="accountRadio"><input class="accountRadioInput" type="radio" id="accountRadioInput2" name="checkoutAsGuest" value="no" />Register An Account</label>
+					<label class="accountRadio"><input class="accountRadioInput" type="radio" id="accountRadioInput2" name="checkoutAsGuest" value="no" checked="checked" />Register An Account</label>
+					
+					<div id="newAccountPwdDiv">
+						<div id="newPassValidationError" class="validation-box" style="display:none;">
+							Passwords do not match.
+						</div>
+						<table style="width:100%;" >
+							<tbody>
+								<tr>
+									<td class="address-form-label-column">Enter Password:</td>
+									<td style="text-align:left"><input type="password" id="newuser_pwd" value="" /></td>
+								</tr>
+								<tr>
+									<td class="address-form-label-column">Confirm Password:</td>
+									<td style="text-align:left"><input type="password" id="confirm_newuser_pwd" value="" /></td>
+								</tr>
+							</tbody>
+						</table>
+						
+					</div>
+					
 				</div>
-				<div id="loginContainer" class="alignright">
+				<div id="loginContainer" class="alignright info-box">
 					<h6>Returning Customer</h6>
 					<p>To continue, please enter your email address and password that you use for your account.</p>	
 					<?php login_with_ajax() ?>
@@ -65,8 +88,9 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 			</div>
 		</div>
 		<form id="checkout-form" action="/checkout/process" method="post">
-			<input type="hidden" name="tc_guest_checkout" id="tc_guest_checkout" value="yes" />
+			<input type="hidden" name="tc_guest_checkout" id="tc_guest_checkout" value="" />
 			<input type="hidden" name="_tc_order_type" id="_tc_order_type" value="35" />
+			<input type="hidden" name="tc_newuser_pwd" id="tc_newuser_pwd" value="" />
 		
 
 
@@ -82,52 +106,52 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 									<td style="text-align:left"><select class="addressBookDropdown" id="billingAddressSelect"></select></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Email address:</td>
-									<td style="text-align:left"> <input type="text" name="customer_email"  id="customer_email"  /></td>
+									<td class="address-form-label-column required">Email address:</td>
+									<td style="text-align:left"><input type="text" class="validate-email" name="customer_email"  id="customer_email"  /></td>
 								</tr>								
 								<tr>
-									<td class="address-form-label-column">Confirm Email address:</td>
-									<td style="text-align:left"> <input type="text" name="customer_email_confirm"  id="customer_email_confirm"  /></td>
+									<td class="address-form-label-column required">Confirm Email address:</td>
+									<td style="text-align:left"> <input type="text" class="validate-email" name="customer_email_confirm"  id="customer_email_confirm"  /></td>
 								</tr>								
 								<tr>
-									<td class="address-form-label-column">Phone:</td>
-									<td style="text-align:left"> <input type="text" name="customer_phone"  id="customer_phone"  /></td>
+									<td class="address-form-label-column required">Phone:</td>
+									<td style="text-align:left"> <input type="text" class="validate-phone" name="customer_phone"  id="customer_phone"  /></td>
 								</tr>								
 								
 								<tr>
-									<td class="address-form-label-column">First Name:</td>
-									<td style="text-align:left"> <input type="text" name="billing_address_first_name"  id="billing_address_first_name"  /></td>
+									<td class="address-form-label-column required">First Name:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text" name="billing_address_first_name"  id="billing_address_first_name"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Last Name:</td>
-									<td style="text-align:left"> <input type="text" name="billing_address_last_name"  id="billing_address_last_name"  /></td>
+									<td class="address-form-label-column required">Last Name:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text" name="billing_address_last_name"  id="billing_address_last_name"  /></td>
 								</tr>
 								<tr>
 									<td class="address-form-label-column">Company:</td>
 									<td style="text-align:left"> <input type="text" name="billing_address_company"  id="billing_address_company"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Address Line 1:</td>
-									<td style="text-align:left"> <input type="text" name="billing_address_line_1"  id="billing_address_line_1"  /></td>
+									<td class="address-form-label-column required">Address Line 1:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text" name="billing_address_line_1"  id="billing_address_line_1"  /></td>
 								</tr>
 								<tr>
 									<td class="address-form-label-column">Address Line 2:</td>
 									<td style="text-align:left"> <input type="text" name="billing_address_line_2"  id="billing_address_line_2"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">City:</td>
-									<td style="text-align:left"> <input type="text" name="billing_address_city"  id="billing_address_city"  /></td>
+									<td class="address-form-label-column required">City:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text"  name="billing_address_city"  id="billing_address_city"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">State:</td>
+									<td class="address-form-label-column required">State:</td>
 									<td style="text-align:left"> <select name="billing_address_state"  id="billing_address_state"></select></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Zip:</td>
-									<td style="text-align:left"> <input type="text" name="billing_address_zip"  id="billing_address_zip"  /></td>
+									<td class="address-form-label-column required">Zip:</td>
+									<td style="text-align:left"> <input type="text" class="validate-zip"  name="billing_address_zip"  id="billing_address_zip"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Country:</td>
+									<td class="address-form-label-column required">Country:</td>
 									<td style="text-align:left"> <input type="text" name="billing_address_country"  id="billing_address_country"  /></td>
 								</tr>
 							</tbody>
@@ -145,39 +169,39 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 									<td style="text-align:left"><select class="addressBookDropdown" id="shippingAddressSelect"></select></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">First Name:</td>
-									<td style="text-align:left"> <input type="text" name="shipping_address_first_name"  id="shipping_address_first_name"  /></td>
+									<td class="address-form-label-column required">First Name:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text"  name="shipping_address_first_name"  id="shipping_address_first_name"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Last Name:</td>
-									<td style="text-align:left"> <input type="text" name="shipping_address_last_name"  id="shipping_address_last_name"  /></td>
+									<td class="address-form-label-column required">Last Name:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text"  name="shipping_address_last_name"  id="shipping_address_last_name"  /></td>
 								</tr>
 								<tr>
 									<td class="address-form-label-column">Company:</td>
 									<td style="text-align:left"> <input type="text" name="shipping_address_company"  id="shipping_address_company"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Address Line 1:</td>
-									<td style="text-align:left"> <input type="text" name="shipping_address_line_1"  id="shipping_address_line_1"  /></td>
+									<td class="address-form-label-column required">Address Line 1:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text"  name="shipping_address_line_1"  id="shipping_address_line_1"  /></td>
 								</tr>
 								<tr>
 									<td class="address-form-label-column">Address Line 2:</td>
 									<td style="text-align:left"> <input type="text" name="shipping_address_line_2"  id="shipping_address_line_2"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">City:</td>
-									<td style="text-align:left"> <input type="text" name="shipping_address_city"  id="shipping_address_city"  /></td>
+									<td class="address-form-label-column  required">City:</td>
+									<td style="text-align:left"> <input type="text" class="validate-text"  name="shipping_address_city"  id="shipping_address_city"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">State:</td>
+									<td class="address-form-label-column required">State:</td>
 									<td style="text-align:left"> <select name="shipping_address_state"  id="shipping_address_state"></select></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Zip:</td>
-									<td style="text-align:left"> <input type="text" name="shipping_address_zip"  id="shipping_address_zip"  /></td>
+									<td class="address-form-label-column required">Zip:</td>
+									<td style="text-align:left"> <input type="text" class="validate-zip"  name="shipping_address_zip"  id="shipping_address_zip"  /></td>
 								</tr>
 								<tr>
-									<td class="address-form-label-column">Country:</td>
+									<td class="address-form-label-column required">Country:</td>
 									<td style="text-align:left"> <input type="text" name="shipping_address_country"  id="shipping_address_country"  /></td>
 								</tr>
 							</tbody>
@@ -186,7 +210,7 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 						<label id="editShippingAddressLabel" style="display:none"><input type="checkbox" id="editShippingAddressCheckbox"  />Edit Shipping Address</label><br /><br />
 					
 					
-						<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" />Use Billing Address</label><br />
+						<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput1" name="shippingSameAsBilling" value="yes" checked="checked" />Use Billing Address</label><br />
 						<label class="shippingRadio"><input class="shippingRadioInput" type="radio" id="shippingRadioInput2" name="shippingSameAsBilling" value="no" />Specify Different Shipping Address</label>
 					
 					</div>
@@ -206,6 +230,9 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 						</div>
 					</div>
 					<div id="shippingContentDiv" class="two-thirds">
+						<div id="shipmentTypeValidationError" class="validation-box" style="display:none;">
+							Please select either Pickup or a Shipment Type.
+						</div>
 						<p>Select Pickup or Shipping Method:</p>
 						<label class="shipmentTypeRadio"><input class="shipmentTypeRadioInput" type="radio" id="shipmentTypeRadioInput1" name="shipmentType" value="PICKUP"  />Pickup</label><br />
 						<input type="button" id="getShippingRatesButton" value="Get Shipping Rates">

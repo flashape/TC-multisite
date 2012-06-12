@@ -20,6 +20,10 @@ class ContactProxy
 			$customerEmail = $_POST['customer_email'];
 			$customerPhone = $_POST['customer_phone'];
 			$customerCompany = $_POST['customer_company'];
+		}else{
+			// if not getting values from post, $data is expected to have a 'contactModel' property
+			$customerFirstName = $data['contactModel']['customerFirstName'];
+			$customerLastName = $data['contactModel']['customerLastName'];
 		}
 
 	   $contact = array(
