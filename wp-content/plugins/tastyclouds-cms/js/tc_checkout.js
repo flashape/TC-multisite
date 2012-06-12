@@ -16,15 +16,16 @@
 		jQuery(".validate-email").seaBehavior( "email", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
 		jQuery(".validate-phone").seaBehavior( "numeric", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
 		jQuery(".validate-zip").seaBehavior( "numeric", {"notEmpty":true, "allowedCharacters":"-", "aditionalValidation":validateZip, "minLength":5, "maxLength":10}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
-		jQuery("#card-cvc").seaBehavior( "numeric", {"notEmpty":true, "minLength":3, "maxLength":4, "aditionalValidation":validateCreditCardCVC}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
+		jQuery("#card-cvc").seaBehavior( "numeric", {"notEmpty":true, "minLength":2, "maxLength":4, "aditionalValidation":validateCreditCardCVC}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
 		jQuery("#card-number").seaBehavior( "numeric", {"notEmpty":true, "minLength":10, "maxLength":20, "aditionalValidation":validateCreditCard}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
 		jQuery("#card-expiry-month").seaBehavior( "text", {"notEmpty":true, "minLength":2, "maxLength":2, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
 		jQuery("#card-expiry-year").seaBehavior( "text", {"notEmpty":true, "minLength":4, "maxLength":4, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
 	
 		//Seahorse.form("checkout-form", function(msjs, array) {alert(msjs);}, "Submit error" );
 		
-		// for stripe testing
-		$('#card-number').val('4242424242424242');
+		//for stripe testing
+		//$('#card-number').val('4242424242424242');
+		$('#card-number').val('4000000000000002'); // test for card_declined response
 		$('#card-cvc').val('999');
 		$('#card-expiry-month').val('12');
 		$('#card-expiry-year').val('2015');
@@ -117,13 +118,15 @@
 				
 		function validateCreditCardCVC(){
 			debug.log('validateCreditCardCVC : ', Stripe.validateCVC( $('#card-cvc').val() ) );
-			return Stripe.validateCVC( $('#card-cvc').val() )
+			return true;
+			//return Stripe.validateCVC( $('#card-cvc').val() )
 		}
 		
 						
 		function validateCreditCardExpiry(){
 			debug.log('validateCreditCardExpiry : ', Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() ) );
-			return Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() )
+			return true;
+			//return Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() )
 		}
 		
 		
@@ -181,15 +184,18 @@
 		function formIsValid(){
 			//validate new account password
 			var valid = true;
-			var newPass = $.trim($('#newuser_pwd').val());
-			var confirmNewPass = $.trim($('#confirm_newuser_pwd').val());
 			
-			if (newPass == "" || newPass != confirmNewPass){
-				//TODO: show error
-				$('#newPassValidationError').show();
-				valid = false;
-			}else{
-				$('#newPassValidationError').hide();				
+			if ($('#accountRadioInput2').is(':checked')){
+				var newPass = $.trim($('#newuser_pwd').val());
+				var confirmNewPass = $.trim($('#confirm_newuser_pwd').val());
+			
+				if (newPass == "" || newPass != confirmNewPass){
+					//TODO: show error
+					$('#newPassValidationError').show();
+					valid = false;
+				}else{
+					$('#newPassValidationError').hide();				
+				}
 			}
 			
 			
@@ -214,6 +220,7 @@
 			debug.log("seaValidate email result : ", result);
 			
 			if(!result){
+				jQuery(".validate-email").seaVerify();
 				valid = false;
 			}
 			
@@ -221,6 +228,8 @@
 			debug.log("seaValidate card-cvc result : ", result);
 			
 			if(!result){
+				jQuery("#card-cvc").seaVerify();
+				
 				valid = false;
 			}
 						
@@ -228,6 +237,7 @@
 			debug.log("seaValidate card-number result : ", result);
 			
 			if(!result){
+				jQuery("#card-number").seaVerify();
 				valid = false;
 			}
 									
@@ -235,6 +245,7 @@
 			debug.log("seaValidate card-expiry-month result : ", result);
 			
 			if(!result){
+				jQuery("#card-expiry-month").seaVerify();
 				valid = false;
 			}
 												
@@ -242,6 +253,7 @@
 			debug.log("seaValidate card-expiry-year result : ", result);
 			
 			if(!result){
+				jQuery("#card-expiry-year").seaVerify();
 				valid = false;
 			}
 			
@@ -311,7 +323,9 @@
 			debug.log('stripeResponseHandler, status : ', status, 'response : ', response);
 		    if (response.error) {
 		        // show the errors on the form
-		        $(".payment-errors").text(response.error.message);
+				$.colorbox({initialHeight:0, initialWidth:0, html:"<p>"+response.error.message+"</p>"})
+		
+		        //$(".payment-errors").text(response.error.message);
 		    } else {
 		        var $form = $("#checkout-form");
 		        // token contains id, last4, and card type

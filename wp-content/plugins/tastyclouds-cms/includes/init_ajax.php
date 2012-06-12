@@ -37,6 +37,8 @@ add_action( 'wp_ajax_nopriv_tc_remove_coupon_checkout', array('CartAjax', 'remov
 add_action( 'wp_ajax_tc_get_cart', array('CartAjax', 'getCart') );
 add_action( 'wp_ajax_tc_reload_order', array('CartAjax', 'reloadOrder') );
 add_action( 'wp_ajax_tc_enable_tax', array('CartAjax', 'enableTax') );
+add_action( 'wp_ajax_tc_create_charge', array('CartAjax', 'createCharge') );
+add_action( 'wp_ajax_nopriv_tc_create_charge', array('CartAjax', 'createCharge') );
 
 add_action( 'wp_ajax_tc_update_shipping_rates',  array('ShippingAjax', 'retrieveShippingRates') );
 add_action( 'wp_ajax_tc_get_checkout_shipping_rates',  array('ShippingAjax', 'getShippingRatesForCheckout') );

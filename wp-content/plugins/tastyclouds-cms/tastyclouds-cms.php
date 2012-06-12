@@ -14,6 +14,18 @@ if (!defined('TASTY_CMS_PLUGIN_DIR')) {
 }
 
 
+//TODO:  move this to MU plugin
+function tc_admin_lockout(){  
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	
+	if( is_admin() && !current_user_can('manage_options') && !$doing_ajax ){    
+		wp_redirect( home_url());
+	    die();  
+	}
+}
+add_action('init','tc_admin_lockout');
+
+
 function alter_tc_product_query( $request ) {
     $dummy_query = new WP_Query();  // the query isn't run if we don't pass any query vars
     $dummy_query->parse_query( $request );
@@ -242,7 +254,7 @@ function tc_cms_enqueue_scripts(){
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v1/');
 		wp_enqueue_script( 'seahorse', TC_CMS_JS_URL . 'seahorse/seahorse-1.2.js');
 		wp_enqueue_script( 'seahorse.jquery', TC_CMS_JS_URL . 'seahorse/seahorse.jquery-1.2.js');
-		
+
 		
 		$order_types = get_terms( 'tc_order_type', 'hide_empty=0' );
 		$shippingTermID = '';

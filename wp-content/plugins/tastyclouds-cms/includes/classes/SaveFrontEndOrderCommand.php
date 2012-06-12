@@ -168,7 +168,6 @@ class SaveFrontEndOrderCommand
 					'first_name'=>$customerFirstName,
 					'last_name'=>$customerLastName,
 					));
-				//$newUserResult = wp_create_user($user_name, $user_pass, $customerEmail);
 				
 				if( is_wp_error($newUserResult) ){
 					error_log('Error creating new user : '.$newUserResult->getErrorMessages());
@@ -195,7 +194,6 @@ class SaveFrontEndOrderCommand
 
 		return $contactModel;
 		
-
 	}
 	
 	
@@ -222,13 +220,19 @@ class SaveFrontEndOrderCommand
 		
 		//if($this->checkoutAsGuest){
 			// create the charge on Stripe's servers - this will charge the user's card
-			$stripeCharge = Stripe_Charge::create(array(
-				  "amount" => $paymentAmount, // amount in cents, again
-				  "currency" => "usd",
-				  "card" => $token,
-				  "description" => $descriptionJSON 
-				)
-			);
+			try{
+				$stripeCharge = Stripe_Charge::create(array(
+					  "amount" => $paymentAmount, // amount in cents, again
+					  "currency" => "usd",
+					  "card" => $token,
+					  "description" => $descriptionJSON 
+					)
+				);
+		}catch(Exception $e){
+			error_log(var_export($e, 1));
+			
+		}
+			
 			
 		// }else{
 		// 	

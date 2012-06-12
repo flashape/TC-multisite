@@ -420,6 +420,66 @@ class CartAjax
 	private static function echoJson($result){
 		
 	}
+	
+	
+	public static function createCharge(){
+		// TODO:  submit payment to stripe
+		// set your secret key: remember to change this to your live secret key in production
+		// see your keys here https://manage.stripe.com/account
+		
+		require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
+		Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
+
+		$token = $_POST['stripeToken'];
+		$amount = $_POST['amount'];
+		
+		$cartID = self::getCartIDFromSession();
+		
+		$cart = self::getCartById($cartID);
+		
+		if($cart){
+		
+			$summary = OrderProxy::getOrderSummary($cart);
+			//error_log(var_export($summary, 1));
+			$orderTotal = OrderProxy::getOrderTotalFromSummary($summary);
+		
+
+			$description = array('cartID'=>self::getCartById($cartID));
+		
+			$descriptionJSON = json_encode($description);
+		
+			$paymentAmount = $amount;
+			$paymentAmountInCents = $paymentAmount * 100;
+		
+			try{
+				$stripeCharge = Stripe_Charge::create(array(
+					  "amount" => $paymentAmount, // amount in cents, again
+					  "currency" => "usd",
+					  "card" => $token,
+					  "description" => $descriptionJSON 
+					)
+				);
+			
+			
+			$result = AjaxUtils::createResult('Charge created successfully',true, array('charge'=>$stripeCharge, 'cartID'=>$cartID));
+			
+			
+			
+			}catch(Exception $e){
+				error_log(var_export($e, 1));
+				$result = AjaxUtils::createResult('Error creating charge.', false, array('exception'=>$e));
+			
+			}
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+		
+		
+		
+		AjaxUtils::returnJson($result);
+		
+		
+	}
 
 	private static function createCartNotFoundResult($arrayToMerge = null){
 		$result = array('success'=>false, 'errorMessage'=>'Cart not found.', 'session'=>$_SESSION, 'sessionID'=>session_id() );
