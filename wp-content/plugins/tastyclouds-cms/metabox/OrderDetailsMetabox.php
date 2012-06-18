@@ -1196,7 +1196,7 @@ jQuery(document).ready(function($){
 		<td class="rowTotalColumn"></td>
 			
 
-		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</button></td>
 		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 		
 		
@@ -1220,7 +1220,7 @@ jQuery(document).ready(function($){
 		
 		<td class="rowTotalColumn"></td>
 			
-		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</button></td>
 		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 		
 	<tr>
@@ -1240,7 +1240,7 @@ jQuery(document).ready(function($){
 		
 		<td class="rowTotalColumn"></td>
 			
-		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</td>
+		<td class="addNextItemColumn"><button class="addNextItemButton">Add New</button></td>
 		<td class="removeItemColumn"><button class="removeProductButton">Remove</button></td>
 	<tr>
 				

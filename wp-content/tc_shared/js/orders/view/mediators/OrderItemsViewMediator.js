@@ -90,11 +90,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 						
 												
 				if (cart.shipping){
-					var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
+					//var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
 					var amount = parseFloat(cart.shipping.amount);
-					amount +=  markup;
+					//amount +=  markup;
 					
-					var shippingModel = {amount:amount, serviceType:cart.shipping.serviceType, markup:markup}
+					var shippingModel = {amount:amount, serviceType:cart.shipping.serviceType}
 					jQuery('#shippingRow').data('shippingModel', shippingModel);
 					jQuery('#_tc_shipping_enabled_checkbox').attr("checked", "checked");
 					jQuery('#shippingRow').show();
@@ -145,10 +145,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 		onShippingRateResult: function (serviceResult){
 			if (serviceResult.success){
 				var serviceType = serviceResult.serviceType;
-				var amount = parseFloat( serviceResult.amount );
-				var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
-				amount +=  markup;
-				jQuery('#shippingRow').data('shippingModel', {amount:amount, serviceType:serviceType, markup:markup});
+				//var amount = parseFloat( serviceResult.amount );
+				var amount = parseFloat( serviceResult.shippingResult.cart.shipping.amount ); 
+				// var markup = parseFloat(shippingOptionsJSON.FedEx.markupAmount);
+				// amount +=  markup;
+				jQuery('#shippingRow').data('shippingModel', {amount:amount, serviceType:serviceType});
 				jQuery("#loadingShipping").hide();
 
 				this.calculateTotal();

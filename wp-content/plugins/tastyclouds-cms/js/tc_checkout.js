@@ -24,8 +24,8 @@
 		//Seahorse.form("checkout-form", function(msjs, array) {alert(msjs);}, "Submit error" );
 		
 		//for stripe testing
-		//$('#card-number').val('4242424242424242');
-		$('#card-number').val('4000000000000002'); // test for card_declined response
+		$('#card-number').val('4242424242424242');
+		//$('#card-number').val('4000000000000002'); // test for card_declined response
 		$('#card-cvc').val('999');
 		$('#card-expiry-month').val('12');
 		$('#card-expiry-year').val('2015');
@@ -68,15 +68,21 @@
 
 		});
 		
+		
 				
 		$('#checkout').on('change', 'input.shipmentTypeRadioInput', function(event){
+			
 			debug.log('on shipmentTypeRadio change!');
 			if ($('#shipmentTypeRadioInput1').is(':checked')){
 				$('#_tc_order_type').val(TCCheckoutAjax.pickupTermID);
 			}else{
 				$('#_tc_order_type').val(TCCheckoutAjax.shippingTermID);
 			}
+			
 			debug.log('set _tc_order_type to : ', $('#_tc_order_type').val());
+			
+			submitShippingSelection();
+			
 			return false;
 
 		});
@@ -95,6 +101,23 @@
 		
 		$('#removeCouponButton').on('click', function() {
 			removeCoupon();
+		    return false;
+		});
+		
+					
+		$('#editOrderButton').on('click', function() {
+			window.location.href = "http://tastyclouds.com/cart";
+		    //return false;
+		});
+		
+				
+		$('#isGiftCheckbox').on('change', function() {
+			if ( $(this).is(":checked") ){
+				$('#giftMessageTextArea').removeAttr('disabled').focus();
+			}else{
+				$('#giftMessageTextArea').attr('disabled', 'disabled');
+				
+			}
 		    return false;
 		});
 		
@@ -268,7 +291,11 @@
 			//$('.submit-button').attr("disabled", "disabled");
 			
 			if ( formIsValid() ){
-				validateEmail();
+				if ($('#accountRadioInput2').is(':checked')){
+					validateEmail();
+				}else{
+					getCardToken();
+				}
 			}
 			
 			//prevent the form from submitting with the default action
@@ -313,13 +340,11 @@
 		        cvc: $('#card-cvc').val(),
 		        exp_month: $('#card-expiry-month').val(),
 		        exp_year: $('#card-expiry-year').val()
-		    }, stripeResponseHandler);
-
-			
+		    }, getCardTokenResponseHandler);
 		}
 		
 		
-		function stripeResponseHandler(status, response) {
+		function getCardTokenResponseHandler(status, response) {
 			debug.log('stripeResponseHandler, status : ', status, 'response : ', response);
 		    if (response.error) {
 		        // show the errors on the form
@@ -333,8 +358,44 @@
 		        // insert the token into the form so it gets submitted to the server
 		        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
 		        
-				doFormSubmit();
+				//doFormSubmit();
+				submitPayment(token);
 		    }
+		}
+		
+		function submitPayment(token){
+			// submit payment via ajax before submitting rest of form
+			var data = {action:'tc_create_charge'};
+			data.stripeToken = token;
+			jQuery.post(
+			    TCCheckoutAjax.ajaxurl, 
+				data,
+			    function( response ) {
+			        debug.log('submitPayment response : ', response );
+					onCreateChargeResult(response);
+			    },
+				'json'
+			);
+			
+			
+		}
+		
+		function onCreateChargeResult(serviceResult){
+			
+			debug.log('onCreateChargeResult , serviceResult : ', serviceResult);
+			
+			if(serviceResult.success){
+				debug.log("onCreateChargeResult success!");
+
+				doFormSubmit();
+			}else{
+				$.colorbox({initialHeight:0, initialWidth:0, html:"<p>"+serviceResult.message+"</p>"})				
+				// jQuery('#couponCodeInput').val('');
+				
+			}
+			
+			
+
 		}
 		
 
@@ -359,6 +420,81 @@
 		
 		
 		
+
+		
+		
+				
+		
+		function submitShippingSelection (){
+			debug.log('submitShippingSelection()');
+			$("#settingShipping").show();
+			setShippingSelection();
+			
+		}
+		
+		
+		
+		function setShippingSelection (){
+			
+			
+			var data = {action:'tc_select_shipping_checkout'};
+			data.shipmentType = $("input[name='shipmentType']:checked").val();
+	        data.site = TCCheckoutAjax.site;
+			debug.log("setShippingSelection data : ", data);
+			jQuery.post(
+			    TCCheckoutAjax.ajaxurl, 
+				data,
+			    function( response ) {
+			        debug.log('setShippingSelection response : ', response );
+					onSetShippingSelectionResult(response);
+			    },
+				'json'
+			);
+						
+		}
+		
+		
+		function onSetShippingSelectionResult (serviceResult){  
+			$("#settingShipping").hide();
+			debug.log('onSetShippingSelectionResult , serviceResult : ', serviceResult);
+			
+			if(serviceResult.success){
+				debug.log("onSetShippingSelectionResult success!");
+				// var couponModel = serviceResult.couponModel;
+				// jQuery("#couponDiv").data('couponModel', couponModel);    
+				// populateCouponInfo();
+
+			}else{
+				$("input[name='shipmentType']:checked").removeAttr('checked');
+				alert('There was an error setting the shipping selection : '+serviceResult.message);
+				
+				// jQuery('#couponCodeInput').val('');
+				
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		function submitCouponCode (){
+			debug.log('submitCouponCode()');
+			
+			jQuery("#validatingCoupon").show();
+			var code = jQuery('#couponCodeInput').val();
+			validateCoupon(code);
+			
+		}
+		
+		
+		
+		
+		
 		function validateCoupon (couponCode){
 			var data = {action:'tc_validate_coupon_checkout'};
 			data.couponCode = couponCode;
@@ -376,8 +512,6 @@
 			);
 						
 		}
-		
-		
 		
 		
 		function onCouponValidationResult (serviceResult){  
@@ -456,17 +590,7 @@
 			}
 		}
 		
-		function submitCouponCode (){
-			debug.log('submitCouponCode()');
-			
-			jQuery("#validatingCoupon").show();
-			var code = jQuery('#couponCodeInput').val();
-			validateCoupon(code);
-			
-		}
-		
-		
-		
+
 		
 		
 		

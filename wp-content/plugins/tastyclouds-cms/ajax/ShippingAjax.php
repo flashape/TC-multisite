@@ -278,9 +278,14 @@ class ShippingAjax
 
 		// add the shipping info directly to the cart session
 		$cartID = $_POST['cartID'];
-
-		$shipping = array('amount'=>$result['amount'], 'serviceType'=>$result['serviceType']);
 		
+		$shippingOptions = get_option('tc_shipping_options');
+		$amount = $result['amount'];
+		$markupAmount = $shippingOptions['FedEx']['markupAmount'];
+		
+		$amount += $markupAmount;
+
+		$shipping = array('amount'=>$amount, 'serviceType'=>$result['serviceType']);
 		$shippingResult = CartAjax::setShipping($cartID, $shipping);
 		//error_log(print_r($shippingResult, 1));
 

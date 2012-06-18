@@ -34,6 +34,18 @@ class SaveFrontEndOrderCommand
 		
 		$this->billingAddress = $this->processBillingAddress();
 		$this->shippingAddress = $this->processShippingAddress($this->billingAddress);
+		
+		$isGift = $_POST['isGift'];
+		
+		
+		if( !empty( $isGift ) && $isGift == 'on' ){
+			
+			$giftMessageText = wp_strip_all_tags($_POST['giftMessageText']);
+			
+			update_post_meta( $this->orderID, '_isGift', true);	
+			update_post_meta( $this->orderID, '_giftMessageText', $giftMessageText );	
+			
+		}
 
 		// // save payment info if submitted with order
 		if (!empty($_POST['stripeToken'] ) ){
@@ -80,6 +92,8 @@ class SaveFrontEndOrderCommand
 		// 	$this->createInvoice();
 		// 
 		// }
+		
+		tc_send_customer_order_email(array('orderID'=>$this->orderID, 'summary'=>$summary, 'contactModel'=>$this->contactModel));
 		
 	}
 	
@@ -202,44 +216,47 @@ class SaveFrontEndOrderCommand
 		// set your secret key: remember to change this to your live secret key in production
 		// see your keys here https://manage.stripe.com/account
 		
-		require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
-		Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
-
-		// get the credit card details submitted by the form
-		$token = $_POST['stripeToken'];
-		
-		// If they chose to create an account, create a Stripe Customer object and charge that,
-		// If they chose to check out as guest, just charge the card directly.
-		
-		$description = array('orderID'=>$this->orderID);
-		
-		$descriptionJSON = json_encode($description);
-		
-		$paymentAmount = 100;
-		$paymentAmountInCents = $paymentAmount * 100;
-		
-		//if($this->checkoutAsGuest){
-			// create the charge on Stripe's servers - this will charge the user's card
-			try{
-				$stripeCharge = Stripe_Charge::create(array(
-					  "amount" => $paymentAmount, // amount in cents, again
-					  "currency" => "usd",
-					  "card" => $token,
-					  "description" => $descriptionJSON 
-					)
-				);
-		}catch(Exception $e){
-			error_log(var_export($e, 1));
-			
-		}
-			
+		// require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
+		// Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
+		// 
+		// // get the credit card details submitted by the form
+		// $token = $_POST['stripeToken'];
+		// 
+		// // If they chose to create an account, create a Stripe Customer object and charge that,
+		// // If they chose to check out as guest, just charge the card directly.
+		// 
+		// $description = array('orderID'=>$this->orderID);
+		// 
+		// $descriptionJSON = json_encode($description);
+		// 
+		// $paymentAmount = 100;
+		// $paymentAmountInCents = $paymentAmount * 100;
+		// 
+		// //if($this->checkoutAsGuest){
+		// 	// create the charge on Stripe's servers - this will charge the user's card
+		// 	try{
+		// 		$stripeCharge = Stripe_Charge::create(array(
+		// 			  "amount" => $paymentAmount, // amount in cents, again
+		// 			  "currency" => "usd",
+		// 			  "card" => $token,
+		// 			  "description" => $descriptionJSON 
+		// 			)
+		// 		);
+		// }catch(Exception $e){
+		// 	error_log(var_export($e, 1));
+		// 	
+		// }
+		// 	
 			
 		// }else{
 		// 	
 		// 	
 		// }
+		require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
 		
-
+		$stripeCharge = get_transient("charge_{$this->cartID}");
+		
+		$paymentAmount = $stripeCharge->amount / 100; //$amount will be in cents so divide by 100 to get dollar amount.
 		$paymentNote = '';
 		
 		$paymentModel = array(
@@ -247,7 +264,8 @@ class SaveFrontEndOrderCommand
 			'paymentAmount' => $paymentAmount,
 			'paymentNote' => $paymentNote,
 		);
-				
+		error_log("paymentModel : ");
+		error_log(var_export($paymentModel, 1));		
 		$paymentID = PaymentProxy::insertNew(array('use_post'=>false, 'orderID'=>$this->orderID, 'paymentModel'=>$paymentModel));
 		
 		update_post_meta( $paymentID, '_stripeChargeID', $stripeCharge->id);					

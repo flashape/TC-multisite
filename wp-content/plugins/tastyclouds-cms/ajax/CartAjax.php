@@ -81,10 +81,25 @@ class CartAjax
 			}
 		}
 		return $_SESSION['cart_'.$cartID];
+	}
+	
+	// sends the cart to the front end /cart page.
+	public static function loadCart(){
+		$cart = self::getCartById( self::getCartIDFromSession() );
+		
+		if ($cart){
+			$result = AjaxUtils::createResult('Cart found successfully',true, array('cart'=>$cart));
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+		
+		AjaxUtils::returnJson($result);
+		
 		
 	}
 	
-	// Returns the cart to WP
+	
+	// Returns the cart to admin order edit screen
 	public static function getCart(){
 		$cart = self::getCartById();
 		
@@ -97,6 +112,15 @@ class CartAjax
 		AjaxUtils::returnJson($result);
 		
 	}	
+	
+	
+	public static function isEmpty($cart){
+		if ( !isset($cart) || !isset($cart['items']) || empty($cart['items']) ) {
+			return true;		
+		}else{
+			return false;
+		}
+	}
 	
 	// Returns the cart plus payment info
 	public static function reloadOrder(){
@@ -201,6 +225,31 @@ class CartAjax
 		AjaxUtils::returnJson($result);
 	}
 	
+	
+	// updates the item quantity from /cart front end page.
+	public static function updateQuantity(){
+		
+		$cart = self::getCartById( self::getCartIDFromSession() );
+		$cartItemID = $_POST['cartItemID'];
+		$newQuantity = $_POST['quantity'];
+		$result;
+
+		if ($cart){
+			$model =& $cart['items'][$cartItemID];
+			$model->quantity = $newQuantity;
+			
+			
+			$result = AjaxUtils::createResult('Quantity updated successfully', true, array('cart'=>$cart)); //'cart' added for debugging only
+			self::overwriteCartInSession($cart);
+			error_log(var_export($model, 1));
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+		
+		AjaxUtils::returnJson($result);
+	}
+	
+		
 	public static function updateItem(){
 		
 		$cart = self::getCartById();
@@ -214,6 +263,22 @@ class CartAjax
 			$result = AjaxUtils::createResult('Item updated successfully', true, array('cart'=>$cart)); //'cart' added for debugging only
 			self::overwriteCartInSession($cart);
 			error_log(var_export($model, 1));
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+		
+		AjaxUtils::returnJson($result);
+	}
+	
+	public static function removeItemByID(){
+		$cart = self::getCartById( self::getCartIDFromSession() );
+		if ($cart){
+
+			$cartItemID = $_POST['cartItemID'];
+			
+			unset($cart['items'][$cartItemID]);
+			$result = AjaxUtils::createResult('Item removed successfully', true, array('cart'=>$cart));
+			self::overwriteCartInSession($cart);
 		}else{
 			$result = self::createCartNotFoundResult();
 		}
@@ -391,6 +456,44 @@ class CartAjax
 		AjaxUtils::returnJson($result);
 	}
 	
+	public static function selectShippingForCheckout(){
+		$cartID = self::getCartIDFromSession();
+		
+		$cart = self::getCartById($cartID);
+		
+		if($cart){
+			$shipmentType = $_POST['shipmentType'];
+
+			if ($shipmentType == 'PICKUP'){
+				$shipping = array('amount'=>0, 'serviceType'=>$shipmentType);
+			}else{
+				// get the shipping results that have been stored as a transient option
+				$shippingCharges = get_transient("ship_{$cartID}");
+				foreach($shippingCharges as $shipCharge){
+					if ($shipCharge['serviceType'] == $shipmentType){
+						$shipAmount = $shipCharge['amount'];
+						break;
+					}
+				}
+
+				//error_log(var_export($shippingCharges, 1));
+				$shipping = array('amount'=>$shipAmount, 'serviceType'=>$shipmentType);
+			}
+			
+			$result = CartAjax::setShipping($cartID, $shipping);
+			
+			
+		}else{
+			$result = self::createCartNotFoundResult();
+		}
+
+
+
+		AjaxUtils::returnJson($result);
+		
+		
+	}
+	
 			
 	
 	
@@ -431,7 +534,7 @@ class CartAjax
 		Stripe::setApiKey("YUHmdlnsLPInqkUrAWZxKrO82hRDgQDQ");
 
 		$token = $_POST['stripeToken'];
-		$amount = $_POST['amount'];
+		//$amount = $_POST['amount'];
 		
 		$cartID = self::getCartIDFromSession();
 		
@@ -442,32 +545,39 @@ class CartAjax
 			$summary = OrderProxy::getOrderSummary($cart);
 			//error_log(var_export($summary, 1));
 			$orderTotal = OrderProxy::getOrderTotalFromSummary($summary);
-		
+			
 
 			$description = array('cartID'=>self::getCartById($cartID));
 		
 			$descriptionJSON = json_encode($description);
 		
-			$paymentAmount = $amount;
+			// front end orders are always pay in full, no partial payments
+			$paymentAmount = $orderTotal;
 			$paymentAmountInCents = $paymentAmount * 100;
-		
+			error_log("attempting to create charge for amount of $paymentAmount");
+			
 			try{
 				$stripeCharge = Stripe_Charge::create(array(
-					  "amount" => $paymentAmount, // amount in cents, again
+					  "amount" => $paymentAmountInCents, // amount in cents, again
 					  "currency" => "usd",
 					  "card" => $token,
 					  "description" => $descriptionJSON 
 					)
 				);
 			
-			
-			$result = AjaxUtils::createResult('Charge created successfully',true, array('charge'=>$stripeCharge, 'cartID'=>$cartID));
-			
-			
+				set_transient('charge_'.$cartID, $stripeCharge, 60 * 60); // save the results for 1 hour
+				
+				// error_log("Stripe charge :");
+				// error_log(var_export($stripeCharge, 1));
+				
+				// we dont need to send any ID back, when this repsonse is received in the browser
+				// it will submit the checkout form, and we can pull the transient charge from the db by the cartID	
+				$result = AjaxUtils::createResult('Charge created successfully',true);
+				//$result = AjaxUtils::createResult('Charge created successfully',true, array('chargeID'=>$stripeCharge->id, 'cartID'=>$cartID));
 			
 			}catch(Exception $e){
 				error_log(var_export($e, 1));
-				$result = AjaxUtils::createResult('Error creating charge.', false, array('exception'=>$e));
+				$result = AjaxUtils::createResult('Error creating charge : '.$e->json_body['error']['message'], false, array('exception'=>$e));
 			
 			}
 		}else{

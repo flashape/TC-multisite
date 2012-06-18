@@ -11,8 +11,6 @@ class WPSEO_Frontend {
 
 		add_filter( 'wp_title', array( &$this, 'title' ), 10, 3 );
 		add_filter( 'thematic_doctitle', array( &$this, 'force_wp_title' ) );
-		add_filter( 'headway_title', array( &$this, 'force_wp_title' ) );
-		add_filter( 'woo_title', array( &$this, 'force_wp_title' ) );
 		
 		add_action( 'wp',array( &$this, 'page_redirect' ), 99, 1 );
 
@@ -110,7 +108,7 @@ class WPSEO_Frontend {
 		$title = get_the_author_meta('wpseo_title', $author_id);
 		
 		if ( !empty($title) )
-			return wpseo_replace_vars( $title );
+			return wpseo_replace_vars( $title, array() );
 		
 		return $this->get_title_from_options( 'title-author' );
 	}
@@ -301,9 +299,7 @@ class WPSEO_Frontend {
  	}
 	
 	function force_wp_title() {
-		wp_reset_query();
-		global $sep;
-		return wp_title( $sep, true, 'right' );
+		return $this->title( '', '', false );
 	}
 	
 	function fix_generator($generator) {
@@ -402,11 +398,12 @@ class WPSEO_Frontend {
 				$term_meta = wpseo_get_term_meta( $term, $term->taxonomy, 'noindex' );
 				if ( 'noindex' == $term_meta || 'on' == $term_meta ) // on is for backwards compatibility
 					$robots['index'] = 'noindex';
-				else if ( 'index' == $term_meta )
+				
+				if ( 'index' == $term_meta )
 					$robots['index'] = 'index';				
 			} else if ( 
 				(is_author() 	&& isset($options['noindex-author']) && $options['noindex-author']) || 
-				(is_date() 		&& isset($options['noindex-archives']) && $options['noindex-archives']) || 
+				(is_date() 		&& isset($options['noindex-archive']) && $options['noindex-archive']) || 
 				(is_home() 		&& get_query_var( 'paged') > 1) )
 			{
 				$robots['index']  = 'noindex';

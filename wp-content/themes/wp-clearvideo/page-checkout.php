@@ -1,11 +1,20 @@
 <?php
 
 $cartKey = CartAjax::hasCartInSession();
+error_log("page_checkout, cartKey : $cartKey");
+
 if ($cartKey !== FALSE){
 	$cartID = str_replace('cart_', '', $cartKey);
 	$cart = CartAjax::getCartById( $cartID );
+	
+	if(CartAjax::isEmpty($cart)){
+		wp_redirect("http://tastyclouds.com/cart", 302);
+	}
+	
+}else{
+	wp_redirect("http://tastyclouds.com/cart", 302);
 }
-//TODO:  redirect to cart.php if the cart is empty.
+
 
 
 $orderSummary = OrderProxy::getOrderSummary($cart);
@@ -154,6 +163,11 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 									<td class="address-form-label-column required">Country:</td>
 									<td style="text-align:left"> <input type="text" name="billing_address_country"  id="billing_address_country"  /></td>
 								</tr>
+								<tr>
+									<td class="address-form-label-column">Address Notes:</td>
+									<td style="text-align:left"><textarea id="billing_address_notes" name="billing_address_notes" rows="2" style="width:100%;"></textarea></td>
+								</tr>
+								
 							</tbody>
 						</table>
 						<label id="editBillingAddressLabel" style="display:none"><input type="checkbox" id="editBillingAddressCheckbox" />Edit Billing Address</label>
@@ -204,6 +218,10 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 									<td class="address-form-label-column required">Country:</td>
 									<td style="text-align:left"> <input type="text" name="shipping_address_country"  id="shipping_address_country"  /></td>
 								</tr>
+								<tr>
+									<td class="address-form-label-column">Address Notes:</td>
+									<td style="text-align:left"><textarea id="shipping_address_notes" name="shipping_address_notes" rows="2" style="width:100%;"></textarea></td>
+								</tr>
 							</tbody>
 						</table>
 					
@@ -234,6 +252,10 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 							Please select either Pickup or a Shipment Type.
 						</div>
 						<p>Select Pickup or Shipping Method:</p>
+						<div id="settingShipping" style="display:none;">
+						  <p style="font-size:10px"><img src="<?php echo plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif'); ?>" />Setting shipping selection...</p>
+						</div>
+						
 						<label class="shipmentTypeRadio"><input class="shipmentTypeRadioInput" type="radio" id="shipmentTypeRadioInput1" name="shipmentType" value="PICKUP"  />Pickup</label><br />
 						<input type="button" id="getShippingRatesButton" value="Get Shipping Rates">
 						<div id="loadingShipping" style="display:none;">
@@ -287,7 +309,7 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 							</table>
 						</div>
 						
-						<button id="editOrderButton">Edit Cart</button><br /><br />
+						<button id="editOrderButton" type="button">Edit Cart</button><br /><br />
 					</div>
 				</div>
 			</div>
@@ -307,7 +329,12 @@ foreach ($orderSummary['lines']['line'] as $lineItem){
 						</div>
 						<div id="couponTitle"><br /><span style="font-style:italic;color:#CCC;font-size:10px;">(Will be applied during checkout)<span></div>
 					</div>
-					<div class="two-thirds" >
+					<div class="one-third">
+						<label><input type="checkbox" id="isGiftCheckbox" name="isGift"  />Is this a gift?</label><br />
+						Message:<br/>
+		        		<textarea id="giftMessageTextArea" name="giftMessageText" rows="10" style="width:100%;" disabled="disabled" ></textarea>
+					</div>
+					<div class="one-third" >
 		        		<p>Payment Information:</p>
 						<table id="ccTable" style="width:100%;" >
 							<tbody>

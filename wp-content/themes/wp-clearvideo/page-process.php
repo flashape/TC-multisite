@@ -3,6 +3,7 @@
 // wp_redirect($redirect_to,301);
 
 $cartKey = CartAjax::hasCartInSession();
+error_log("page_process, cartKey : $cartKey");
 if ($cartKey !== FALSE){
 	$cartID = str_replace('cart_', '', $cartKey);
 	$cart = CartAjax::getCartById($cartID );
@@ -21,43 +22,13 @@ if ($cartKey !== FALSE){
 	}
 	
 	
-	
-	// if this is a shipping order, save the selected
-	// shipping method with the order
-	$shipmentType = $_POST['shipmentType'];
-	
-	if ($shipmentType != 'PICKUP'){
-		// get the shipping results that have been stored as a transient option
-		$shippingCharges = get_transient("ship_{$cartID}");
-		foreach($shippingCharges as $shipCharge){
-			if ($shipCharge['serviceType'] == $shipmentType){
-				$shipAmount = $shipCharge['amount'];
-				break;
-			}
-		}
-		
-		//error_log(var_export($shippingCharges, 1));
-
-		
-		$shipping = array('amount'=>$shipAmount, 'serviceType'=>$shipmentType);
-		
-		$shippingResult = CartAjax::setShipping($cartID, $shipping);
-		
-		if($shippingResult['success']){
-			$cart = CartAjax::getCartById($cartID );
-			//error_log(var_export($cart, 1));
-		}
-		
-	}
-	
-	
-	
 	$saveFrontEndOrderCommand = new SaveFrontEndOrderCommand($orderID, $cart, $cartID);
 	$saveFrontEndOrderCommand->execute();
 	
+	// Delete the shopping cart from the session
+	CartAjax::removeCartInSession($cartKey);
 	
-	
-	
+	wp_redirect("https://tastyclouds.com/checkout/thankyou?oid=$orderID", 303);
 	
 	
 }

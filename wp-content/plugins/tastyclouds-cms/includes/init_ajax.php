@@ -18,8 +18,15 @@ add_action( 'wp_ajax_tc_delete_variation_rule', array('ProductVariationRulesAjax
 
 add_action( 'wp_ajax_tc_add_cart_item', array('CartAjax', 'addItem') );
 add_action( 'wp_ajax_nopriv_tc_add_cart_item', array('CartAjax', 'addItem') );
+
 add_action( 'wp_ajax_tc_remove_cart_item', array('CartAjax', 'removeItem') );
+add_action( 'wp_ajax_tc_remove_cart_item_by_id', array('CartAjax', 'removeItemByID') );
+add_action( 'wp_ajax_nopriv_tc_remove_cart_item_by_id', array('CartAjax', 'removeItemByID') );
+
 add_action( 'wp_ajax_tc_update_cart_item', array('CartAjax', 'updateItem') );
+add_action( 'wp_ajax_tc_update_quantity', array('CartAjax', 'updateQuantity') );
+add_action( 'wp_ajax_nopriv_tc_update_quantity', array('CartAjax', 'updateQuantity') );
+
 add_action( 'wp_ajax_tc_upsell_popup', array('CartAjax', 'getUpsellPopup') );
 add_action( 'wp_ajax_nopriv_tc_upsell_popup', array('CartAjax', 'getUpsellPopup') );
 
@@ -29,6 +36,8 @@ add_action( 'wp_ajax_tc_update_discount', array('CartAjax', 'updateDiscount') );
 add_action( 'wp_ajax_tc_validate_coupon', array('CartAjax', 'validateCoupon') );
 add_action( 'wp_ajax_tc_validate_coupon_checkout', array('CartAjax', 'validateCouponForCheckout') );
 add_action( 'wp_ajax_nopriv_tc_validate_coupon_checkout', array('CartAjax', 'validateCouponForCheckout') );
+add_action( 'wp_ajax_tc_select_shipping_checkout', array('CartAjax', 'selectShippingForCheckout') );
+add_action( 'wp_ajax_nopriv_tc_select_shipping_checkout', array('CartAjax', 'selectShippingForCheckout') );
 
 add_action( 'wp_ajax_tc_remove_coupon', array('CartAjax', 'removeCoupon') );
 add_action( 'wp_ajax_tc_remove_coupon_checkout', array('CartAjax', 'removeCouponForCheckout') );
@@ -36,6 +45,8 @@ add_action( 'wp_ajax_nopriv_tc_remove_coupon_checkout', array('CartAjax', 'remov
 
 add_action( 'wp_ajax_tc_get_cart', array('CartAjax', 'getCart') );
 add_action( 'wp_ajax_tc_reload_order', array('CartAjax', 'reloadOrder') );
+add_action( 'wp_ajax_tc_load_cart', array('CartAjax', 'loadCart') );
+add_action( 'wp_ajax_nopriv_tc_load_cart', array('CartAjax', 'loadCart') );
 add_action( 'wp_ajax_tc_enable_tax', array('CartAjax', 'enableTax') );
 add_action( 'wp_ajax_tc_create_charge', array('CartAjax', 'createCharge') );
 add_action( 'wp_ajax_nopriv_tc_create_charge', array('CartAjax', 'createCharge') );

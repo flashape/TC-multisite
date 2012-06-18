@@ -6,7 +6,8 @@ class WPSEO_Metabox {
 	var $wpseo_meta_length_reason = '';
 	
 	function __construct() {
-		require WPSEO_PATH."/admin/linkdex/TextStatistics.php";
+		if ( !class_exists('TextStatistics') )
+			require WPSEO_PATH."/admin/linkdex/TextStatistics.php";
 		
 		$options = get_wpseo_options();
 
@@ -21,10 +22,13 @@ class WPSEO_Metabox {
 
 		add_action( 'wp_insert_post', array($this,'save_postdata') );
 		
-		add_action( 'admin_init', array(&$this, 'register_columns') );
-		add_filter( 'request', array(&$this, 'column_sort_orderby') );
+		if ( apply_filters('wpseo_use_page_analysis', true ) ) {
+			add_action( 'admin_init', array(&$this, 'register_columns') );
+			add_filter( 'request', array(&$this, 'column_sort_orderby') );
 		
-		add_action( 'post_submitbox_misc_actions', array( $this, 'publish_box' ) ); 
+			add_action( 'restrict_manage_posts', array(&$this, 'posts_filter_dropdown') );
+			add_action( 'post_submitbox_misc_actions', array( $this, 'publish_box' ) ); 
+		}
 	}
 
 	public function register_columns() {
@@ -48,7 +52,7 @@ class WPSEO_Metabox {
 			$score = 'noindex';
 			$title = __('Post is set to noindex.','wordpress-seo');
 		} else if ( $perc_score = wpseo_get_value('linkdex') ) {
-			$score = $this->translate_score( round( $perc_score / 10 ) );
+			$score = wpseo_translate_score( round( $perc_score / 10 ) );
 		} else {
 			if ( isset( $_GET['post'] ) ) {
 				$post_id = (int) $_GET['post'];
@@ -99,7 +103,7 @@ class WPSEO_Metabox {
 		$options = get_wpseo_options();
 		
 		$date = '';
-		if ( $post->post_type == 'post' ) {
+		if ( $post->post_type == 'post' && apply_filters( 'wpseo_show_date_in_snippet', true, $post ) ) {
 			$date = $this->get_post_date( $post );
 
 			$this->wpseo_meta_length = $this->wpseo_meta_length - (strlen($date)+5);
@@ -237,7 +241,7 @@ class WPSEO_Metabox {
 			"title" => __("Meta Robots Index", 'wordpress-seo' ),
 			"type" => "select",
 			"options" => array(
-				"0" => sprintf( __( "Default for post type, currently: %s", 'wordpress-seo'), ( isset( $options['noindex-' . $post_type ] ) && $options['noindex-' . $post->post_type ] ) ? 'noindex' : 'index' ),
+				"0" => sprintf( __( "Default for post type, currently: %s", 'wordpress-seo'), ( isset( $options['noindex-' . $post_type ] ) && $options['noindex-' . $post_type ] ) ? 'noindex' : 'index' ),
 				"2" => "index",
 				"1" => "noindex",
 			),
@@ -584,10 +588,28 @@ class WPSEO_Metabox {
 
 			wp_enqueue_script( 'jquery-ui-autocomplete', WPSEO_URL.'js/jquery-ui-autocomplete.min.js', array( 'jquery', 'jquery-ui-core' ), WPSEO_VERSION, true );		
 			wp_enqueue_script( 'wp-seo-metabox', WPSEO_URL.'js/wp-seo-metabox.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-autocomplete' ), WPSEO_VERSION, true );
-			
 		}
 	}
 
+	function posts_filter_dropdown() {
+		echo '<select name="seo_filter">';
+		echo '<option value="">All SEO Scores</option>';
+		foreach ( array(
+					'na' => 'SEO: No Focus Keyword',
+					'bad' => 'SEO: Bad',
+					'poor' => 'SEO: Poor',
+					'ok' => 'SEO: OK',
+					'good' => 'SEO: Good',
+					'noindex' => 'SEO: Post Noindexed',
+					) as $val => $text ) {
+			$sel = '';
+			if ( isset($_GET['seo_filter']) && $_GET['seo_filter'] == $val )
+				$sel = 'selected ';
+			echo '<option '.$sel.'value="'.$val.'">'.$text.'</option>';
+		}
+		echo '</select>';
+	}
+	
 	function column_heading( $columns ) {
 		return array_merge( $columns, array('wpseo-score' => 'SEO', 'wpseo-title' => 'SEO Title', 'wpseo-metadesc' => 'Meta Desc.', 'wpseo-focuskw' => 'Focus KW') );
 	}
@@ -600,7 +622,7 @@ class WPSEO_Metabox {
 				if ( wpseo_get_value('meta-robots-noindex', $id) !== 0 )
 					update_post_meta( $id, '_yoast_wpseo_linkdex', 0 );
 			} else if ( $score = wpseo_get_value('linkdex', $id) ) {
-				$score = $this->translate_score( round( $score / 10 ) );
+				$score = wpseo_translate_score( round( $score / 10 ) );
 				$title = $score;
 			} else {
 				$this->calculateResults( get_post( $id ) );
@@ -609,7 +631,7 @@ class WPSEO_Metabox {
 					$score = 'na';
 					$title = __('Focus keyword not set.','wordpress-seo');
 				} else {
-					$score = $this->translate_score( $score );
+					$score = wpseo_translate_score( $score );
 					$title = $score;
 				}
 			}
@@ -636,6 +658,73 @@ class WPSEO_Metabox {
 	}
 	
 	function column_sort_orderby( $vars ) {
+		if ( isset( $_GET['seo_filter'] ) ) {
+			switch ( $_GET['seo_filter'] ) {
+				case 'noindex':
+					$low = false;
+					$noindex = true;
+					break;
+				case 'na':
+					$low = 0;
+					$high = 0;
+					break;
+				case 'bad':
+					$low = 1;
+					$high = 34;
+					break;
+				case 'poor':
+					$low = 35;
+					$high = 54;
+					break;
+				case 'ok':
+					$low = 55;
+					$high = 74;
+					break;
+				case 'good':
+					$low = 75;
+					$high = 100;
+					break;
+				default:
+					$low = false;
+					$noindex = false;
+					break;
+			}
+			if ( $low !== false ) {
+				$vars = array_merge( 
+						$vars, 
+						array(
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key' => '_yoast_wpseo_meta-robots-noindex',
+									'value' => 1,
+									'compare' => '!='
+								),
+								array(
+									'key' => '_yoast_wpseo_linkdex',
+									'value' => array( $low, $high ),
+									'type' => 'numeric',
+									'compare' => 'BETWEEN'
+					    		)
+							)
+						)
+					);
+			} else if ( $noindex ) {
+				$vars = array_merge( 
+						$vars, 
+						array(
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key' => '_yoast_wpseo_meta-robots-noindex',
+									'value' => 1,
+									'compare' => '='
+								),
+							)
+						)
+					);				
+			}
+		}
 		if ( isset( $vars['orderby'] ) && 'wpseo-score' == $vars['orderby'] ) {
 			$vars = array_merge( $vars, array(
 				'meta_key' => '_yoast_wpseo_linkdex',
@@ -686,27 +775,6 @@ class WPSEO_Metabox {
 	    $array=$ret;
 	}
 
-	function translate_score( $val ) {
-		$score = 'bad';
-		switch ( $val ) {
-			case 3:
-			case 4:
-				$score = 'poor';
-				break;
-			case 5:
-			case 6:
-			case 7:
-				$score = 'ok';
-				break;
-			case 8:
-			case 9:
-			case 10:
-				$score = 'good';
-				break;
-		}
-		return $score;
-	}
-	
 	function linkdex_output( $post ) {
 		
 		if ( isset( $_GET['post'] ) ) {
@@ -731,7 +799,7 @@ class WPSEO_Metabox {
 		$perc_score = wpseo_get_value('linkdex');
 		
 		foreach ($results as $result) {
-			$score = $this->translate_score( $result['val'] );
+			$score = wpseo_translate_score( $result['val'] );
 			$output .= '<tr><td class="score"><div class="wpseo_score_img '.$score.'"></div></td><td>'.$result['msg'].'</td></tr>';
 		}
 		$output .= '</table>';
@@ -770,7 +838,7 @@ class WPSEO_Metabox {
 		$sampleurl = get_sample_permalink( $post );
 		$job["pageUrl"] = preg_replace( '/%(post|page)name%/', $sampleurl[1], $sampleurl[0] );
 		$job["pageSlug"] = urldecode( $post->post_name );
-		$job["keyword"]	= wpseo_get_value('focuskw');
+		$job["keyword"]	= trim( wpseo_get_value('focuskw') );
 		$job["keyword_folded"] = $this->strip_separators_and_fold( $job["keyword"] );
 
 		$dom = new domDocument; 
@@ -890,7 +958,7 @@ class WPSEO_Metabox {
 		// standardise whitespace again
 		$inputString = preg_replace('/\s+/',' ',$inputString);
 
-		return $inputString;
+		return trim( $inputString );
 	}
 	
 	function ScoreKeyword($job, &$results) {
@@ -952,13 +1020,13 @@ class WPSEO_Metabox {
 			// TODO MA Keyword/Title matching is exact match with separators removed, but should extend to distributed match
 			$needle_position = stripos( $title, $job["keyword_folded"] );
 
-			if ( $needle_position === false )
+			if ( $needle_position === false ) {
 				$needle_position = stripos( $title, $job["keyword"] );
-
+			}
+			
 			if ( $needle_position === false )
 				$this->SaveScoreResult( $results, 2, sprintf( $scoreTitleKeywordMissing, $job["keyword_folded"] ) );
-
-			if ( $needle_position <= $scoreTitleKeywordLimit )
+			else if ( $needle_position <= $scoreTitleKeywordLimit )
 				$this->SaveScoreResult( $results, 9, $scoreTitleKeywordBeginning );
 			else
 				$this->SaveScoreResult( $results, 6, $scoreTitleKeywordEnd );
@@ -1052,9 +1120,9 @@ class WPSEO_Metabox {
 		$scoreImagesAltKeywordMissing 	= __("The images on this page do not have alt tags containing your keyword / phrase.", 'wordpress-seo' );
 
 		if ( $imgcount == 0 ) {
-			$this->SaveScoreResult($results,6,$scoreImagesNoImages);
+			$this->SaveScoreResult($results,3,$scoreImagesNoImages);
 		} else if ( count($alts) == 0 && $imgcount != 0 ) {
-			$this->SaveScoreResult($results,3,$scoreImagesNoAlt);
+			$this->SaveScoreResult($results,5,$scoreImagesNoAlt);
 		} else {
 			$found=false;
 			foreach ($alts as $alt) {
@@ -1162,10 +1230,11 @@ class WPSEO_Metabox {
 		}
 	}
 
-
 	function ScoreBody($job, &$results, $body, $firstp, $statistics) {		
 		$scoreBodyGoodLimit 	= 300;
-		$scoreBodyPoorLimit 	= 100;
+		$scoreBodyOKLimit 		= 250;
+		$scoreBodyPoorLimit 	= 200;
+		$scoreBodyBadLimit 		= 100;
 
 		$scoreBodyGoodLength 	= __("There are %d words contained in the body copy, this is greater than the 300 word recommended minimum.", 'wordpress-seo' );
 		$scoreBodyPoorLength 	= __("There are %d words contained in the body copy, this is below the 300 word recommended minimum. Add more useful content on this topic for readers.", 'wordpress-seo' );
@@ -1184,10 +1253,14 @@ class WPSEO_Metabox {
 		// Copy length check
 		$wordCount = $statistics->word_count( $body );
 		
-		if ( $wordCount < $scoreBodyPoorLimit )
-			$this->SaveScoreResult( $results, 1, sprintf( $scoreBodyBadLength, $wordCount ) );
-		else if ( $wordCount < $scoreBodyGoodLimit )
+		if ( $wordCount < $scoreBodyBadLimit )
+			$this->SaveScoreResult( $results, -10, sprintf( $scoreBodyBadLength, $wordCount ) );
+		else if ( $wordCount < $scoreBodyPoorLimit )
+			$this->SaveScoreResult( $results, 3, sprintf( $scoreBodyPoorLength, $wordCount ) );
+		else if ( $wordCount < $scoreBodyOKLimit )
 			$this->SaveScoreResult( $results, 5, sprintf( $scoreBodyPoorLength, $wordCount ) );
+		else if ( $wordCount < $scoreBodyGoodLimit )
+			$this->SaveScoreResult( $results, 7, sprintf( $scoreBodyPoorLength, $wordCount ) );
 		else
 			$this->SaveScoreResult( $results, 9, sprintf( $scoreBodyGoodLength, $wordCount ) );
 
@@ -1211,14 +1284,14 @@ class WPSEO_Metabox {
 		$firstp = wpseo_strtolower_utf8( $firstp );
 		
 		// First Paragraph Test
-		if ( stripos( $firstp, $job["keyword"] ) === false && strpos( $firstp, $job["keyword_folded"] ) === false ) {
+		if ( stripos( $firstp, $job["keyword"] ) === false && stripos( $firstp, $job["keyword_folded"] ) === false ) {
 			$this->SaveScoreResult( $results, 3, $scoreFirstParagraphLow );
 		} else {
 			$this->SaveScoreResult( $results, 9, $scoreFirstParagraphHigh );		
 		}
 
 		$lang = get_bloginfo('language');
-		if ( substr($lang, 0, 2) == 'en' ) {
+		if ( substr($lang, 0, 2) == 'en' && $wordCount > 100 ) {
 			// Flesch Reading Ease check
 			$flesch = $statistics->flesch_kincaid_reading_ease($body);
 
@@ -1287,8 +1360,10 @@ class WPSEO_Metabox {
 
 	function GetFirstParagraph( $post ) {
 		// To determine the first paragraph we first need to autop the content, then match the first paragraph and return.		
-		preg_match( '/<p>(.*)<\/p>/', wpautop( $post->post_content ), $matches );
-		return $matches[1];
+		$res = preg_match( '/<p>(.*)<\/p>/', wpautop( $post->post_content ), $matches );
+		if ( $res )
+			return $matches[1];
+		return false;
 	}
 }
 $wpseo_metabox = new WPSEO_Metabox();

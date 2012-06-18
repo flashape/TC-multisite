@@ -217,6 +217,7 @@ class ContactProxy
 		$address['state'] = @$_POST[$type.'_address_state'];
 		$address['zip'] = @$_POST[$type.'_address_zip'];
 		$address['company'] = @$_POST[$type.'_address_company'];
+		$address['notes'] = @$_POST[$type.'_address_notes'];
 		
 		return $address;
 	}

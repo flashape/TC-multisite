@@ -279,7 +279,7 @@ class OrderProxy
 
 				}
 
-
+				$lineItem['cartItemID'] = $cartItem->cartItemID;
 				$lineItem['quantity'] = $cartItem->quantity;
 
 				$chargeItemsTotal += ($lineItem['unit_cost'] * $lineItem['quantity']);
@@ -306,7 +306,7 @@ class OrderProxy
 					}
 
 					$lineItem['name'] = "Shipping";
-					$lineItem['unit_cost'] = $shipping['amount'] + $shippingOptions['FedEx']['markupAmount'];
+					$lineItem['unit_cost'] = $shipping['amount']; // markup was already added to to the shipping total upon response from the FedEx service // + $shippingOptions['FedEx']['markupAmount'];
 					$lineItem['quantity'] = 1;
 
 					$invoice['lines']['line'][] = $lineItem;
