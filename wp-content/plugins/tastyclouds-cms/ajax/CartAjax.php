@@ -262,7 +262,7 @@ class CartAjax
 			$cart['items'][$cartItemID] = $model;
 			$result = AjaxUtils::createResult('Item updated successfully', true, array('cart'=>$cart)); //'cart' added for debugging only
 			self::overwriteCartInSession($cart);
-			error_log(var_export($model, 1));
+			error_log(var_export($cart, 1));
 		}else{
 			$result = self::createCartNotFoundResult();
 		}

@@ -62,12 +62,14 @@ class SaveOrderCommand
 		update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
 		update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
 
-
-		if ($this->isNewOrder || $this->orderWasReloaded){
+		// always save the cart
+		//if ($this->isNewOrder || $this->orderWasReloaded){
 			$cartID = $_POST['cartID'];
 			$this->cart = CartAjax::getCartById($cartID);
+			error_log("SaveORderCommand, saving cart : ");
+			error_log(var_export($this->cart, 1));
 			OrderProxy::saveCart($this->cart, $this->orderID, $cartID);
-		}
+		//}
 		
 		
 		

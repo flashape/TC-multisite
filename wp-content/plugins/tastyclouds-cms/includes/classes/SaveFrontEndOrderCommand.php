@@ -54,6 +54,9 @@ class SaveFrontEndOrderCommand
 
 
 		OrderProxy::setOrderTypeTaxonomyTerms($this->orderID);
+		update_post_meta( $this->orderID, '_tc_is_website_order', true);					
+
+
 
 		if( isset($_POST['_tc_event_date']) && !empty($_POST['_tc_event_date']) ){
 			update_post_meta( $this->orderID, '_tc_event_date', $_POST['_tc_event_date'] );	

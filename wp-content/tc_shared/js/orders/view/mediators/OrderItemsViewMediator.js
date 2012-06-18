@@ -46,7 +46,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			if(serviceResult.success){
 				debug.log('serviceResult : ', serviceResult);
-				this.cartReloaded = true;
+				//this.cartReloaded = true;
+				this.getShippingCharge();
 			}else{
 				alert('There was an error adding the item to the cart.');
 			}
@@ -109,11 +110,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 				});
 				
 				
+				this.cartReloaded = true;
 				
 				
 				this.calculateTotalEnabled = true;
 				this.ajaxEnabled = true;
-				
 				this.calculateTotal();
 			}else{
 				alert('There was an error retrieving the cart.');
@@ -127,6 +128,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			if(serviceResult.success){
 				//this.addNewCustomItemRow(serviceResult.cartItemID, serviceResult.customItemType);
+				this.getShippingCharge();
 			}else{
 				alert('There was an removing the item from the cart.');
 			}
@@ -429,10 +431,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 				
 				variationsDiv += '</select>';
 				debug.log('variation : ', variation);
+				// set the default itemCount
 				variationsDiv += 'Count: <input type="text" id="itemCount_p2pid_'+variation.p2p_id+'__r_'+randomnumber+'" class="variationCountInput small-text" value="'+variation.itemCount+'" /></span>';
-				
-				
-				
 				
 				variationsDiv += '</p>';
 			});
@@ -962,8 +962,8 @@ var OrderItemsViewMediatorClass = JS.Class({
 							var dropdownID = dropdown.attr('id');
 
 							var idParts = dropdownID.split('__');
-
-							// idParts = ['variation_XXX', 'p2pid_XXX']
+							debug.log('variation idParts: ', idParts);
+							// idParts = ['variation_XXX', 'p2pid_XXX', 'r_XXXXXXXXXX']
 							var variation = {};
 							variation.variationID = idParts[0].split('_')[1];
 							variation.p2pid = idParts[1].split('_')[1];
@@ -971,7 +971,11 @@ var OrderItemsViewMediatorClass = JS.Class({
 
 							var variationItemID = jQuery("#"+dropdownID+" option:selected").val();
 							variation.selected = [variationItemID];
-
+							debug.log("updated variation : ", variation);
+							
+							idString = 'itemCount_p2pid_'+variation.p2pid+'__'+idParts[2];
+							variation.itemCount = jQuery('#'+idString).val();
+							
 							newModel.variations.push(variation);
 						});
 
@@ -1098,7 +1102,9 @@ var OrderItemsViewMediatorClass = JS.Class({
 
 				
 		isShippingEnabled : function(){
-			return jQuery('#_tc_shipping_enabled_checkbox').is(':checked');
+			// return jQuery('#_tc_shipping_enabled_checkbox').is(':checked');
+			debug.log("isShippingEnabled : ", jQuery('#_tc_order_type-shipping').is(':checked'));
+			return jQuery('#_tc_order_type-shipping').is(':checked');
 		},
 		
 		onShippingEnabledChange : function(){
@@ -1155,6 +1161,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 		},
 		
 		getShippingCharge : function (){
+			debug.log("getShippingCharge(), this.isShippingEnabled() : ", this.isShippingEnabled());
 			if( !this.isShippingEnabled() ){
 				return;
 			}
@@ -1183,6 +1190,12 @@ var OrderItemsViewMediatorClass = JS.Class({
 			var shippingItems = this.getShippingItems();
 			
 			if (shippingItems.length == 0){
+				
+				var shippingModel = {amount:0, serviceType:null}
+				jQuery('#shippingRow').data('shippingModel', shippingModel);
+				jQuery('#shippingRowTotal').text('');
+				this.calculateTotal();
+				
 				return;
 			}
 			

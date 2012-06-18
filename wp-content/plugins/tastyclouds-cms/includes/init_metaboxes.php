@@ -165,18 +165,19 @@ $enter_payment_metabox = new WPAlchemy_MetaBox(array
 	'types' => array('tc_order'),
 	'mode' => WPALCHEMY_MODE_ARRAY,
 	'prefix' => '_tc_enter_payment_',
-	//'output_filter'=>'enterPaymentMetaboxOutputFilter',
+	'output_filter'=>'enterPaymentMetaboxOutputFilter',
 	// 'head_action'=>'onOrderStatusMetaboxHeadAction',
 	// 'foot_action'=>'onOrderStatusMetaboxFooterAction',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'PaymentMetabox.php',
 ));
 
-function enterPaymentMetaboxOutputFilter(){
-	global $pagenow;
-	// $isEditPost = $pagenow == 'post.php';
-	// return $isEditPost;
-	
-	return $pagenow != 'post-new.php';
+function enterPaymentMetaboxOutputFilter($post_id){
+	// global $pagenow;
+	// // $isEditPost = $pagenow == 'post.php';
+	// // return $isEditPost;
+	// 
+	// return $pagenow != 'post-new.php';
+	return !(OrderProxy::isWebsiteOrder($post_id));
 }
 
 

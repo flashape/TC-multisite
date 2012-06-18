@@ -165,16 +165,18 @@ if ($pagenow == 'post-new.php'){
 		
 }
 
-$enabledCheckboxID = '_tc_shipping_enabled_checkbox';
-
 $meta = get_metadata('post', $post->ID);
 //error_log(var_export($meta, 1));
 
-$enabledValue = @$meta[$enabledCheckboxID] ? $meta[$enabledCheckboxID] : 'off';
-$checkBoxField = "<input type='checkbox' id='{$enabledCheckboxID}' name='{$enabledCheckboxID}' " . checked( esc_attr( $enabledValue  ), 'on', false ) . " />";
-$checkBoxLabel = "<label for='{$enabledCheckboxID}'>Calculate Shipping : </label> ";
-//$desc = '<p class="howto">Quick zip is a shortcut to the Contact Info\'s zip field.</p>';
-$quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value="11730"  class="small-text" maxlength="5" />';
+
+// $enabledCheckboxID = '_tc_shipping_enabled_checkbox';
+// 
+// $enabledValue = @$meta[$enabledCheckboxID] ? $meta[$enabledCheckboxID] : 'off';
+// $checkBoxField = "<input type='checkbox' id='{$enabledCheckboxID}' name='{$enabledCheckboxID}' " . checked( esc_attr( $enabledValue  ), 'on', false ) . " />";
+// $checkBoxLabel = "<label for='{$enabledCheckboxID}'>Calculate Shipping : </label> ";
+
+
+$quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value=""  class="small-text" maxlength="5" />';
 
 //$meta_contact_id = @$meta['_tc_contact_id'][0];
 
@@ -183,7 +185,8 @@ $quickZip = 'Quick Zip: <input type="text" name="quickZip" id="quickZip" value="
 $contactSelectDiv = '<div class="alignright" style="margin-right:100px;" id="quick_contact_select">Quick Contact Select : <input type="text" id="tc_contact_input"  /><input type="hidden" name="tc_selected_contact" id="tc_selected_contact" value="'.$contactID.'" /> </div>';
 
 
-$shipCheckboxDiv = "<div id='shipCheckboxDiv' style='margin-right:0px;clear:both;'>$checkBoxLabel $checkBoxField $quickZip </div>";
+//$shipCheckboxDiv = "<div id='shipCheckboxDiv' style='margin-right:0px;clear:both;'>$checkBoxLabel $checkBoxField $quickZip </div>";
+$shipCheckboxDiv = "<div id='shipCheckboxDiv' style='margin-right:0px;clear:both;'>$quickZip</div>";
 
 
 $orderTypeNames = wp_get_object_terms( $post->ID, 'tc_order_type' );
@@ -836,6 +839,8 @@ jQuery(document).ready(function($){
 		}else{
 			$('#tc-event-types').slideUp('fast');
 		}
+		
+		orderItemsViewMediator.onShippingEnabledChange();
 	});
 	
 	$('#tc_contact_input').autocomplete({
@@ -893,7 +898,7 @@ jQuery(document).ready(function($){
 	$('#orderItemsTable').on('focusout', 'input.quantity', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.itemDescTextInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.priceInput', checkRowForUpdates)
-	$('#orderItemsTable').on('focusout', 'input.variationItemCountInput', checkRowForUpdates)
+	$('#orderItemsTable').on('focusout', 'input.variationCountInput', checkRowForUpdates)
 	$('#orderItemsTable').on('focusout', 'input.customItemTitleInput', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'select.variationDropdown', checkRowForUpdates)
 	$('#orderItemsTable').on('change', 'input.addTaxCheckbox', checkRowForUpdates)
@@ -939,6 +944,11 @@ jQuery(document).ready(function($){
 	
 	
 		
+	// $('#_tc_shipping_enabled_checkbox').on('change', function(){
+	// 	orderItemsViewMediator.onShippingEnabledChange();
+	// });
+	// 
+			
 	$('#_tc_shipping_enabled_checkbox').on('change', function(){
 		orderItemsViewMediator.onShippingEnabledChange();
 	});

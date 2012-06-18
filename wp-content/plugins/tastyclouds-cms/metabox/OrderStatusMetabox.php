@@ -8,8 +8,11 @@
 	
 ?>
 <div class="tc_metabox">
-	<div class="yellow-callout">
-	
+	<?php
+		$style = OrderProxy::isWebsiteOrder($post->ID) ?  ' style="display:none;"' : '';
+	?>
+	<div class="yellow-callout" <?php echo $style?> >
+		
 		<?php $mb->the_field('is_estimate'); ?>
 		<input type="checkbox" name="<?php $mb->the_name(); ?>" id="<?php $mb->the_name(); ?>" value="on"<?php $mb->the_checkbox_state('on'); ?>/>
 		<label for="<?php $mb->the_name(); ?>">Save As Quote</label><br/>

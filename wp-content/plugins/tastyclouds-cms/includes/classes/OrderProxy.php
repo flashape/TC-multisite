@@ -51,6 +51,7 @@ class OrderProxy
 	
 	
 	public static function saveCart($cart, $orderID, $cartID){
+		
 		$serializedCart = base64_encode(serialize($cart));
 		update_post_meta( $orderID, '_tc_cart', $serializedCart);
 		update_post_meta( $orderID, '_cartID', $cartID);
@@ -431,6 +432,12 @@ class OrderProxy
 		
 		
 		
+	}
+	
+	
+	public static function isWebsiteOrder($orderID){
+		$isWebsiteOrder = get_post_meta($orderID, '_tc_is_website_order', true);	
+		return ( !empty($isWebsiteOrder) ) ;	
 	}
 	
 	

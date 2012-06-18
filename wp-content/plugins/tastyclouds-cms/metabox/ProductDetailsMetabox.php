@@ -14,7 +14,13 @@
 	Price:
 	<?php $mb->the_field('price'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/><br />
-		
+			
+	Regular Price:
+	<?php $mb->the_field('regular_price'); ?>
+	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/><br />
+	<span class="description">If a regular price is entered, will be displayed above price with a strike-thru to indicate that the price has been discounted, for example <del>$19.99</del></span><br /><br/>
+	
+	
 	Length:
 	<?php $mb->the_field('length'); ?>
 	<input type="text" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>" class="small-text"/> Inches<br />
