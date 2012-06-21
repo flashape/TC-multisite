@@ -22,25 +22,28 @@ class WPSEO_Metabox {
 
 		add_action( 'wp_insert_post', array($this,'save_postdata') );
 		
-		if ( apply_filters('wpseo_use_page_analysis', true ) ) {
-			add_action( 'admin_init', array(&$this, 'register_columns') );
+		add_action( 'admin_init', array(&$this, 'setup_page_analysis') );
+	}
+
+	public function setup_page_analysis() {
+		
+		if ( apply_filters('wpseo_use_page_analysis', true ) === true ) {
+		
+			$options = get_wpseo_options();
+		
+			foreach ( get_post_types( array('public' => true), 'names' ) as $pt ) {
+				if ( isset($options['hideeditbox-'.$pt]) && $options['hideeditbox-'.$pt] )
+					continue;
+				add_filter( 'manage_'.$pt.'_posts_columns', array( $this, 'column_heading' ), 10, 1 );
+				add_action( 'manage_'.$pt.'_posts_custom_column', array( $this, 'column_content' ), 10, 2 );
+				add_action( 'manage_edit-'.$pt.'_sortable_columns', array( $this, 'column_sort' ), 10, 2 );
+			}
 			add_filter( 'request', array(&$this, 'column_sort_orderby') );
 		
 			add_action( 'restrict_manage_posts', array(&$this, 'posts_filter_dropdown') );
 			add_action( 'post_submitbox_misc_actions', array( $this, 'publish_box' ) ); 
 		}
-	}
 
-	public function register_columns() {
-		$options = get_wpseo_options();
-		
-		foreach ( get_post_types( array('public' => true), 'names' ) as $pt ) {
-			if ( isset($options['hideeditbox-'.$pt]) && $options['hideeditbox-'.$pt] )
-				continue;
-			add_filter( 'manage_'.$pt.'_posts_columns', array( $this, 'column_heading' ), 10, 1 );
-			add_action( 'manage_'.$pt.'_posts_custom_column', array( $this, 'column_content' ), 10, 2 );
-			add_action( 'manage_edit-'.$pt.'_sortable_columns', array( $this, 'column_sort' ), 10, 2 );
-		}
 	}
 	
 	public function publish_box() {
@@ -102,8 +105,9 @@ class WPSEO_Metabox {
 			
 		$options = get_wpseo_options();
 		
-		$date = '';
-		if ( $post->post_type == 'post' && apply_filters( 'wpseo_show_date_in_snippet', true, $post ) ) {
+		$use_date 	= apply_filters( 'wpseo_show_date_in_snippet_preview', true, $post );
+		$date 		= '';
+		if ( $post->post_type == 'post' && $use_date ) {
 			$date = $this->get_post_date( $post );
 
 			$this->wpseo_meta_length = $this->wpseo_meta_length - (strlen($date)+5);
@@ -498,7 +502,7 @@ class WPSEO_Metabox {
 		
 		// TODO: make this configurable per post type.
 		$date = '';
-		if ( $post->post_type == 'post' )
+		if ( $post->post_type == 'post' && apply_filters( 'wpseo_show_date_in_snippet_preview', true, $post ) )
 			$date = $this->get_post_date( $post );
 		
 		$title = wpseo_get_value('title');
@@ -592,6 +596,10 @@ class WPSEO_Metabox {
 	}
 
 	function posts_filter_dropdown() {
+		global $pagenow;
+		if ( $pagenow == 'upload.php' )
+			return;
+			
 		echo '<select name="seo_filter">';
 		echo '<option value="">All SEO Scores</option>';
 		foreach ( array(
@@ -1160,9 +1168,9 @@ class WPSEO_Metabox {
 	}
 	
 	function ScoreHeadings($job, &$results, $headings) {
-		$scoreHeadingsNone				= __("No heading tags appear in the copy.", 'wordpress-seo' );
-		$scoreHeadingsKeywordIn			= __("Keyword / keyphrase appears in %s (out of %s) headings in the copy. While not a major ranking factor, this is beneficial.", 'wordpress-seo' );
-		$scoreHeadingsKeywordMissing	= __("You have not used your keyword / keyphrase in any heading in your copy.", 'wordpress-seo' );
+		$scoreHeadingsNone				= __("No subheading tags (like an H2) appear in the copy.", 'wordpress-seo' );
+		$scoreHeadingsKeywordIn			= __("Keyword / keyphrase appears in %s (out of %s) subheadings in the copy. While not a major ranking factor, this is beneficial.", 'wordpress-seo' );
+		$scoreHeadingsKeywordMissing	= __("You have not used your keyword / keyphrase in any subheading (such as an H2) in your copy.", 'wordpress-seo' );
 
 		$headingCount = count( $headings );
 		if ( $headingCount == 0 )
@@ -1238,6 +1246,7 @@ class WPSEO_Metabox {
 
 		$scoreBodyGoodLength 	= __("There are %d words contained in the body copy, this is greater than the 300 word recommended minimum.", 'wordpress-seo' );
 		$scoreBodyPoorLength 	= __("There are %d words contained in the body copy, this is below the 300 word recommended minimum. Add more useful content on this topic for readers.", 'wordpress-seo' );
+		$scoreBodyOKLength 		= __("There are %d words contained in the body copy, this is slightly below the 300 word recommended minimum, add a bit more copy.", 'wordpress-seo' );
 		$scoreBodyBadLength 	= __("There are %d words contained in the body copy. This is far too low and should be increased.", 'wordpress-seo' );
 
 		$scoreKeywordDensityLow 	= __("The keyword density is %s%%, which is a bit low, the keyword was found %s times.", 'wordpress-seo' );
@@ -1250,17 +1259,22 @@ class WPSEO_Metabox {
 		$fleschurl					= '<a href="http://en.wikipedia.org/wiki/Flesch-Kincaid_readability_test#Flesch_Reading_Ease">'.__('Flesch Reading Ease', 'wordpress-seo' ).'</a>';
 		$scoreFlesch				= __("The copy scores %s in the %s test, which is considered %s to read. %s", 'wordpress-seo' );
 		
+
+		// Replace images with their alt tags, then strip all tags
+		$body = preg_replace( '/(<img([^>]+)?alt="([^"]+)"([^>]+)>)/','$3', $body);
+		$body = strip_tags( $body );
+		
 		// Copy length check
 		$wordCount = $statistics->word_count( $body );
 		
 		if ( $wordCount < $scoreBodyBadLimit )
-			$this->SaveScoreResult( $results, -10, sprintf( $scoreBodyBadLength, $wordCount ) );
+			$this->SaveScoreResult( $results, -20, sprintf( $scoreBodyBadLength, $wordCount ) );
 		else if ( $wordCount < $scoreBodyPoorLimit )
-			$this->SaveScoreResult( $results, 3, sprintf( $scoreBodyPoorLength, $wordCount ) );
+			$this->SaveScoreResult( $results, -10, sprintf( $scoreBodyPoorLength, $wordCount ) );
 		else if ( $wordCount < $scoreBodyOKLimit )
 			$this->SaveScoreResult( $results, 5, sprintf( $scoreBodyPoorLength, $wordCount ) );
 		else if ( $wordCount < $scoreBodyGoodLimit )
-			$this->SaveScoreResult( $results, 7, sprintf( $scoreBodyPoorLength, $wordCount ) );
+			$this->SaveScoreResult( $results, 7, sprintf( $scoreBodyOKLength, $wordCount ) );
 		else
 			$this->SaveScoreResult( $results, 9, sprintf( $scoreBodyGoodLength, $wordCount ) );
 
@@ -1268,9 +1282,10 @@ class WPSEO_Metabox {
 		
 		// Keyword Density check
 		if ( $wordCount > 0 ) {
-			$keywordCount 		= preg_match_all("/".preg_quote($job["keyword"])."/msiU", $body, $res);
+			$keywordCount 		= preg_match_all("/".preg_quote( $job["keyword"], '/' )."/msiU", $body, $res);
 			$keywordWordCount 	= str_word_count( $job["keyword"] );
-			$keywordDensity 	= number_format( ( ($keywordCount / ($wordCount - (($keywordCount -1) * $keywordWordCount))) * 100 ) , 2 );
+			if ( $keywordCount > 0 && $keywordWordCount > 0 )
+				$keywordDensity 	= number_format( ( ($keywordCount / ($wordCount - (($keywordCount -1) * $keywordWordCount))) * 100 ) , 2 );
 		}
 
 		if ( $keywordDensity < 1 ) {

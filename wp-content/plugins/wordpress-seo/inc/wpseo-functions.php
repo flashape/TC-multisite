@@ -27,6 +27,7 @@ function get_wpseo_options_arr() {
 function get_wpseo_options() {
 	$options = array();
 	foreach( get_wpseo_options_arr() as $opt ) {
+		// echo '<!--'.print_r( get_option($opt), 1 ).'-->';
 		$options = array_merge( $options, (array) get_option($opt) );
 	}
 	return $options;
@@ -399,8 +400,80 @@ function wpseo_maybe_upgrade() {
 		delete_option('wpseo_indexation');
 	}
 	
+	// Clean up the wrong wpseo options
+	if ( version_compare( $current_version, '1.2.3', '<' ) ) {
+		$opt = get_option('wpseo');
+	
+		foreach ( $opt as $key => $val ) {
+			if ( !in_array( $key, array('ignore_blog_public_warning', 'ignore_tour', 'ignore_page_comments', 'ignore_permalink', 'ms_defaults_set', 'version', 'disableadvanced_meta', 'googleverify', 'msverify', 'alexaverify') ) ) {
+				unset( $opt[$key] );
+			}
+		}
+		
+		update_option('wpseo', $opt);
+	}
+	
 	wpseo_title_test();
 	
 	$options['version'] = WPSEO_VERSION;
 	update_option( 'wpseo', $options );
+}
+
+function wpseo_title_test() {
+	$options = get_option('wpseo_titles');
+	
+	if ( isset( $options['forcerewritetitle'] ) )
+		unset( $options['forcerewritetitle'] ); 
+	
+	$options['title_test'] = true;
+	update_option('wpseo_titles', $options );
+	
+	// Setting title_test to true forces the plugin to output the title below through a filter in class-frontend.php
+	$expected_title = 'This is a Yoast Test Title';
+	
+	$resp = wp_remote_get( get_bloginfo('url') );
+	if ( $resp && !is_wp_error( $resp ) && 200 == $resp['response']['code'] ) {
+		$res = preg_match('/<title>([^<]+)<\/title>/im', $resp['body'], $matches);
+	
+		if ( $res && $matches[1] != $expected_title ) {
+			$options['forcerewritetitle'] = 'on';
+			update_option('wpseo_titles', $options );
+
+			$resp = wp_remote_get( get_bloginfo('url') );
+			$res = preg_match('/<title>([^>]+)<\/title>/im', $resp['body'], $matches);
+		}
+
+		if ( !$res || $matches[1] != $expected_title )
+			unset( $options['forcerewritetitle'] ); 
+	} else {
+		// If that dies, let's make sure the titles are correct and force the output.
+		$options['forcerewritetitle'] = 'on';
+	}
+	
+	unset( $options['title_test'] );
+	update_option('wpseo_titles', $options );
+}
+add_filter( 'switch_theme', 'wpseo_title_test', 0 );
+
+function wpseo_translate_score( $val ) {
+	$score = 'bad';
+	switch ( $val ) {
+		case 0:
+			$score = 'na';
+			break;
+		case 4:
+		case 5:
+			$score = 'poor';
+			break;
+		case 6:
+		case 7:
+			$score = 'ok';
+			break;
+		case 8:
+		case 9:
+		case 10:
+			$score = 'good';
+			break;
+	}
+	return $score;
 }

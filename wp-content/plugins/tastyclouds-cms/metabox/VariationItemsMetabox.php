@@ -61,7 +61,7 @@
 <div id="variationItemRowTemplate" class="variationItemRow" style="display:none;">
 	
 	<div class="defaultState" style="display:none;">
-		<div style="display:inline-block;width:250px;"><b>Item:</b> <span class="variantTitle"></span></div> <b>SKU Ext:</b><span class="skuExtension"></span>
+		<div style="display:inline-block;width:250px;"><b>Item ID: <span class="variantItemID"></span></b> <span class="variantTitle"></span></div> <b>SKU Ext:</b><span class="skuExtension"></span>
 	</div>
 
 	
@@ -223,6 +223,7 @@ function onVariationItemsMetaboxFooterAction() {
 			row.find('.skuExtensionInput').val(model.skuExtension);
 			
 			if (model.id != 0 ){
+				row.find('.variantItemID').text( model.id );
 				row.find('.variantTitle').text( model.title );
 				row.find('.skuExtension').text( model.skuExtension );
 			}

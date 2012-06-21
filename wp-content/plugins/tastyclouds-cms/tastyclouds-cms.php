@@ -110,8 +110,7 @@ function tc_cms_init_session(){
 		error_log(" starting session...\n");
 		session_start();
 		error_log(" session id : ".session_id()."\n");
-		//error_log(" session name : ".session_name()."\n");
-		//error_log(var_export($_SESSION, 1));
+
 		if (!is_admin()){
 			error_log('IS NOT ADMIN, checking for cart in session...');
 			$cartID = CartAjax::hasCartInSession();
@@ -142,7 +141,6 @@ function tc_on_order_transition_post_status($new, $old, $post){
 			// the transition_post_status hook fires immediately before the save_post hook,
 			// so we define a constant here that the OrderDetailsMetabox save_action handler will look for.
 			define('IS_NEW_ORDER_POST', true);
-			//update_post_meta($post->ID, '_is_new_order', true);
 		}
 	}
 	
@@ -150,12 +148,8 @@ function tc_on_order_transition_post_status($new, $old, $post){
 
 
 
-
 // turn off wp 'doing it wrong' errors like "[somefunction]_called_incorrectly"
-add_filter('doing_it_wrong_trigger_error', 'on_doing_it_wrong_trigger_error_filter');
-function on_doing_it_wrong_trigger_error_filter(){
-	return false;
-}
+add_filter('doing_it_wrong_trigger_error', '__return_false');
 
 require_once(TASTY_CMS_PLUGIN_DIR .'includes/init_constants.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'not_found_dump.php');
@@ -163,6 +157,7 @@ require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_taxonomies.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_post_types.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_metaboxes.php');
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'widgets/TC_AddToCartWidget.php');
+require_once(TASTY_CMS_PLUGIN_INC_DIR .'widgets/TC_ProductSelectorWidget.php');
 
 require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_widgets.php');
 //require_once(TASTY_CMS_PLUGIN_INC_DIR .'init_custom_action_handlers.php');
@@ -207,7 +202,6 @@ function tc_cms_enqueue_scripts(){
 	
 	
 	
-	error_log('get_post_type($post) = '.get_post_type($post));
 	if (get_post_type($post) == 'tc_products'){
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('jquery-ui-core');
@@ -305,6 +299,22 @@ function tc_cms_enqueue_scripts(){
 		
 		wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
 		wp_enqueue_style( 'jquery.colorbox', TC_SHARED_CSS_URL . 'colorbox/colorbox.css', __FILE__);	
+	}
+	
+	
+	if (is_page_template('page-product-select.php')){
+		wp_enqueue_script( 'tc-productselect-js', TC_CMS_JS_URL . 'tc_product_select.js', array('jquery'));
+		wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
+		wp_enqueue_style( 'jquery.colorbox', TC_SHARED_CSS_URL . 'colorbox/colorbox.css', __FILE__);
+		
+				
+		$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php', 'http' ), 
+			'site'=>mt_rand(), 
+			'addToCartNonce'=> wp_create_nonce( 'tc_productselect_nonce' ), 
+			);
+		wp_localize_script( 'tc-productselect-js', 'TCProductSelectAjax', $vars  );
+		
+		
 	}
 	
 	

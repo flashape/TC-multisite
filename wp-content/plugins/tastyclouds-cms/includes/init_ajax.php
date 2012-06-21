@@ -19,6 +19,9 @@ add_action( 'wp_ajax_tc_delete_variation_rule', array('ProductVariationRulesAjax
 add_action( 'wp_ajax_tc_add_cart_item', array('CartAjax', 'addItem') );
 add_action( 'wp_ajax_nopriv_tc_add_cart_item', array('CartAjax', 'addItem') );
 
+add_action( 'wp_ajax_tc_add_cart_product_by_id', array('CartAjax', 'addCartProductById') );
+add_action( 'wp_ajax_nopriv_tc_add_cart_product_by_id', array('CartAjax', 'addCartProductById') );
+
 add_action( 'wp_ajax_tc_remove_cart_item', array('CartAjax', 'removeItem') );
 add_action( 'wp_ajax_tc_remove_cart_item_by_id', array('CartAjax', 'removeItemByID') );
 add_action( 'wp_ajax_nopriv_tc_remove_cart_item_by_id', array('CartAjax', 'removeItemByID') );

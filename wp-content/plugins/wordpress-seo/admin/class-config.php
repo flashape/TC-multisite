@@ -23,8 +23,9 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 				wp_redirect( admin_url('admin.php?page=wpseo_dashboard') );
 			}
 			
+			add_action( 'admin_init', array(&$this, 'options_init') );
+
 			if ( $this->grant_access() ) {
-				add_action( 'admin_init', array(&$this, 'options_init') );
 				add_action( 'admin_menu', array(&$this, 'register_settings_page') );
 				add_action( 'network_admin_menu', array(&$this, 'register_network_settings_page') );
 
@@ -1015,9 +1016,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 			echo $this->hidden('ignore_permalink');
 			echo $this->hidden('ms_defaults_set');
 			echo $this->hidden('version');
-			
-			ksort($options);
-			
+						
 			if ( isset($options['blocking_files']) && is_array($options['blocking_files']) && count($options['blocking_files']) > 0 ) {
 				$options['blocking_files'] = array_unique( $options['blocking_files'] );
 				echo '<p id="blocking_files" class="wrong">'
@@ -1202,6 +1201,11 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 			echo '<h4>'.__( 'Default settings', 'wordpress-seo' ).'</h4>';
 			echo $this->textinput('og_default_image', __('Image URL', 'wordpress-seo' ) );
 			echo '<p class="desc label">'.__('This image is used if the post/page being shared does not contain any images.','wordpress-seo').'</p>';
+
+			echo '<h2>'.__('Twitter','wordpress-seo').'</h2>';
+			echo $this->checkbox('twitter', '<label for="twitter">'.__('Add Twitter card meta data', 'wordpress-seo').'</label>' );
+			echo'<p class="desc">'.__('Add Twitter card meta data to your site\'s <code>&lt;head&gt;</code> section.', 'wordpress-seo').'</p>';
+			echo $this->textinput('twitter_site', __('Site Twitter Username', 'wordpress-seo' ) );
 						
 			$this->admin_footer('');
 		}
@@ -1242,6 +1246,7 @@ if ( ! class_exists( 'WPSEO_Admin' ) ) {
 		function add_google_plus_contactmethod( $contactmethods ) {
 		  // Add Twitter
 		  $contactmethods['googleplus'] = 'Google+';
+		  $contactmethods['twitter'] = 'Twitter username';
 
 		  return $contactmethods;
 		}

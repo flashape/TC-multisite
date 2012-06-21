@@ -17,6 +17,9 @@ class WPSEO_Sitemaps {
 	private $bad_sitemap = false;
 
 	function __construct() {
+		if ( ! defined('ENT_XML1') )
+			define( "ENT_XML1", 16 );
+			
 		$options = get_option('wpseo_xml');
 		if ( !isset($options['enablexmlsitemap']) || !$options['enablexmlsitemap'] )
 			return;
@@ -372,16 +375,19 @@ class WPSEO_Sitemaps {
 							if ( isset( $url['images'][$src] ) )
 								continue;
 							
-							$src = apply_filters( 'wpseo_xml_sitemap_img_src', $src );
+							$image = array(
+								'src' => apply_filters( 'wpseo_xml_sitemap_img_src', $src, $p )
+							);
 							
-							$image = array();
 							if ( preg_match( '/title=("|\')([^"\']+)("|\')/', $img, $match ) )
 								$image['title'] = str_replace( array('-','_'), ' ', $match[2] );
 
 							if ( preg_match( '/alt=("|\')([^"\']+)("|\')/', $img, $match ) )
 								$image['alt'] = str_replace( array('-','_'), ' ', $match[2] );
 
-							$url['images'][$src] = $image;
+							$src = apply_filters( 'wpseo_xml_sitemap_img', $image, $p );
+
+							$url['images'][] = $image;
 						}
 					}
 				}
@@ -390,15 +396,18 @@ class WPSEO_Sitemaps {
 					$attachments = get_children( array('post_parent' => $p->ID, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image' ) );
 					foreach( $attachments as $att_id => $attachment ) {
 						$src = wp_get_attachment_image_src( $att_id, 'large', false );
-						$src = $src[0];
-						$image = array();
+						$image = array(
+							'src' => apply_filters( 'wpseo_xml_sitemap_img_src', $src[0], $p )
+						);
 
 						if ( $alt = get_post_meta( $att_id, '_wp_attachment_image_alt', true) )
 							$image['alt'] = $alt;
 						
 						$image['title'] = $attachment->post_title;
 
-						$url['images'][$src] = $image;
+						$src = apply_filters( 'wpseo_xml_sitemap_img', $image, $p );
+						
+						$url['images'][] = $image;
 					}
 				}
 
@@ -536,13 +545,13 @@ class WPSEO_Sitemaps {
 		$output .= "\t\t<changefreq>".$url['chf']."</changefreq>\n";
 		$output .= "\t\t<priority>".str_replace(',','.',$url['pri'])."</priority>\n";
 		if ( isset($url['images']) && count($url['images']) > 0 ) {
-			foreach( $url['images'] as $src => $img ) {
+			foreach( $url['images'] as $img ) {
 				$output .= "\t\t<image:image>\n";
-				$output .= "\t\t\t<image:loc>".htmlspecialchars( $src )."</image:loc>\n";
+				$output .= "\t\t\t<image:loc>".esc_html( $img['src'] )."</image:loc>\n";
 				if ( isset($img['title']) )
-					$output .= "\t\t\t<image:title>".preg_replace( "[^A-Za-z0-9\s\.]", "", $img['title'] )."</image:title>\n";
+					$output .= "\t\t\t<image:title>"._wp_specialchars( $img['title'] )."</image:title>\n";
 				if ( isset($img['alt']) )
-					$output .= "\t\t\t<image:caption>".preg_replace( "[^A-Za-z0-9\s\.]", "", $img['alt'] )."</image:caption>\n";
+					$output .= "\t\t\t<image:caption>"._wp_specialchars( $img['alt'] )."</image:caption>\n";
 				$output .= "\t\t</image:image>\n";
 			}
 		}

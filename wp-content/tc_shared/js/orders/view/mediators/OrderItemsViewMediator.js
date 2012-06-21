@@ -1183,7 +1183,7 @@ var OrderItemsViewMediatorClass = JS.Class({
 			
 			debug.log('zipValue : ', zipValue);
 			
-			if (!this.isValidZip(zipValue)){
+			if ( !this.isValidZip(zipValue) ){
 				return;
 			}
 			

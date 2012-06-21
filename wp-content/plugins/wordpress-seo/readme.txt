@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: seo, SEO, google, meta, meta description, search engine optimization, xml sitemap, xml sitemaps, google sitemap, sitemap, sitemaps, robots meta, rss, rss footer, yahoo, bing, news sitemaps, XML News Sitemaps, WordPress SEO, WordPress SEO by Yoast, yoast, multisite, canonical, nofollow, noindex, keywords, meta keywords, description, webmaster tools, google webmaster tools, seo pack
 Requires at least: 3.1
-Tested up to: 3.3
-Stable tag: 1.2.2
+Tested up to: 3.4
+Stable tag: 1.2.3
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the WordPress SEO plugin by Yoast.
 
@@ -133,6 +133,27 @@ Also, other than All In One SEO Pack, this plugin has a completely working canon
 7. The advanced section of the WordPress SEO meta box.
 
 == Changelog ==
+
+= 1.2.3 =
+
+* Bug fixes:
+	* Fixed possible bug on multi site.
+	* Fixed a bug in alt & title elements for XML sitemaps.
+	* Fix to force title rewrites in two places: call `wp_reset_query` for stupid themes and plugins.
+	* Fixed bug in saving some options.
+	* Fixed OpenGraph bug where default image wouldn't be used for post without images.
+	* Prevent error on division by zero when swapping around text.
+	* Prevent notice in title_test and also fix possible bugs.
+	* Properly escape the delimiter too in all `preg_quote` calls.
+	* Don't show SEO filter on upload.php.
+	* Only count alt tags in keyword density and word count calculations, leave out title attributes.
+	* Rewrote the force rewrite test to be simpler and better.
+* Enhancements:
+	* New icons for the analysis functionality.
+	* Twitter card functionality.
+	* Removed 200 lines of code from OpenGraph class because I could just inherit it from the parent class. d0h!
+	* Added a *bunch* of translations; bg, bos, bs, bul, es_ES, hu, hun, id_ID, pl_PL, pt_BR.
+	* Updated another bunch: de_DE, fr_FR, he_IL, it_IT, nl_NL, ru_RU, sv_SE.
 
 = 1.2.2 =
 

@@ -101,7 +101,10 @@ if ( !class_exists('Yoast_WPSEO_Plugin_Admin') ) {
 		 * Create a Checkbox input field
 		 */
 		function checkbox($id, $label, $label_left = false, $option = '') {
-			if ( $option == '' ) {
+			if ( $option == '' && $this->currentoption != '' ) {
+				$options = get_option( $this->currentoption );
+				$option = $this->currentoption;
+			} else if ( $option == ''  && $this->currentoption != '' ) {
 				$options = get_wpseo_options();
 				$option = !empty($option) ? $option : $this->currentoption;
 			} else {
@@ -125,7 +128,7 @@ if ( !class_exists('Yoast_WPSEO_Plugin_Admin') ) {
 				$class 		  = 'checkbox double';
 			}
 			
-			$output_input = '<input class="'.$class.'" type="checkbox" id="'.$id.'" name="'.$option.'['.$id.']"'. checked($options[$id],'on',false).'/>';
+			$output_input = "<input class='$class' type='checkbox' id='${id}' name='${option}[${id}]' ".checked($options[$id],'on',false).'/>';
 			
 			if( $label_left !== false ) {
 				$output = $output_label . $output_input . '<label class="checkbox" for="'.$id.'">'.$label.'</label>';
@@ -152,7 +155,7 @@ if ( !class_exists('Yoast_WPSEO_Plugin_Admin') ) {
 			
 			$val = '';
 			if (isset($options[$id]))
-				$val = htmlspecialchars($options[$id]);
+				$val = _wp_specialchars($options[$id]);
 			
 			return '<label class="textinput" for="'.$id.'">'.$label.':</label><input class="textinput" type="text" id="'.$id.'" name="'.$option.'['.$id.']" value="'.$val.'"/>' . '<br class="clear" />';
 		}
@@ -196,7 +199,7 @@ if ( !class_exists('Yoast_WPSEO_Plugin_Admin') ) {
 			
 			$val = '';
 			if (isset($options[$id]))
-				$val = htmlspecialchars($options[$id]);
+				$val = _wp_specialchars($options[$id]);
 			return '<input class="hidden" type="hidden" id="'.$id.'" name="'.$option.'['.$id.']" value="'.$val.'"/>';
 		}
 		
