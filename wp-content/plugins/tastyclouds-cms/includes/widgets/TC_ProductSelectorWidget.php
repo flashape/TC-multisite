@@ -97,11 +97,13 @@ class TC_ProductSelectorWidget extends WP_Widget {
 			<option value="<?php the_ID() ?>"> <?php the_title(); ?></option>
 		<?php endwhile; ?>
 		</select>
+		<div id="updatingPriceDiv" style="display:none;">
+		  <p style="font-size:10px"><img src="<?php echo plugins_url('/tastyclouds-crm/images/ajax-loader-circle.gif'); ?>" />Updating price...</p>
+		</div>
 <?php
-			echo do_shortcode('[maxbutton id="2"]');
+			echo "</p>" . do_shortcode('[maxbutton id="2"]') ."</p>";
 ?>
 			<script type="text/javascript">
-				var productModel = <?php echo "productModelJson" ?>
 		    </script>
 <?php
 			

@@ -97,6 +97,7 @@ class FreshbooksUtils
 						// $variation['p2p_id']
 						// $variation['selected'] // array
 						// $variation['variationID']
+						
 						// error_log("Variation: ");
 						// error_log(var_export($variation, 1));
 						// error_log("");
@@ -124,7 +125,7 @@ class FreshbooksUtils
 						// error_log("");
 						// error_log("");
 						if (!empty($rules)){
-							$itemPrice = FreshbooksUtils::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
+							$itemPrice = ProductProxy::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
 						}
 					}
 					
@@ -269,64 +270,6 @@ class FreshbooksUtils
 
 	}
 	
-	
-	
-	
-	public static function getAdjustedPriceFromRules($itemPrice, $variationItemID, $p2pid, $rules){
-		// $variationRule['id']
-		// $variationRule['offsetAmount'] 
-		// $variationRule['offsetType'] 
-		// $variationRule['selectedItems'] // array
-		// $variationRule['ruleName']
-		// $variationRule['variationID']
-		// $variationRule['variationToProduct_p2p_id']
-		
-		
-		$variationRule;
-		foreach($rules as $rule){
-			if ($rule->variationToProduct_p2p_id == $p2pid){
-				$variationRule = $rule;
-				break;
-			}
-		}
-		
-		
-		if ( in_array( $variationItemID, $variationRule->selectedItems) ){
-			//process rule
-			$offsetAmount = $variationRule->offsetAmount; 
-			$offsetType = $variationRule->offsetType;
-		
-			switch($offsetType){
-				case "total":
-					//charge specified price for item, overriding any rules
-					$itemPrice  = $offsetAmount;
-					break;
-				break;
-
-				case "addPercent":
-					// add specified percent to item
-					$percent = ($offsetAmount/100);
-					$amountToAdd = $itemPrice * $percent;
-					$itemPrice += $amountToAdd;
-				break;
-
-				case "addDollars":
-					// add specified dollar amount to item
-					$itemPrice += $offsetAmount;
-				break;
-
-
-				case "addDollarsOnce":
-					// add specified dollar amount to item, if another product row has not done so already
-					//TODO:  add map for "once" items already calculated
-					$itemPrice += $offsetAmount;
-				break;
-			}
-		}
-		
-		return $itemPrice;
-		
-	}
 	
 	
 	public static function createClientObject($data){

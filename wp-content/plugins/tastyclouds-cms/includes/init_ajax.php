@@ -16,6 +16,9 @@ add_action( 'wp_ajax_tc_update_variation_rule', array('ProductVariationRulesAjax
 add_action( 'wp_ajax_tc_delete_variation_rule', array('ProductVariationRulesAjax', 'deleteVariationRule') );
 
 
+add_action( 'wp_ajax_tc_get_product_price', array('CartAjax', 'getUpdatedProductPrice') );
+add_action( 'wp_ajax_nopriv_tc_get_product_price', array('CartAjax', 'getUpdatedProductPrice') );
+
 add_action( 'wp_ajax_tc_add_cart_item', array('CartAjax', 'addItem') );
 add_action( 'wp_ajax_nopriv_tc_add_cart_item', array('CartAjax', 'addItem') );
 

@@ -267,7 +267,7 @@ class OrderProxy
 							// error_log("");
 							// error_log("");
 							if (!empty($rules)){
-								$itemPrice = FreshbooksUtils::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
+								$itemPrice = ProductProxy::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
 							}
 						}
 					}

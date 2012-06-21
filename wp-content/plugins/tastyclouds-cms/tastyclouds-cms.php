@@ -302,16 +302,21 @@ function tc_cms_enqueue_scripts(){
 	}
 	
 	
+	
+	
 	if (is_page_template('page-product-select.php')){
 		wp_enqueue_script( 'tc-productselect-js', TC_CMS_JS_URL . 'tc_product_select.js', array('jquery'));
 		wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
 		wp_enqueue_style( 'jquery.colorbox', TC_SHARED_CSS_URL . 'colorbox/colorbox.css', __FILE__);
 		
-				
+		$variationItemID = get_post_meta($post->ID, '_tc_variation_item_id', true);
+		
 		$vars = array( 'ajaxurl' => admin_url( 'admin-ajax.php', 'http' ), 
 			'site'=>mt_rand(), 
 			'addToCartNonce'=> wp_create_nonce( 'tc_productselect_nonce' ), 
+			'variationItemID'=>$variationItemID
 			);
+			
 		wp_localize_script( 'tc-productselect-js', 'TCProductSelectAjax', $vars  );
 		
 		

@@ -186,8 +186,8 @@ $variation_item_id_metabox = new WPAlchemy_MetaBox(array
 	'id' => 'variation_item_id',
 	'title' => 'Variation Item ID',
 	'types' => array('page'),
-	'mode' => WPALCHEMY_MODE_ARRAY,
-	'prefix' => '_tc_variation_item_id_',
+	'mode' => WPALCHEMY_MODE_EXTRACT,
+	'prefix' => '_tc_',
 	'template' => TASTY_CMS_PLUGIN_METABOX_DIR . 'PageVariationItemMetabox.php',
 ));
 

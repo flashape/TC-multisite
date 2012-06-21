@@ -157,6 +157,169 @@ class CartAjax
 		
 	}
 	
+	
+	// called from product-select page template.
+	public static function getUpdatedProductPrice(){
+		error_log("add item, cartID: $cartID");
+		
+		$cart = self::getCartById( self::getCartIDFromSession() );
+		
+		$result;
+		
+		if (!$cart){
+			$result = self::createCartNotFoundResult();
+		}else{
+			$productID = $_POST['productID'];
+		
+			$productModel = ProductProxy::getProductByID($productID);
+			
+			$basePrice = $productModel['price'];
+			
+			$itemPrice = $basePrice;
+			
+			$variationItemID  = $_POST['variationItemID'];
+		
+			if( !empty( $variationItemID ) ){
+				
+				$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
+				foreach ($variations as $variation) {
+				
+					$rules = ProductVariationRulesAjax::getRulesForVariation($productID, $variation->variationID, $variation->p2pid, true);
+				
+					if (!empty($rules)){
+						$itemPrice = ProductProxy::getAdjustedPriceFromRules($itemPrice, $variationItemID, $variation->p2pid, $rules);
+					}
+				}
+			}
+			
+			
+			$result = AjaxUtils::createResult('Item Added Successfully.', true, array('price'=>$itemPrice));
+			
+			
+			
+		}
+		
+		AjaxUtils::returnJson($result);
+		
+		
+		
+	}
+	
+	
+	// called from product-select page template.
+	public static function addCartProductByID(){
+		error_log("addCartProductByID");
+		
+		$cart = self::getCartById( self::getCartIDFromSession() );
+		
+		$result;
+		
+		if (!$cart){
+			$result = self::createCartNotFoundResult();
+		}else{
+		
+			$nonce = $_POST['addToCartNonce'];
+
+		
+			// Add-to-cart AJAX requests from the front end of the site
+			// will have a (meaningless) 'site' variable sent with the request,
+			// requests from the admin will not.
+		
+			if (isset($_POST['site'])){
+				// check to see if the submitted nonce matches with the
+			    // generated nonce we created earlier
+				error_log("request is from front end, checking nonce...");
+			    if ( ! wp_verify_nonce( $nonce, 'tc_add_to_cart_nonce' ) ){
+					$result = AjaxUtils::createResult('Invalid request.',false);
+				}
+				error_log("nonce is valid.");	
+			}
+		
+		
+			$productID = $_POST['productID'];
+		
+			$productModel = ProductProxy::getProductByID($productID);
+		
+		
+			$variations = ProductVariationRulesAjax::getVariationsForProduct($productID, true);
+
+
+			foreach($variations as &$variation){
+				//error_log(var_export($variation, 1));
+			
+				$variation['items'] = VariationItemAjax::getItemsForVariation($variation['id'], true);
+				$variation['rules'] = ProductVariationRulesAjax::getRulesForVariation($productID, $variation['id'], $variation['p2p_id'], true);
+				//error_log(var_export($variation, 1));
+			
+			}
+
+			$productModel['variations'] = $variations;
+		
+			// TODO:  IF there are other variations attached to the page that was adding this item, add them here
+		
+			$model = new stdClass();
+			$model->productID = $productID;
+			$model->price = $productModel['price'];
+			$model->type = 'tc_products';
+			$model->quantity = 1;
+			$model->taxable = false;
+		
+			$cartItemID = uniqid();
+			$model->cartItemID = $cartItemID;
+		
+			$cart['items'][$cartItemID] = $model;
+		
+			$model->variations = array();
+		
+			$variationItemID  = $_POST['variationItemID'];
+		
+			if( !empty( $variationItemID ) ){
+			
+				// Check each variation assigned to this product,
+				// IF the provided $variationItemID is in the $variation['items'] array,
+				// create a variation model for it in the $model->variations array
+			
+				// $variation['p2p_id']
+				// $variation['selected'] // array
+				// $variation['variationID']
+			
+				foreach ($productModel['variations'] as $productVariation) {
+					$variationItemIDs = array_keys($productVariation['items']);
+					if( in_array($variationItemID, $variationItemIDs) ){
+						$model->variations[] = array(
+							'p2p_id' => $productVariation['p2p_id'],
+							'variationID' => $productVariation['id'],
+							'selected' => array($variationItemID)
+						);
+					}
+				}
+			
+			}
+		
+			$cart['items'][$cartItemID] = $model;
+			$arrayToReturn = array('cartItemID'=>$cartItemID, 'cart'=>$cart, 'model'=>$model);
+		
+			if(isset($_POST['site'])){
+				ob_start();
+				include(TASTY_CMS_PLUGIN_INC_DIR.'upsell.php');
+				$arrayToReturn['popupContent'] = ob_get_clean();
+			}
+		
+		
+			$result = AjaxUtils::createResult('Item Added Successfully.', true, $arrayToReturn);
+			self::overwriteCartInSession($cart);
+		
+
+		}
+		
+
+		
+		AjaxUtils::returnJson($result);
+		
+		
+		
+	}
+	
 	public static function addItem(){
 		$cartID = $_POST['cartID'];
 		error_log("add item, cartID: $cartID");
