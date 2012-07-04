@@ -39,6 +39,7 @@ if ( $post ) {
  * @param int $post_id Optional. Post ID.
  */
 function redirect_post($post_id = '') {
+
 	if ( isset($_POST['save']) || isset($_POST['publish']) ) {
 		$status = get_post_status( $post_id );
 
@@ -90,6 +91,7 @@ if ( ! $sendback ||
 } else {
 	$sendback = remove_query_arg( array('trashed', 'untrashed', 'deleted', 'ids'), $sendback );
 }
+
 
 switch($action) {
 case 'postajaxpost':

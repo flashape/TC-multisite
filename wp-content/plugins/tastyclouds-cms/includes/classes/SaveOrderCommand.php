@@ -19,6 +19,7 @@ class SaveOrderCommand
 	}
 	
 	public function execute(){
+		error_log("SaveOrderComand->execute, orderID : ".$this->orderID);
 		
 		if ( defined( 'IS_NEW_ORDER_POST' ) ){
 			error_log("IS_NEW_ORDER_POST : ".IS_NEW_ORDER_POST);
@@ -34,6 +35,7 @@ class SaveOrderCommand
 		
 		// remove the save action handler so it doesnt fire if/when we need to save new posts of other types (like contacts or payments)
 		$order_details_metabox->remove_action('save', 'onOrderDetailsMetaboxSaveAction');
+		$this->cartID = $_POST['cartID'];
 
 		$this->contactModel = $this->processContact();
 		$this->contactID = $this->contactModel['contactID'];		
@@ -60,15 +62,13 @@ class SaveOrderCommand
 		}
 		update_post_meta( $this->orderID,'tc_order_total', $_POST['tc_order_total']);
 		update_post_meta( $this->orderID,'tc_balance_due', $_POST['tc_balance_due']);
-		update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
 
 		// always save the cart
 		//if ($this->isNewOrder || $this->orderWasReloaded){
-			$cartID = $_POST['cartID'];
-			$this->cart = CartAjax::getCartById($cartID);
+			$this->cart = CartAjax::getCartById($this->cartID);
 			error_log("SaveORderCommand, saving cart : ");
 			error_log(var_export($this->cart, 1));
-			OrderProxy::saveCart($this->cart, $this->orderID, $cartID);
+			OrderProxy::saveCart($this->cart, $this->orderID, $this->cartID);
 		//}
 		
 		
@@ -387,8 +387,39 @@ class SaveOrderCommand
 		
 	}
 	
-	private function processPayment(){		
-		$paymentID = PaymentProxy::insertNew(array('use_post'=>true, 'orderID'=>$this->orderID));
+	private function processPayment(){
+		$paymentType = $_POST['payment_type'];
+		
+		if($paymentType == 'creditCard'){
+			// if we accepted a credit card payment using stripe,
+			// the payment has already been created
+			require_once(TASTY_CMS_PLUGIN_LIBS_DIR.'stripe/Stripe.php');
+			
+			$stripeCharge = get_transient("charge_{$this->cartID}");
+
+			$paymentAmount = $stripeCharge->amount / 100; //$amount will be in cents so divide by 100 to get dollar amount.
+			$paymentNote = '';
+
+			$paymentModel = array(
+				'paymentType' => 'creditCard',
+				'paymentAmount' => $paymentAmount,
+				'paymentNote' => $paymentNote,
+			);
+			error_log("paymentModel : ");
+			error_log(var_export($paymentModel, 1));		
+			$paymentID = PaymentProxy::insertNew(array('use_post'=>false, 'orderID'=>$this->orderID, 'paymentModel'=>$paymentModel));
+
+			update_post_meta( $paymentID, '_stripeChargeID', $stripeCharge->id);					
+			update_post_meta( $paymentID, '_stripeCharge', $stripeCharge );					
+
+			update_post_meta( $this->orderID,'tc_payments_total', $paymentAmount); 
+
+			//return $paymentID;
+		}else{
+			$paymentID = PaymentProxy::insertNew(array('use_post'=>true, 'orderID'=>$this->orderID));
+			update_post_meta( $this->orderID,'tc_payments_total', $_POST['tc_payments_total']); 
+			
+		}
 
 		p2p_type( 'payment_to_order' )->connect( $paymentID, $this->orderID, array(
 			'date' => current_time('mysql'),			

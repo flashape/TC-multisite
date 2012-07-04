@@ -70,7 +70,7 @@ class plugin_sws_ui_themes {
 				}
 				$path_parts = @pathinfo($file);
 				
-				if('css'==$path_parts['extension']){
+				if('css'==@$path_parts['extension']){
 					$files[]=$file;
 				}
 		    }

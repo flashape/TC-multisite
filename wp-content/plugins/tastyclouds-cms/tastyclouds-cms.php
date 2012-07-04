@@ -23,7 +23,7 @@ function tc_admin_lockout(){
 	    die();  
 	}
 }
-add_action('init','tc_admin_lockout');
+//add_action('init','tc_admin_lockout');
 
 
 function alter_tc_product_query( $request ) {
@@ -99,7 +99,8 @@ function tc_cms_dequeue_autosave(){
 function tc_cms_init_session(){
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	
-
+	error_log("\n\n\ntc_cms_init_session:");
+	//error_log(var_export($_POST, 1));
 	
 	global $post;
 	global $current_screen;
@@ -129,10 +130,12 @@ function tc_cms_init_session(){
 add_action('transition_post_status','tc_on_order_transition_post_status',10,3);
 
 function tc_on_order_transition_post_status($new, $old, $post){
+	error_log("tc_on_order_transition_post_status....");
     // Make sure the post obj is present and complete. If not, bail.
     if(!is_object($post) || !isset($post->post_type)) {
         return;
     }
+	error_log("tc_on_order_transition_post_status, post->post_type : ".$post->post_type.", new : $new, old : $old");
 
     if($post->post_type == 'tc_order') {
 			
@@ -210,7 +213,7 @@ function tc_cms_enqueue_scripts(){
 		
 		
 		
-		if(!is_admin()){
+		if( !is_admin() ){
 			$productModel = ProductProxy::getProductByID($post->ID);
 			wp_enqueue_script( 'tc-product-ajax', TC_CMS_JS_URL . 'tc_product_ajax.js', array('jquery'));
 			wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
@@ -232,7 +235,6 @@ function tc_cms_enqueue_scripts(){
 				);
 			wp_localize_script( 'tc-product-ajax', 'TCProductAjax', $vars  );
 		}
-		
 	}
 	
 	if(is_page('checkout')){
@@ -375,6 +377,9 @@ function tc_cms_admin_enqueue_scripts(){
 	wp_enqueue_script( 'ba-debug', TC_SHARED_JS_URL .'/ba-debug.js', __FILE__ );
 	
 	wp_enqueue_style('jquery.ui.theme', TC_SHARED_CSS_URL .'jqueryui/smoothness/jquery-ui-1.8.16.custom.css', __FILE__);
+	wp_enqueue_script( 'jquery-colorbox', TC_CMS_JS_URL . 'colorbox/jquery.colorbox.js', array('jquery'));
+	wp_enqueue_style( 'jquery.colorbox', TC_SHARED_CSS_URL . 'colorbox/colorbox.css', __FILE__);
+	
 	
 	
 }

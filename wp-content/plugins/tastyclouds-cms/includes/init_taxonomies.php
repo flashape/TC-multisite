@@ -132,7 +132,7 @@ function tc_init_product_type_taxonomy(){
     $args = array( 
         'labels' => $labels,
         'public' => true,
-        'show_in_nav_menus' => false,
+        'show_in_nav_menus' => true,
         'show_ui' => true,
         'show_tagcloud' => true,
         'hierarchical' => true,

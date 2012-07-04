@@ -124,17 +124,20 @@ $order_details_metabox = new WPAlchemy_MetaBox(array
 
 
 function onOrderDetailsMetaboxSaveAction($meta, $post_id){
-	$saveOrderCommand = new SaveOrderCommand($post_id);
-	$saveOrderCommand->execute();
+
+		$saveOrderCommand = new SaveOrderCommand($post_id);
+		$saveOrderCommand->execute();
 	
 }
 
 
 function onOrderDetailsMetaboxInitAction() {
 	add_filter( 'post_updated_messages', 'tc_order_messages_filter' );
+	
 }
 
 function tc_order_messages_filter($messages){
+	error_log(var_export($messages, 1));
 	$messages['tc_order'][6] =  __('New order saved successfully.');
 	return $messages;
 }
@@ -295,6 +298,8 @@ function tc_enqueue_contact_scripts(){
 
 function onOrderDetailsMetaboxHeadAction(){
 	
+	error_log("\n\nonOrderDetailsMetaboxHeadAction!!!!!!!!\n\n");
+	
 	remove_meta_box( 'tagsdiv-tc_order_type', 'tc_order', 'side' );      
 	remove_meta_box( 'tc_event_typediv', 'tc_order', 'side' );      
 	
@@ -326,6 +331,7 @@ function onOrderDetailsMetaboxHeadAction(){
 	wp_enqueue_script('jquery-ui-autocomplete');
 	wp_enqueue_script( 'jquery-ui-tabs' );
 	wp_enqueue_script('jquery-ui-datepicker', TC_SHARED_JS_URL . 'jquery.ui.datepicker.min.js', array('jquery', 'jquery-ui-core') );
+	wp_enqueue_script( 'stripe', 'https://js.stripe.com/v1/', array('jquery', 'validate'));
 	
 	//wp_enqueue_script('jquery-ui-accordion', TC_SHARED_JS_URL . 'jquery.ui.accordion.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-widget') );	
 	

@@ -1,1 +1,25 @@
 /* -- This is the place to add your own style modifications without touching the original styles -- */
+
+#topnav_uber ul {
+/*	margin-left: 20px;
+*/	margin:0;
+	padding: 0;
+	}
+	
+/*#megaMenu .ss-nav-menu-with-img img {
+	width:35px;
+	height:35px;
+}*/
+
+#megaMenu ul.megaMenu .ss-nav-menu-with-img { min-height: 50px; }
+
+#megaMenu .ss-nav-menu-with-img > a > .wpmega-link-title, 
+#megaMenu .ss-nav-menu-with-img > a > .wpmega-link-description, 
+#megaMenu .ss-nav-menu-with-img > a > .wpmega-item-description, 
+#megaMenu .ss-nav-menu-with-img > span.um-anchoremulator > .wpmega-link-title, 
+#megaMenu .ss-nav-menu-with-img > span.um-anchoremulator > .wpmega-link-description, 
+#megaMenu .ss-nav-menu-with-img > span.um-anchoremulator > .wpmega-item-description { 
+	line-height:50px; padding-left:60px; /*padding-top: 15px*/ 
+}
+
+

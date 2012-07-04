@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WordPress Menu Management Enhancer Support Manual</title>
+
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+
+<style type="text/css">
+
+html, body{
+	background:url(images/demo_bkg.jpg) repeat;
+	margin:0;
+	padding:0;
+	
+}
+.wrap { 
+	background:transparent url(images/glass.png) top right repeat;
+	margin: 10px auto; 
+	font-family: Lucida Grande, Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+	color: #333; 
+	line-height: 20px; 
+	width: 620px; 
+	padding: 25px; 
+	
+	border:1px solid #fff;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	
+	text-shadow:0px 1px 1px #fff;
+}
+
+.wrap-foot { 
+	background:transparent url(images/glass.png) top right repeat;
+	margin: 30px auto; 
+	font-family: Lucida Grande, Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+	color: #333; 
+	line-height: 20px; 
+	width: 620px; 
+	padding: 10px 25px; 
+	
+	border:1px solid #fff;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	
+	text-shadow:0px 1px 1px #fff;
+}
+
+fieldset { margin: 30px 0; padding: 30px; }
+legend { font-size: 18px; padding: 0 10px; color: #202020; }
+pre{
+	border: solid 1px #fff;
+	padding:15px; 
+	background: #efefef;
+	width:95%;
+	font-family:Arial, sans-serif;
+	word-wrap:break-word;
+}
+a {
+	color: #000;
+}
+hr{
+	background: #FFF;
+	height: 1px;
+	border: none;
+	border-bottom: 1px dotted #ddd;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+a img{
+	border: none;
+}
+h3, h4{
+	color:#333;
+	
+}
+h1.title, h2.title{
+	color:#000;
+	font-family:"Droid Sans", Arial, sans-serif;
+	font-weight:bold;
+	margin:0px;
+}
+h1.title,
+h1.title a{
+	font-size:36px;
+	color:#222;
+	padding-right:35px;
+	padding-top:2px;
+	line-height:40px;
+	margin-bottom:0px;
+	text-decoration:none;
+}
+h1.title{
+	background:transparent url(images/sevensparklogo.png) right 7px no-repeat;
+}
+h2.title{
+	margin:.5em 0 1em 0;
+	color:#8c2702;
+	font-family:"Droid Sans", Arial, sans-serif;
+	font-weight:normal;
+}
+
+h2{
+	margin-top:2em;
+	color:#8c2702;
+	font-family:"Droid Sans", Arial, sans-serif;
+}
+
+img.packaging{
+	padding:10px;
+	background:url("images/glass.png") repeat scroll right top transparent;
+	border:1px solid #fff;
+	box-shadow:0px 0px 1px #999;
+}
+
+h4{
+	color:#98B03A;
+}
+
+h4 code{
+	color:#222;
+}
+
+.mega-api td.mega-op-name{
+	width:30%;
+	padding-right:20px;
+	vertical-align:top;
+	font-style:italic;
+	color:#660000;
+	color:#8C2702;
+}
+.mega-api h4{
+	margin:0px; padding:0px;
+}
+.mega-ex{
+	width:90%;
+	background:#ddd;
+}
+.mega-ex td{
+	padding-left:10px;
+	width:25%;
+	
+}
+
+.mega-ex td.mega-top{
+	background:url("images/glass.png") repeat scroll right top transparent;
+	color:#777;
+}
+.mega-sel{
+	font-weight:bold;
+	color:#fff;
+	background:#000;
+	text-shadow:none;
+}
+.clear{ clear:both; }
+blockquote{
+	font-family:Georgia, Times New Roman, serif;
+	font-style:italic;
+	border:1px solid #fff;
+	background:#dfdfdf;
+	margin:10px 0px;
+	padding:10px;
+}
+
+table.compare{
+	margin-left:10px;
+	margin-right:10px;
+}
+table.compare td{
+	vertical-align:top;
+	padding:0px 10px;
+}
+td.hdr{
+	color:#8C2702;
+	font-size:13px;
+	font-weight:bold;
+}
+
+/** COLUMNS **/
+.ss-colgroup .ss-col{
+	float:left;
+}
+
+/* 1/2 */
+.ss-colgroup-2 > .ss-col{
+	width:46%;
+	margin-right:8%;
+}
+/* 1/3 */
+.ss-colgroup-3 > .ss-col{
+	width:29%;
+	margin-right:6%;
+}
+/* 2/3 */
+.ss-colgroup-3 > .ss-col.ss-colspan-2{
+	width:64%;
+	margin-right:6%;
+}
+/* 1/4 */
+.ss-colgroup-4 > .ss-col{
+	width:21%;
+	margin-right:5%;
+}
+/* 2/4 */
+.ss-colgroup-4 > .ss-col.ss-colspan-2{
+	width:47%;
+	margin-right:5%;
+}
+/* 3/4 */
+.ss-colgroup-4 > .ss-col.ss-colspan-3{
+	width:73%;
+	margin-right:5%;
+}
+/* 1/5 */
+.ss-colgroup-5 > .ss-col{
+	width:16%;
+	margin-right:5%;
+}
+/* 2/5 */
+.ss-colgroup-5 > .ss-col.ss-colspan-2{
+	width:37%;
+	margin-right:5%;
+}
+/* 3/5 */
+.ss-colgroup-5 > .ss-col.ss-colspan-3{
+	width:58%;
+	margin-right:5%;
+}
+/* 4/5 */
+.ss-colgroup-5 > .ss-col.ss-colspan-4{
+	width:79%;
+	margin-right:5%;
+}
+/* Final Column - no right margin */
+.ss-colgroup-2 > .ss-col.ss-col-2,
+.ss-colgroup-3 > .ss-col.ss-col-3,
+.ss-colgroup-4 > .ss-col.ss-col-4,
+.ss-colgroup-5 > .ss-col.ss-col-5{
+	margin-right:0px;
+	
+}
+
+.ss-affiliate{
+	width:560px;
+	height:30px;
+	margin:0px auto;
+	position:relative;
+}
+.ss-affiliate-inner{
+	position:absolute;
+	width:100%;
+	left:0px;
+	font-size:12px;
+	line-height:1.4em;
+	padding:4px;
+	background:#98b03a;
+	color:#000;
+	text-shadow:0px 1px 1px #dbef8b;
+	border:2px solid #fff;
+	border-top:none;
+	
+	box-shadow:0px 0px 3px #999;
+	-moz-box-shadow:0px 0px 3px #999;
+	-webkit-box-shadow:0px 0px 3px #999;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	text-transform:uppercase;
+	font-family:Cabin, Arial, sans-serif;
+	font-weight:bold;
+	text-align:center;
+}
+.ss-affiliate-inner a{
+	text-decoration:none;
+	color:#222;	
+}
+.ss-affiliate-inner a:hover{
+	color:#000;	
+}
+
+</style>
+</head>
+
+<body>
+
+
+<div class="wrap">
+<h1 class="title"><a href="http://menumanager.sevenspark.com">Menu Management Enhancer</a></h1>
+<h2 class="title">Support Manual</h2>
+
+<img src="images/Menu_Management_Enhancer.jpg" class="packaging" />
+
+<p>Here are some tips on using the Menu Management Enhancer.  Please take a minute to read through this manual before contacting me directly.  If you've tried this manual and it hasn't solved your issue, please check out the online documentation at 
+<a href="http://menumanager.sevenspark.com/help">menumanager.sevenspark.com/help</a> for the latest version of this manual.  
+</p> 
+
+<p>If you find your problem is not solved through either of these means, please contact me as described on my
+<a href="http://codecanyon.net/user/sevenspark">profile page</a>.  Please use the account you used to purchase the plugin and describe the means you've attempted to solve the problem when you contact me.  Thanks!</p>
+
+<p>You can always find the latest version of this file at <a href="http://menumanager.sevenspark.com/help">menumanager.sevenspark.com/help</a></p>
+
+<h2>Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation &amp; Setup</a></li>
+<li><a href="#options">Menu Management Enhanced Tools and Features</a></li>
+</ol>
+
+<!-------------------------------------------
+
+OVERVIEW
+
+-------------------------------------------->
+
+<h2 id="overview">Overview</h2>
+
+<p>Menu Management Enhancer for WordPress adds enhanced features to the backend of the WordPress Menu System (that's the page in <em>Appearance > Menus</em> where you build your menu).</p>
+
+<ul>
+<li>Manage large numbers of menu items with ease</li>
+<li>Expand and collapse the menu tree to save space</li>
+<li>Quickly jump to any top level menu item</li>
+<li>Enhanced drag &amp; drop jump-to-item feature</li>
+</ul>
+
+<iframe width="621" height="378" src="http://www.youtube.com/embed/65JI0hAECvA?hd=1" frameborder="0" allowfullscreen></iframe>
+
+
+
+<!------------------------------------------
+
+REQUIREMENTS
+
+------------------------------------------->
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+<li>WordPress 3.2+</li>
+<li>jQuery 1.6.1 (comes with WordPress 3.2)</li>
+<li>PHP 5.2+</li>
+<li>Use of the WordPress 3 Navigation Menu System</li>
+<li>Use of a modern browser, like Firefox or Chrome.</li>
+</ul>
+
+
+
+
+<!------------------------------------------
+
+INSTALLATION
+
+------------------------------------------->
+
+<h2 id="installation">Installation &amp; Setup</h2>
+
+<p>Upload via WordPress Control Panel</p>
+
+<ol>
+<li>Log into WordPress and navigate to <em>Plugins &gt; Add New &gt; Upload</em></li>
+<li>Select the .zip file you downloaded from CodeCanyon and click <strong>Install Now</strong></li>
+<li>Enter your FTP information if necessary and install the plugin</li>
+<li>Activate the plugin</li>
+</ol>
+
+<p>Alternatively, upload via FTP</p>
+
+<ol>
+<li>Decompress the .zip file you downloaded from CodeCanyon.</li>
+<li>Upload the <code>menu-management-enhancer</code> folder to your <code>wp-content/plugins</code> directory.</li>
+<li>Navigate to your Control Panel: <em>Plugins</em></li>
+<li>Under <em>Menu Management Enhancer</em>, click <em>Activate</em></li>
+</ol>
+
+
+
+<!------------------------------------------
+
+OPTIONS
+
+------------------------------------------->
+
+<h2 id="options">Menu Management Enhanced Tools and Features</h2>
+
+<img src="images/diagram.jpg" />
+<br/>
+
+All options are available in <em>Appearance > Menus</em>
+
+<h4>Menu Item Expandos</h4>
+
+Expand and contract the submenu items in this item's tree.
+
+
+<h4>Subtree Display</h4>
+
+This display shows the number of children a menu item has at a glance.  Hover over it to reveal the total number of descendents (in the tooltip).
+
+
+<h4>Highlights</h4>
+
+The highlighter highlights the submenu tree for this item.  Hover over it to reveal the highlight.  This allows you to see the extent of this item's tree at a glance.
+
+
+
+<h4>Scroll Indicator</h4>
+
+The scroll indicator has a "sausage" section for each top level menu item.  
+
+<br/>
+<br/><strong>Hover</strong> over each section to see the name and ID of the menu item to which it corresponds.
+
+<br/><strong>Click</strong> a section to scroll that menu item into view.
+
+<br/><strong>Shift + Hover</strong> over a section to scroll that menu item into view (very useful when dragging menu items over long distances).
+
+
+<h4>Expand/Collapse All</h4>
+
+Expands or collapses all menu items (current state of individual menu items is ignored)
+
+
+<h4>Toggle Menu IDs</h4>
+
+Display the ID of the LI element for each menu item.  These IDs are present on the front-end and are useful for styling.
+
+<h4>Toggle Descriptions</h4>
+
+Quickly toggle Descriptions on and off to save space.  This is the same as clicking in the Description checkbox in the <em>Screen Options</em>, just more convenient.
+
+
+<h4>Toggle Scroller Width</h4>
+
+Sometimes it's just easier to have a wider scroller for easier clicking/hovering
+
+<h4>Hints</h4>
+
+Toggle Tooltip hints on and off.  Hover over a hint to highlight it.  Explains everything above in-browser so you don't really even need this doc.
+
+
+<!------------------------------------------
+
+Frequently Asked Questions
+
+------------------------------------------->
+
+<h2 id="FAQ">Frequently Asked Questions</h2>
+
+<h3 id="FAQ-nojs">Will this plugin work without JavaScript?</h3>
+
+No.  It is entirely jQuery-based.
+
+</div>
+
+<div class="wrap-foot">&copy; 2011 Chris Mavricos, <a href="http://sevenspark.com">SevenSpark Web Studio</a></div>
+</body>
+</html>

@@ -919,6 +919,8 @@ function wp_ajax_add_menu_item() {
 }
 
 function wp_ajax_add_meta() {
+	error_log("\n\wp_ajax_add_meta()\n\n");
+	
 	check_ajax_referer( 'add-meta', '_ajax_nonce-add-meta' );
 	$c = 0;
 	$pid = (int) $_POST['post_id'];

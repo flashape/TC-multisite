@@ -2458,6 +2458,10 @@ function wp_get_single_post($postid = 0, $mode = OBJECT) {
  * @return int|WP_Error The value 0 or WP_Error on failure. The post ID on success.
  */
 function wp_insert_post($postarr, $wp_error = false) {
+	error_log("wp_insert_post : ");
+	// error_log("postarr :");
+	// error_log(var_export($postarr,1));	
+	// error_log("wp_error : $wp_error");
 	global $wpdb, $user_ID;
 
 	$defaults = array('post_status' => 'draft', 'post_type' => 'post', 'post_author' => $user_ID,
@@ -2474,10 +2478,12 @@ function wp_insert_post($postarr, $wp_error = false) {
 
 	// export array as variables
 	extract($postarr, EXTR_SKIP);
-
+	error_log("postarr after extract:");
+	error_log(var_export($postarr,1));
 	// Are we updating or creating?
 	$update = false;
 	if ( !empty($ID) ) {
+		error_log("ID is not empty!!!!");
 		$update = true;
 		$previous_status = get_post_field('post_status', $ID);
 	} else {
@@ -2492,7 +2498,7 @@ function wp_insert_post($postarr, $wp_error = false) {
 		else
 			return 0;
 	}
-
+	error_log("post_type : $post_type, is empty " .empty($post_type));
 	if ( empty($post_type) )
 		$post_type = 'post';
 
@@ -2741,6 +2747,8 @@ function wp_update_post($postarr = array()) {
 
 	// Merge old and new fields with new fields overwriting old ones.
 	$postarr = array_merge($post, $postarr);
+	
+	
 	$postarr['post_category'] = $post_cats;
 	if ( $clear_date ) {
 		$postarr['post_date'] = current_time('mysql');
@@ -2764,6 +2772,7 @@ function wp_update_post($postarr = array()) {
  * @return null
  */
 function wp_publish_post($post_id) {
+	error_log("\n\nwp_publish_post()\n\n");
 	global $wpdb;
 
 	$post = get_post($post_id);

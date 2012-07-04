@@ -705,17 +705,24 @@ class CartAjax
 		
 		if($cart){
 		
-			$summary = OrderProxy::getOrderSummary($cart);
-			//error_log(var_export($summary, 1));
-			$orderTotal = OrderProxy::getOrderTotalFromSummary($summary);
+			$paymentAmount;
 			
-
+			// Payments coming from the admin order edit screen will manually input the payment amount,
+			// payments coming from the front end are always for the full amount of the cart total.
+			if( isset($_POST['paymentAmount']) ){
+				$paymentAmount = floatval($_POST['paymentAmount']);
+			}else{
+				$summary = OrderProxy::getOrderSummary($cart);
+				$orderTotal = OrderProxy::getOrderTotalFromSummary($summary);
+				$paymentAmount = $orderTotal;
+				
+			}
+			
 			$description = array('cartID'=>self::getCartById($cartID));
 		
 			$descriptionJSON = json_encode($description);
 		
 			// front end orders are always pay in full, no partial payments
-			$paymentAmount = $orderTotal;
 			$paymentAmountInCents = $paymentAmount * 100;
 			error_log("attempting to create charge for amount of $paymentAmount");
 			

@@ -1,23 +1,38 @@
-<?php 
+<?php
+/**
+ * @package Frontend
+ *
+ * This code handles the OpenGraph output.
+ */
 
+/**
+ * Adds the OpenGraph output
+ */
 class WPSEO_OpenGraph extends WPSEO_Frontend {
 
-	var $options;
-	
+	/**
+	 * @var array $options Options for the OpenGraph Settings
+	 */
+	var $options = array();
+
+	/**
+	 * Class constructor.
+	 */
 	public function __construct() {
 		$this->options = get_option('wpseo_social');
 		
-		add_action( 'wpseo_head', array( &$this, 'opengraph' ) );
-		add_filter( 'language_attributes', array( &$this, 'add_opengraph_namespace' ) );
+		add_action( 'wpseo_head', array( $this, 'opengraph' ) );
+		add_filter( 'language_attributes', array( $this, 'add_opengraph_namespace' ) );
 	}
 
+	/**
+	 * Main OpenGraph output.
+	 */
 	public function opengraph() {
-		global $wp_query, $paged;
-		
 		wp_reset_query();
 		
 		$this->locale();
-		$this->id();
+		$this->site_owner();
 		$this->og_title();
 		$this->description();
 		$this->url();
@@ -27,16 +42,26 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 		do_action('wpseo_opengraph');
 	}
 
-	public function add_opengraph_namespace( $output ) {
-		return $output . ' xmlns:og="http://opengraphprotocol.org/schema/"';
+	/**
+	 * Filter for the namespace, adding the OpenGraph namespace.
+	 *
+	 * @param string $input The input namespace string.
+	 * @return string
+	 */
+	public function add_opengraph_namespace( $input ) {
+		return $input . ' xmlns:og="http://opengraphprotocol.org/schema/"';
 	}
-	
-	public function id() {
+
+	/**
+	 * Outputs the site owner
+	 */
+	public function site_owner() {
 		if ( isset( $this->options['fbadminapp'] ) && 0 != $this->options['fbadminapp'] ) {
 			echo "<meta property='fb:app_id' content='".esc_attr( $this->options['fbadminapp'] )."'/>\n";
 		} else if ( isset( $this->options['fb_admins'] ) && is_array( $this->options['fb_admins'] ) && ( count( $this->options['fb_admins'] ) > 0 )  ) {
+			$adminstr = '';
 			foreach ( $this->options['fb_admins'] as $admin_id => $admin ) {
-				if ( isset($adminstr) )
+				if ( !empty($adminstr) )
 					$adminstr .= ','.$admin_id;
 				else
 					$adminstr = $admin_id;
@@ -44,16 +69,25 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 			echo "<meta property='fb:admins' content='".esc_attr( $adminstr )."'/>\n";
 		}
 	}
-	
+
+	/**
+	 * Outputs the SEO title as OpenGraph title.
+	 */
 	public function og_title() {
 		$title = $this->title('');
 		echo "<meta property='og:title' content='".esc_attr( $title )."'/>\n";
 	}
-		
+
+	/**
+	 * Outputs the canonical URL as OpenGraph URL, which consolidates likes and shares.
+	 */
 	public function url() {
 		echo "<meta property='og:url' content='".esc_attr( $this->canonical( false ) )."'/>\n";
 	}
-	
+
+	/**
+	 * Output the locale, doing some conversions to make sure the proper Facebook locale is outputted.
+	 */
 	public function locale() {
 		$locale = apply_filters( 'wpseo_locale', strtolower( get_locale() ) );
 		
@@ -77,7 +111,10 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 		
 		echo "<meta property='og:locale' content='".esc_attr( $locale )."'/>\n";
 	}
-	
+
+	/**
+	 * Output the OpenGraph type.
+	 */
 	public function type() {
 		if ( is_singular() ) {
 			$type = wpseo_get_value('og_type');
@@ -89,8 +126,13 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 		$type = apply_filters( 'wpseo_opengraph_type', $type );
 		echo "<meta property='og:type' content='".esc_attr( $type )."'/>\n";
 	}
-		
-	public function image( $image = '' ) {
+
+	/**
+	 * Output the OpenGraph image elements for all the images within the current post/page.
+	 *
+	 * @return bool
+	 */
+	public function image() {
 		if ( is_singular() ) {
 			global $post;
 
@@ -98,6 +140,7 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 
 			if ( is_front_page() ) {
 				if ( is_front_page() ) {
+					$og_image = '';
 					if ( isset( $this->options['og_frontpage_image'] ) )
 						$og_image = $this->options['og_frontpage_image'];
 						
@@ -144,7 +187,7 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 				}
 			}
 			if ( count( $shown_images ) > 0 )
-				return;
+				return true;
 		} 
 		
 
@@ -164,8 +207,13 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 
 		if ( isset( $og_image ) && $og_image != '' ) 
 			echo "<meta property='og:image' content='".esc_attr( $og_image )."'/>\n";
+
+        // @TODO add G+ image stuff
 	}
-		
+
+	/**
+	 * Output the OpenGraph description, specific OG description first, if not, grab the meta description.
+	 */
 	public function description() {
 		$ogdesc = wpseo_get_value('opengraph-description');
 		
@@ -176,9 +224,12 @@ class WPSEO_OpenGraph extends WPSEO_Frontend {
 			echo "<meta property='og:description' content='".esc_attr( $ogdesc )."'/>\n";
 	}
 
+	/**
+	 * Output the site name straight from the blog info.
+	 */
 	public function site_name() {
 		echo "<meta property='og:site_name' content='".esc_attr( get_bloginfo('name') )."'/>\n";
 	}
 }
-
+global $wpseo_og;
 $wpseo_og = new WPSEO_OpenGraph;

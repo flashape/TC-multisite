@@ -47,7 +47,8 @@
 			<?php include (TEMPLATEPATH . '/banner468head.php'); ?>
 		</div>
 
-		<div id="topnav">
+		<!-- <div id="topnav"> changed this for ubermenu integration -->
+		<div id="topnav_uber">
 			<div class="limit clearfix">
 				<?php if (has_nav_menu('topnav')) { ?>
 					<ul class="clearfix">

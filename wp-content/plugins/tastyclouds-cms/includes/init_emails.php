@@ -131,7 +131,7 @@ function createSwiftmailTransport(){
 
 function tc_send_customer_order_email($data){
 	//$user = new WP_user($data['userID']);
-	//$postID = $data['postID'];
+	$postID = $data['postID'];
 	
 	$orderID = $data['orderID'];
 	$summary = $data['summary'];

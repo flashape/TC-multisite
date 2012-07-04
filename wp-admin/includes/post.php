@@ -19,6 +19,7 @@
  * @return object|bool WP_Error on failure, true on success.
  */
 function _wp_translate_postdata( $update = false, $post_data = null ) {
+	error_log("_wp_translate_postdata :");
 
 	if ( empty($post_data) )
 		$post_data = &$_POST;
@@ -67,7 +68,8 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
 			}
 		}
 	}
-
+	error_log("before setting post_status:");
+	error_log(var_export($post_data, 1));
 	// What to do based on which button they pressed
 	if ( isset($post_data['saveasdraft']) && '' != $post_data['saveasdraft'] )
 		$post_data['post_status'] = 'draft';
@@ -79,6 +81,9 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
 		$post_data['post_status'] = 'draft';
 	if ( isset($post_data['pending']) && '' != $post_data['pending'] )
 		$post_data['post_status'] = 'pending';
+
+	error_log("after setting post_status:");
+	error_log(var_export($post_data, 1));
 
 	if ( isset( $post_data['ID'] ) )
 		$post_id = $post_data['ID'];
@@ -138,6 +143,7 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
  * @return int Post ID.
  */
 function edit_post( $post_data = null ) {
+	error_log("\n\nedit_post...\n\n");
 
 	if ( empty($post_data) )
 		$post_data = &$_POST;
@@ -169,10 +175,12 @@ function edit_post( $post_data = null ) {
 	}
 
 	$post_data = _wp_translate_postdata( true, $post_data );
+	
 	if ( is_wp_error($post_data) )
 		wp_die( $post_data->get_error_message() );
 	if ( 'autosave' != $post_data['action'] && 'auto-draft' == $post_data['post_status'] )
 		$post_data['post_status'] = 'draft';
+
 
 	if ( isset($post_data['visibility']) ) {
 		switch ( $post_data['visibility'] ) {
@@ -530,7 +538,6 @@ function post_exists($title, $content = '', $date = '') {
  */
 function wp_write_post() {
 	global $user_ID;
-
 	if ( isset($_POST['post_type']) )
 		$ptype = get_post_type_object($_POST['post_type']);
 	else

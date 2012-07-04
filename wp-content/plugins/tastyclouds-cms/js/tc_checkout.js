@@ -15,9 +15,9 @@
 		jQuery(".validate-text").seaBehavior( "text", {"notEmpty":true, "minLength":3}, { "okClass": "ok", "errorClass": "error" } )
 		jQuery(".validate-email").seaBehavior( "email", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
 		jQuery(".validate-phone").seaBehavior( "numeric", {"notEmpty":true}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
-		jQuery(".validate-zip").seaBehavior( "numeric", {"notEmpty":true, "allowedCharacters":"-", "aditionalValidation":validateZip, "minLength":5, "maxLength":10}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A phone number is required" } )
-		jQuery("#card-cvc").seaBehavior( "numeric", {"notEmpty":true, "minLength":2, "maxLength":4, "aditionalValidation":validateCreditCardCVC}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
-		jQuery("#card-number").seaBehavior( "numeric", {"notEmpty":true, "minLength":10, "maxLength":20, "aditionalValidation":validateCreditCard}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid email is required" } )
+		jQuery(".validate-zip").seaBehavior( "numeric", {"notEmpty":true, "allowedCharacters":"-", "aditionalValidation":validateZip, "minLength":5, "maxLength":10}, { "okClass": "ok", "errorClass": "error", "errorMessage":"A valid zip code is required" } )
+		jQuery("#card-cvc").seaBehavior( "numeric", {"notEmpty":true, "minLength":2, "maxLength":4, "aditionalValidation":validateCreditCardCVC}, { "okClass": "ok", "errorClass": "error", "errorMessage":"Please provide a valid CVC number." } )
+		jQuery("#card-number").seaBehavior( "numeric", {"notEmpty":true, "minLength":10, "maxLength":20, "aditionalValidation":validateCreditCard}, { "okClass": "ok", "errorClass": "error", "errorMessage":"Please provide a valid credit card number." } )
 		jQuery("#card-expiry-month").seaBehavior( "text", {"notEmpty":true, "minLength":2, "maxLength":2, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
 		jQuery("#card-expiry-year").seaBehavior( "text", {"notEmpty":true, "minLength":4, "maxLength":4, "aditionalValidation":validateCreditCardExpiry}, { "okClass": "ok", "errorClass": "error" } )
 	

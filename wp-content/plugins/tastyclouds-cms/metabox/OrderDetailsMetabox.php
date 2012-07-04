@@ -777,6 +777,31 @@ var orderItemsViewMediator;
 
 jQuery(document).ready(function($){
 	
+	Stripe.setPublishableKey('pk_tgdbVsxsj5AJFmCCFM3AakzC3LC0J');
+	var submittedForm;
+	
+	// It looks like the validation plugin doesnt check on the "depends" value before running the
+	// additional validation methods, so if we're not using a credit card we just return true so the fields validate.
+	$.validator.addMethod("stripeValidateCreditCard", function(value, element) { 
+	 		return !isCreditCardPayment() ? true : Stripe.validateCardNumber( value ); 
+		}, 
+		"Please provide a valid credit card number."
+	);
+		
+	$.validator.addMethod("stripeValidateCreditCardCVC", function(value, element) { 
+	 		return !isCreditCardPayment() ? true : Stripe.validateCVC( value ); 
+		}, 
+		"Please provide a valid CVC number."
+	);
+			
+	$.validator.addMethod("validateCardExpiry", function(value, element) { 
+			//debug.log("validateCardExpiry: ", value, element);w
+	 		return !isCreditCardPayment() ? true : Stripe.validateExpiry( $('#card-expiry-month').val(),  $('#card-expiry-year').val() );
+		}, 
+		"A valid expiry date is required."
+	);
+	
+
 	contactAutocompleteJSON = <?php echo $contactAutocompleteJSON ?>;
 	productAutocompleteJSON = <?php echo $productAutocompleteJSON ?>;
 	shippingOptionsJSON = <?php echo $shippingOptionsJSON ?>;
@@ -909,6 +934,14 @@ jQuery(document).ready(function($){
 	
 	$('#discountTypeDropdown').on('change', function(event){
 		orderItemsViewMediator.checkDiscountUpdated();
+	});
+			
+	$('#payment_type').on('change', function(event){
+		var selectedVal = $(this).val();
+		
+		(selectedVal == "" ) ?  $('#paymentInfoDiv').hide() : $('#paymentInfoDiv').show();	
+		
+		(selectedVal == 'creditCard') ? $('#creditCardPaymentDiv').show() : $('#creditCardPaymentDiv').hide();			
 	});
 		
 	$('#orderItemsTable').on('click', '.addNextItemButton', function(event){
@@ -1074,12 +1107,45 @@ jQuery(document).ready(function($){
 		       	}
 			},			
 			
-			customer_email	: {
+			customer_email : {
 				required : {
 			         depends: function(element) {
 			           return $("#_tc_order_type-event-catering").is(':checked');
 			         }
 		       	}
+			},	
+							
+			payment_amount : {
+				required : {
+			         depends: function(element) {
+			           	return $("#payment_type").val() != "";
+			         }
+		       	}
+			},	
+				
+			"card-number" : {
+				required : {
+			         depends: function(element) {				
+			           return isCreditCardPayment();
+			         }
+		       	},
+				stripeValidateCreditCard:true
+			},				
+			"card-cvc"	: {
+				required : {
+			         depends: function(element) {
+			           return isCreditCardPayment();
+			         }
+		       	},
+				stripeValidateCreditCardCVC:true
+			},	
+			"card-expiry-month"	: {
+				required : {
+			         depends: function(element) {
+			           return isCreditCardPayment();
+			         }
+				},
+				validateCardExpiry:true
 			}
 		},
 		messages: 
@@ -1087,12 +1153,141 @@ jQuery(document).ready(function($){
 	        _tc_order_type: "Please select an order type.",
 	        _tc_event_type: "Please select an event type.",
 	        customer_email: "An email is required for event orders.",
+	        payment_amount: "Please enter a payment amount or select 'No Payment'.",
+	        "card-number": "Please provide a valid credit card number.",
+	        "card-cvc": "Please provide a valid credit card CVC number.",
+	        "card-expiry-month": "Please provide a valid credit card expiry date."
 		},
 		invalidHandler: function(event, validator) { 
 			$('#publish').removeClass('button-primary-disabled'); $('#ajax-loading').css('visibility', 'hidden'); 
-		}
+		},
+		submitHandler: function(form) {
+			debug.log("SUBMIT HANDLER");
+			// check if a stripe payment has been entered, 
+			// if so create new payment post via ajax,
+			// following the same flow as an order submitted from the front end.
+			submittedForm = form;
+			
+			if(isCreditCardPayment()){
+				getCardToken()
+				//doFormSubmit();
+				
+			}else{
+				doFormSubmit();
+			}
 
+		}
 	});
+	
+	function isCreditCardPayment(){
+		return $("#payment_type").val() == "creditCard";
+	}
+	
+	
+	function getCardToken(){
+	    Stripe.createToken({
+	        number: $('#card-number').val(),
+	        cvc: $('#card-cvc').val(),
+	        exp_month: $('#card-expiry-month').val(),
+	        exp_year: $('#card-expiry-year').val()
+	    }, getCardTokenResponseHandler);
+	}
+	
+	
+	function getCardTokenResponseHandler(status, response) {
+		debug.log('stripeResponseHandler, status : ', status, 'response : ', response);
+	    if (response.error) {
+	        // show the errors on the form
+			$.colorbox({initialHeight:0, initialWidth:0, html:"<p>"+response.error.message+"</p>"})
+	
+	        //$(".payment-errors").text(response.error.message);
+	    } else {
+	        var $form = $("#checkout-form");
+	        // token contains id, last4, and card type
+	        var token = response['id'];
+	        // insert the token into the form so it gets submitted to the server
+	        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+	        
+			//doFormSubmit();
+			submitPayment(token);
+	    }
+	}
+	
+	function submitPayment(token){
+		// submit payment via ajax before submitting rest of form
+		var data = {action:'tc_create_charge'};
+		data.stripeToken = token;
+		data.paymentAmount = $('#payment_amount').val();
+		jQuery.post(
+		    ajaxurl, 
+			data,
+		    function( response ) {
+		        debug.log('submitPayment response : ', response );
+				onCreateChargeResult(response);
+		    },
+			'json'
+		);
+		
+		
+	}
+	
+	function onCreateChargeResult(serviceResult){
+		
+		debug.log('onCreateChargeResult , serviceResult : ', serviceResult);
+		
+		if(serviceResult.success){
+			debug.log("onCreateChargeResult success!");
+			//re-enable the #post field or else the post will be saved as a draft
+			$('#publish').removeClass('button-primary-disabled'); $('#ajax-loading').css('visibility', 'visible'); 
+			
+			// On the backend, WordPress checks for the value of the "#publish" field to see if the post should be published.
+			// We need to make sure that button is clicked so the value is sent with the form,
+			// but we don't need to run validation again when the button is clicked, so we unbind the submit events from the form first.
+			// see http://stackoverflow.com/questions/363268/how-do-i-remove-jquery-validation-from-a-form/1055371#1055371
+			
+			// var form = $('#post').get(0);
+			// $.removeData(form,'validator');
+
+			jQuery('#post').unbind('submit');
+			
+			try{
+				$('#publish').click();
+			}catch(e){
+				debug.log("Error : ", e);
+			}
+		}else{
+			$.colorbox({initialHeight:0, initialWidth:0, html:"<p>"+serviceResult.message+"</p>"})				
+			// jQuery('#couponCodeInput').val('');
+			
+		}
+		
+		
+
+	}
+	
+	
+	
+	$('#card-number').val('4242424242424242');
+	//$('#card-number').val('4000000000000002'); // test for card_declined response
+	$('#card-cvc').val('999');
+	$('#card-expiry-month').val('12');
+	$('#card-expiry-year').val('2015');
+	
+	
+	
+	function doFormSubmit(){
+		debug.log("form submit, post_status: ", $('#post_status').val());
+		debug.log("form submit, publish: ", $('#publish').val());
+		debug.log("publish : ", $('#publish'));
+		
+		//var $form = $("#post");
+        
+		// and submit
+        //$form.get(0).submit();
+		submittedForm.submit();
+	}
+	
+	
 	var nowDate = new Date();
 	$datepicker = jQuery('#_tc_event_date');
 	$datepicker.attr("autocomplete", "off");

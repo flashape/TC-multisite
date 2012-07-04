@@ -82,7 +82,7 @@ ini_set('display_errors',0);
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 define('WP_DEBUG_DISPLAY', false); // Turn forced display OFF
-
+define('SCRIPT_DEBUG', true);
 define('WP_ALLOW_MULTISITE', true);
 
 define( 'MULTISITE', true );
@@ -98,7 +98,7 @@ define('AUTOSAVE_INTERVAL', 300 ); // seconds
 
 define('WP_POST_REVISIONS', false );
 
-define('FORCE_SSL_ADMIN', true);
+//define('FORCE_SSL_ADMIN', true);
 define('FORCE_SSL_LOGIN', true);
 
 /* That's all, stop editing! Happy blogging. */

@@ -254,6 +254,7 @@ WPRemoveThumbnail = function(nonce){
 })(jQuery);
 
 jQuery(document).ready( function($) {
+	debug.log("post.dev.js ready!");
 	var stamp, visibility, sticky = '', last = 0, co = $('#content');
 
 	postboxes.add_postbox_toggles(pagenow);
@@ -362,6 +363,7 @@ jQuery(document).ready( function($) {
 	}
 
 	// submitdiv
+	debug.log("$('#submitdiv').length : ", $('#submitdiv').length );
 	if ( $('#submitdiv').length ) {
 		stamp = $('#timestamp').html();
 		visibility = $('#post-visibility-display').html();
@@ -382,6 +384,8 @@ jQuery(document).ready( function($) {
 		}
 
 		function updateText() {
+			debug.log("updateText(), publish val : ", $('#publish').val());
+			
 			var attemptedDate, originalDate, currentDate, publishOn, postStatus = $('#post_status'),
 				optPublish = $('option[value="publish"]', postStatus), aa = $('#aa').val(),
 				mm = $('#mm').val(), jj = $('#jj').val(), hh = $('#hh').val(), mn = $('#mn').val();
@@ -396,7 +400,6 @@ jQuery(document).ready( function($) {
 			} else {
 				$('.timestamp-wrap', '#timestampdiv').removeClass('form-invalid');
 			}
-
 			if ( attemptedDate > currentDate && $('#original_post_status').val() != 'future' ) {
 				publishOn = postL10n.publishOnFuture;
 				$('#publish').val( postL10n.schedule );
